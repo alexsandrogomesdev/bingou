@@ -27,6 +27,7 @@ const Menu = () => {
             <NavLink
               to="/packs"
               className={({ isActive }) => (isActive ? styles.active : "")}
+              onClick={() => mainContext.setMenuOpen(false)}
             >
               <Boxes />
               <span>Maços</span>
@@ -36,6 +37,7 @@ const Menu = () => {
             <NavLink
               to="/profile"
               className={({ isActive }) => (isActive ? styles.active : "")}
+              onClick={() => mainContext.setMenuOpen(false)}
             >
               <UserRound />
               <span>Perfil</span>
