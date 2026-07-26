@@ -1,0 +1,56 @@
+import { useState } from "react";
+import { Boxes, UserRound, Globe } from "lucide-react";
+import { NavLink } from "react-router-dom";
+// STYLES
+import styles from "./Menu.module.css";
+
+// HOOKS
+import { useMainContext } from "../hooks/useMainContext.tsx";
+
+// COMPONENTS
+
+const Menu = () => {
+  const mainContext = useMainContext();
+
+  return (
+    <section
+      className={`${styles.menu_section} ${mainContext.menuOpen ? styles.menu_open : styles.menu_closed}`}
+    >
+      <div className={styles.menu_div}>
+        <div className={styles.menu_header}>
+          <Globe />
+          <h2>WMS Cartelas</h2>
+        </div>
+
+        <ul className={styles.menu_ul}>
+          <li>
+            <NavLink
+              to="/packs"
+              className={({ isActive }) => (isActive ? styles.active : "")}
+            >
+              <Boxes />
+              <span>Maços</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/profile"
+              className={({ isActive }) => (isActive ? styles.active : "")}
+            >
+              <UserRound />
+              <span>Perfil</span>
+            </NavLink>
+          </li>
+        </ul>
+      </div>
+      <div
+        className={styles.menu_div_close}
+        onClick={() =>
+          mainContext.setMenuOpen(mainContext.menuOpen ? false : true)
+        }
+      ></div>
+    </section>
+  );
+};
+
+export default Menu;
