@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Boxes, UserRound, Globe } from "lucide-react";
 import { NavLink } from "react-router-dom";
 // STYLES

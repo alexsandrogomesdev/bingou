@@ -43,14 +43,13 @@ const Packs = () => {
   ];
 
   // STATE VARIABLES
-  // INTERFACES
-  interface Pack {
+  type Pack = {
     id: number;
     name: string;
     cards: number;
     starts_at: number;
     created_at: number;
-  }
+  };
   const [packs, setPacks] = useState<Pack[]>(mockPacks);
   const [sectionNewPack, setSectionNewPack] = useState<boolean>(false);
 
@@ -68,7 +67,7 @@ const Packs = () => {
             <li key={pack.id} className={styles.pack}>
               <div>
                 <b>{pack.name}</b>
-                <span>{fts.date_from_unix(pack.starts_at)}</span>
+                <span>{fts.dateFromUnix(pack.starts_at)}</span>
                 <p>{pack.cards} Cartelas</p>
               </div>
               <NavLink to={`/pack/${pack.id}`}>
