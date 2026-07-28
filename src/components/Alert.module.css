@@ -1,0 +1,30 @@
+.alert {
+  display: flex;
+  flex-flow: row;
+  position: fixed;
+  z-index: 16;
+  align-items: center;
+  gap: 5px;
+  justify-content: space-between;
+  padding: 17px;
+  border-radius: 12px;
+  min-width: calc(100vw - 34px);
+  max-width: calc(100vw - 34px);
+  top: 17px;
+  left: 17px;
+}
+.alert_error {
+  background-color: #ec4848;
+}
+.alert_success {
+  background-color: #61c254;
+}
+.alert > p {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 500;
+}
+.alert > svg {
+  color: #fff;
+  cursor: pointer;
+}

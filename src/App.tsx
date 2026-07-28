@@ -8,6 +8,7 @@ import "./App.css";
 import { useMainContext } from "./hooks/useMainContext.tsx";
 
 // COMPONENTS
+import Alert from "./components/Alert.tsx";
 import Menu from "./components/Menu.tsx";
 import Header from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
@@ -24,9 +25,7 @@ function App() {
   return (
     <>
       <Header />
-
-      <Menu className={mainContext.menuOpen ? "menu_open" : "menu_closed"} />
-
+      <Menu />
       <main>
         <Routes>
           <Route path="/" element={<Home />}></Route>
@@ -35,7 +34,30 @@ function App() {
           <Route path="/pack/:id" element={<Pack />}></Route>
         </Routes>
       </main>
-
+      =={mainContext.alert.type !== "" && <Alert />}==
+      <span>---{mainContext.alert.type}---</span>
+      <button
+        onClick={() =>
+          mainContext.setAlert({
+            id: Math.floor(Math.random() * 1001),
+            type: "errors",
+            message: "",
+          })
+        }
+      >
+        Teste
+      </button>
+      <button
+        onClick={() =>
+          mainContext.setAlert({
+            id: Math.floor(Math.random() * 1001),
+            type: "error",
+            message: "",
+          })
+        }
+      >
+        Teste
+      </button>
       <Footer />
     </>
   );

@@ -1,19 +1,47 @@
-import { createContext, useState, useMemo } from 'react'
+import { createContext, useState, useMemo, type ReactNode } from "react";
 
-export const MainContext = createContext();
+export type AlertObject = {
+  id: number;
+  type: string;
+  message: string;
+};
+export type MainContextData = {
+  contextStatus: string;
+  setContextStatus: React.Dispatch<React.SetStateAction<string>>;
+  menuOpen: boolean;
+  setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  alert: AlertObject;
+  setAlert: React.Dispatch<React.SetStateAction<AlertObject>>;
+};
 
-export const MainContextProvider = ({children}) => {
-  const [contextStatus, setContextStatus] = useState<string>('Main Context...');
+export const MainContext = createContext<MainContextData>(
+  {} as MainContextData,
+);
+
+export const MainContextProvider = ({ children }: { children: ReactNode }) => {
+  const [contextStatus, setContextStatus] = useState<string>("Main Context...");
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [alert, setAlert] = useState<AlertObject>({
+    id: 0,
+    type: "",
+    message: "",
+  });
 
-  const contextVariables = useMemo(() => ({
-    contextStatus, setContextStatus,
-    menuOpen, setMenuOpen
-  }), [contextStatus, menuOpen]);
-  
+  const contextVariables = useMemo(
+    () => ({
+      contextStatus,
+      setContextStatus,
+      menuOpen,
+      setMenuOpen,
+      alert,
+      setAlert,
+    }),
+    [contextStatus, menuOpen, alert],
+  );
+
   return (
     <MainContext.Provider value={contextVariables}>
       {children}
     </MainContext.Provider>
-  )
-}
+  );
+};
