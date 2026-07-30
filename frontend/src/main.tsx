@@ -1,13 +1,13 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
 
-import App from './App.tsx'
+import App from "./App.tsx";
 
 // CONTEXT
-import { MainContextProvider } from './context/MainContext.tsx'
+import { MainContextProvider } from "./contexts/MainContext.tsx";
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <MainContextProvider>
@@ -15,4 +15,4 @@ createRoot(document.getElementById('root')).render(
       </MainContextProvider>
     </BrowserRouter>
   </StrictMode>,
-)
+);
