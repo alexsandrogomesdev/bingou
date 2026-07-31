@@ -1,5 +1,7 @@
 import { Boxes, UserRound, Globe, UserKey, House } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import Cookies from "js-cookie";
+
 // STYLES
 import styles from "./MainMenu.module.css";
 
@@ -22,7 +24,19 @@ const MainMenu = () => {
         </div>
 
         <ul className={styles.menu_ul}>
-          <li className={mainContext.userId === null ? styles.hide : ""}>
+          <li>
+            <NavLink
+              to="/"
+              className={({ isActive }) => (isActive ? styles.active : "")}
+              onClick={() => mainContext.setMenuOpen(false)}
+            >
+              <House />
+              <span>Inicio</span>
+            </NavLink>
+          </li>
+          <li
+            className={Cookies.get("userId") === undefined ? styles.hide : ""}
+          >
             <NavLink
               to="/packs"
               className={({ isActive }) => (isActive ? styles.active : "")}
@@ -32,7 +46,9 @@ const MainMenu = () => {
               <span>Maços</span>
             </NavLink>
           </li>
-          <li className={mainContext.userId === null ? styles.hide : ""}>
+          <li
+            className={Cookies.get("userId") === undefined ? styles.hide : ""}
+          >
             <NavLink
               to="/profile"
               className={({ isActive }) => (isActive ? styles.active : "")}
@@ -42,7 +58,10 @@ const MainMenu = () => {
               <span>Perfil</span>
             </NavLink>
           </li>
-          <li className={mainContext.userId !== null ? styles.hide : ""}>
+
+          <li
+            className={Cookies.get("userId") !== undefined ? styles.hide : ""}
+          >
             <NavLink
               to="/signin"
               className={({ isActive }) => (isActive ? styles.active : "")}
@@ -50,16 +69,6 @@ const MainMenu = () => {
             >
               <UserKey />
               <span>Acessar</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) => (isActive ? styles.active : "")}
-              onClick={() => mainContext.setMenuOpen(false)}
-            >
-              <House />
-              <span>Inicio</span>
             </NavLink>
           </li>
         </ul>

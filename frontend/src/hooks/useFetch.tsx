@@ -10,7 +10,7 @@ export const useFetch = () => {
       credentials?: boolean,
     ): Promise<T> => {
       if (!url.includes("://")) {
-        url = `http://192.168.100.15:3001${url}`;
+        url = `http://localhost:3001${url}`;
       }
 
       const config: RequestInit = {

@@ -5,6 +5,14 @@ import bcrypt from "bcryptjs";
 import fastifyCookie from "@fastify/cookie";
 import fastifyJwt from "@fastify/jwt";
 
+declare module "@fastify/jwt" {
+  interface FastifyJWT {
+    user: {
+      sub: string;
+    };
+  }
+}
+
 // FUNCTIONS
 const authenticate = async (request: any, reply: any) => {
   try {
@@ -35,17 +43,11 @@ const responseStatus: ResponseStatus = {
 
 // ROUTES
 // GET
-interface UserParams {
-  id: string;
-}
 fastify.get(
-  "/user/:id",
+  "/user",
   { preHandler: [authenticate] },
-  async (
-    request: FastifyRequest<{ Params: UserParams }>,
-    reply: FastifyReply,
-  ) => {
-    const { id } = request.params;
+  async (request: FastifyRequest<{}>, reply: FastifyReply) => {
+    const id = request.user.sub;
 
     interface User {
       name: string;
@@ -62,7 +64,7 @@ fastify.get(
     );
     return reply.status(responseStatus.code).send({
       message: responseStatus.text,
-      result: result,
+      result: result[0],
     });
   },
 );
@@ -87,7 +89,7 @@ fastify.get(
 );
 
 // POST
-interface CreateUser {
+interface CreateUserBody {
   name: string;
   document: string;
   phone: string;
@@ -95,9 +97,9 @@ interface CreateUser {
   password: string;
 }
 fastify.post(
-  "/user",
+  "/user/signup",
   async (
-    request: FastifyRequest<{ Body: CreateUser }>,
+    request: FastifyRequest<{ Body: CreateUserBody }>,
     reply: FastifyReply,
   ) => {
     const { name, document, phone, email, password } = request.body;
@@ -138,7 +140,7 @@ interface SignInBody {
   password: string;
 }
 fastify.post(
-  "/signin",
+  "/user/signin",
   async (
     request: FastifyRequest<{ Body: SignInBody }>,
     reply: FastifyReply,
@@ -172,7 +174,7 @@ fastify.post(
     }
 
     // CREATE JWT TOKEN
-    const token = fastify.jwt.sign(
+    const token = await reply.jwtSign(
       { name: user.name, email: user.email },
       { sub: user.id.toString(), expiresIn: "7d" },
     );
@@ -180,22 +182,63 @@ fastify.post(
     return reply
       .setCookie("token", token, {
         path: "/", // all routes
-        secure: false, // https
+        secure: process.env.NODE_ENV === "production", // https
         httpOnly: true, // XSS attacks protection
+        sameSite: "lax", // CSRF attacks protection
+        maxAge: 7 * 24 * 60 * 60, // expire in 7 days
+      })
+      .setCookie("userId", user.id.toString(), {
+        path: "/", // all routes
+        secure: process.env.NODE_ENV === "production", // https
+        httpOnly: false, // XSS attacks protection
         sameSite: "lax", // CSRF attacks protection
         maxAge: 7 * 24 * 60 * 60, // expire in 7 days
       })
       .status(200)
       .send({
         message: "ok",
+        userId: user.id,
       });
+  },
+);
+
+interface NewPackBody {
+  name: string;
+  qty: number;
+}
+fastify.post(
+  "/packs/new",
+  { preHandler: authenticate },
+  async (
+    request: FastifyRequest<{ Body: NewPackBody }>,
+    reply: FastifyReply,
+  ) => {
+    const user_id = request.user.sub;
+    const name = request.body.name;
+    const qty = request.body.qty;
+
+    interface Modalities {}
+    const modalities: Modalities = [];
+
+    const createPack = await query(
+      "INSERT INTO packs (user_id, name, modalities, numbers, victories, starts_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+      [
+        user_id,
+        name,
+        modalities,
+        [],
+        [],
+        Math.floor(Date.now() / 1000),
+        Math.floor(Date.now() / 1000),
+      ],
+    );
   },
 );
 
 const start = async () => {
   try {
     await fastify.register(cors, {
-      origin: ["http://localhost:5173", "http://192.168.100.15:5173"],
+      origin: ["http://localhost:5173"],
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,

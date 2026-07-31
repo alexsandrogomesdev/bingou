@@ -26,9 +26,10 @@ const SignIn = () => {
 
     interface Request {
       message: string;
+      userId: number;
     }
     const signIn: Request = await request(
-      "/signin",
+      "/user/signin",
       "POST",
       {},
       {
@@ -37,6 +38,7 @@ const SignIn = () => {
       },
       true,
     );
+    localStorage.setItem("userId", signIn.userId.toString());
 
     if (signIn.message === "ok") {
       navigate("/");

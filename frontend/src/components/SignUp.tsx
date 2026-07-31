@@ -31,7 +31,7 @@ const SignUp = () => {
       status: string;
     }
     const signUp: SignUp = await request(
-      "/user",
+      "/user/signup",
       "POST",
       {},
       {
