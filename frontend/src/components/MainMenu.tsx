@@ -1,14 +1,14 @@
-import { Boxes, UserRound, Globe } from "lucide-react";
+import { Boxes, UserRound, Globe, UserKey, House } from "lucide-react";
 import { NavLink } from "react-router-dom";
 // STYLES
-import styles from "./Menu.module.css";
+import styles from "./MainMenu.module.css";
 
 // HOOKS
 import { useMainContext } from "../hooks/useMainContext.tsx";
 
 // COMPONENTS
 
-const Menu = () => {
+const MainMenu = () => {
   const mainContext = useMainContext();
 
   return (
@@ -22,7 +22,7 @@ const Menu = () => {
         </div>
 
         <ul className={styles.menu_ul}>
-          <li>
+          <li className={mainContext.userId === null ? styles.hide : ""}>
             <NavLink
               to="/packs"
               className={({ isActive }) => (isActive ? styles.active : "")}
@@ -32,7 +32,7 @@ const Menu = () => {
               <span>Maços</span>
             </NavLink>
           </li>
-          <li>
+          <li className={mainContext.userId === null ? styles.hide : ""}>
             <NavLink
               to="/profile"
               className={({ isActive }) => (isActive ? styles.active : "")}
@@ -40,6 +40,26 @@ const Menu = () => {
             >
               <UserRound />
               <span>Perfil</span>
+            </NavLink>
+          </li>
+          <li className={mainContext.userId !== null ? styles.hide : ""}>
+            <NavLink
+              to="/signin"
+              className={({ isActive }) => (isActive ? styles.active : "")}
+              onClick={() => mainContext.setMenuOpen(false)}
+            >
+              <UserKey />
+              <span>Acessar</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/"
+              className={({ isActive }) => (isActive ? styles.active : "")}
+              onClick={() => mainContext.setMenuOpen(false)}
+            >
+              <House />
+              <span>Inicio</span>
             </NavLink>
           </li>
         </ul>
@@ -54,4 +74,4 @@ const Menu = () => {
   );
 };
 
-export default Menu;
+export default MainMenu;

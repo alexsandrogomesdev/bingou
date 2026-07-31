@@ -1,0 +1,49 @@
+import { useCallback } from "react";
+
+export const useFetch = () => {
+  const request = useCallback(
+    async <T = unknown,>(
+      url: string,
+      method: string = "GET",
+      headers?: HeadersInit,
+      body?: object,
+      credentials?: boolean,
+    ): Promise<T> => {
+      if (!url.includes("://")) {
+        url = `http://192.168.100.15:3001${url}`;
+      }
+
+      const config: RequestInit = {
+        method,
+        headers: {
+          "Content-type": "application/json",
+          ...headers,
+        },
+      };
+
+      if (method !== "GET" && body) {
+        config.body = JSON.stringify(body);
+      }
+
+      if (credentials) {
+        config.credentials = "include";
+      }
+
+      const response = await fetch(url, config);
+      if (!response.ok) {
+        throw new Error(
+          `Failed to request: ${response.status} ${response.statusText}`,
+        );
+      }
+
+      const statusOk = [200, 201];
+      if (!statusOk.includes(response.status)) return {} as T;
+
+      const json = await response.json();
+      return json as T;
+    },
+    [],
+  );
+
+  return { request };
+};

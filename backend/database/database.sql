@@ -49,19 +49,3 @@ CREATE TABLE cards (
 CREATE INDEX idx_cards_user ON cards (user_id);
 CREATE INDEX idx_cards_pack ON cards (pack_id);
 CREATE INDEX idx_cards_user_pack ON cards (user_id, pack_id);
-
-
--- TABLE: tokens
-CREATE TABLE tokens (
-  id BIGSERIAL PRIMARY KEY,
-  user_id BIGINT NOT NULL,
-  token VARCHAR(128) NOT NULL,
-  created_at BIGINT NOT NULL,
-  
-  -- Foreign Key
-  CONSTRAINT fk_tokens_users FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
-CREATE INDEX idx_tokens_user ON tokens (user_id);
-CREATE INDEX idx_tokens_token ON tokens (token);
-CREATE INDEX idx_tokens_user_token ON tokens (user_id, token);

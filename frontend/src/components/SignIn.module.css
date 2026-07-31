@@ -1,0 +1,67 @@
+.section {
+  display: flex;
+  flex-flow: column;
+}
+.form {
+  display: flex;
+  flex-flow: column;
+  margin: 25px;
+  padding: 32px;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0px 6px 10px 1px #e7e7e7;
+  gap: 15px;
+}
+.form > h2 {
+  font-size: 22px;
+  color: #282930;
+  font-weight: 500;
+  margin: 0 auto 25px;
+}
+
+.form > div {
+  display: flex;
+  flex-flow: column;
+  gap: 5px;
+}
+.form > div > label {
+  font-size: 14px;
+  color: #454545;
+}
+.form > div > input {
+  min-height: 45px;
+  max-height: 45px;
+  border: solid 1px #c2c2c2;
+  border-radius: 12px;
+  background-color: transparent;
+  outline: 0;
+  padding: 0 10px;
+  font-size: 16px;
+  color: #282930;
+}
+.error_message {
+  font-size: 12px;
+  color: #fd2525;
+}
+.form > button {
+  min-height: 45px;
+  max-height: 45px;
+  background-color: #ff7101;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 500;
+  outline: 0;
+  margin-top: 25px;
+}
+.sign_up {
+  margin: 0 auto;
+  font-size: 16px;
+  color: #282930;
+}
+.sign_up > a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  color: #ff7101;
+}

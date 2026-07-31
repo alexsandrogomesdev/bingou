@@ -17,7 +17,15 @@
   margin: 0;
   box-sizing: border-box;
   text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
 }
 body {
   background-color: #f2f1f1;
+}
+
+button {
+  transition: opacity 0.2s;
+}
+button:active {
+  opacity: 0.7;
 }

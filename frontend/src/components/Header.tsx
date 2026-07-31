@@ -1,5 +1,5 @@
 import styles from "./Header.module.css";
-import { Menu } from "lucide-react";
+import { Menu, Globe } from "lucide-react";
 
 import { useMainContext } from "../hooks/useMainContext.tsx";
 
@@ -7,15 +7,19 @@ const Header = () => {
   const mainContext = useMainContext();
 
   return (
-    <section className={styles.header_section}>
+    <header className={styles.header}>
       <Menu
         className={styles.menu_icon}
         onClick={() =>
           mainContext.setMenuOpen(mainContext.menuOpen ? false : true)
         }
       />
-      <h2 className={styles.header_title}>WMS Cartelas</h2>
-    </section>
+
+      <div>
+        <Globe className={styles.logo} />
+        <h2 className={styles.header_title}>WMS Cartelas</h2>
+      </div>
+    </header>
   );
 };
 

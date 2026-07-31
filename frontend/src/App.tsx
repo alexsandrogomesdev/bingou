@@ -8,13 +8,14 @@ import "./App.css";
 import { useMainContext } from "./hooks/useMainContext.tsx";
 
 // COMPONENTS
+import SignUp from "./components/SignUp.tsx";
+import SignIn from "./components/SignIn.tsx";
 import Alert from "./components/Alert.tsx";
-import Menu from "./components/Menu.tsx";
+import MainMenu from "./components/MainMenu.tsx";
 import Header from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
 
 // PAGES
-import Access from "./pages/Access.tsx";
 import Profile from "./pages/Profile.tsx";
 import Pack from "./pages/Pack.tsx";
 import Packs from "./pages/Packs.tsx";
@@ -22,16 +23,16 @@ import Home from "./pages/Home.tsx";
 
 function App() {
   const mainContext = useMainContext();
-  const location = useLocation();
-  const hideOnRoutes = ["/access"];
-  const showComponent = !hideOnRoutes.includes(location.pathname);
+  // const location = useLocation();
+  // const hideOnRoutes = ["/access"];
+  // const showComponent = !hideOnRoutes.includes(location.pathname);
 
   return (
     <>
       {mainContext.alert.type !== "" && <Alert />}
 
-      {showComponent && <Header />}
-      {showComponent && <Menu />}
+      <Header />
+      <MainMenu />
 
       <main>
         <Routes>
@@ -39,11 +40,12 @@ function App() {
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/packs" element={<Packs />}></Route>
           <Route path="/pack/:id" element={<Pack />}></Route>
-          <Route path="/access" element={<Access />}></Route>
+          <Route path="/signin" element={<SignIn />}></Route>
+          <Route path="/signup" element={<SignUp />}></Route>
         </Routes>
       </main>
 
-      {showComponent && <Footer />}
+      <Footer />
     </>
   );
 }

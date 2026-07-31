@@ -1,7 +1,6 @@
-import Fastify from "fastify";
-import { Pool } from "pg";
-import dotenv from "dotenv";
+import { Pool, QueryResult } from "pg";
 
+import dotenv from "dotenv";
 dotenv.config();
 
 export const pool = new Pool({
@@ -36,32 +35,3 @@ pool.connect((err, client, release) => {
   console.log("Connected to PostgreSQL!");
   release();
 });
-
-const fastify = Fastify({
-  logger: true,
-});
-
-fastify.get("/", async () => {
-  interface Users {
-    name: string;
-  }
-  const teste = await query<Users>("SELECT * FROM users");
-  teste.forEach((item) => {
-    console.log(item.name.padStart(15, "*"));
-  });
-  return { status: "ok", message: teste };
-});
-fastify.get("/packs/:id", async () => {
-  return { status: "ok", message: "Packs from user!" };
-});
-
-const start = async () => {
-  try {
-    await fastify.listen({ port: 3001, host: "0.0.0.0" });
-  } catch (err) {
-    fastify.log.error(err);
-    process.exit(1);
-  }
-};
-
-start();

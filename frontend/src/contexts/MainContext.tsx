@@ -12,6 +12,8 @@ export type MainContextData = {
   setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   alert: AlertObject;
   setAlert: React.Dispatch<React.SetStateAction<AlertObject>>;
+  userId: number;
+  setUserId: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export const MainContext = createContext<MainContextData>(
@@ -21,6 +23,7 @@ export const MainContext = createContext<MainContextData>(
 export const MainContextProvider = ({ children }: { children: ReactNode }) => {
   const [contextStatus, setContextStatus] = useState<string>("Main Context...");
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [userId, setUserId] = useState<number | null>(null);
   const [alert, setAlert] = useState<AlertObject>({
     id: 0,
     type: "",
@@ -35,8 +38,10 @@ export const MainContextProvider = ({ children }: { children: ReactNode }) => {
       setMenuOpen,
       alert,
       setAlert,
+      userId,
+      setUserId,
     }),
-    [contextStatus, menuOpen, alert],
+    [contextStatus, menuOpen, alert, userId],
   );
 
   return (
