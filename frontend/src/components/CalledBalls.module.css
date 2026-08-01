@@ -1,0 +1,53 @@
+.section_called_balls {
+  display: flex;
+  flex-flow: column;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px;
+}
+.section_called_balls > h3 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #282930;
+  margin-bottom: 10px;
+}
+.table_body {
+  display: flex;
+  align-items: center;
+  flex-flow: column;
+  border-radius: 5px;
+  gap: 25px;
+  min-height: 180px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+.table_column {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+.number {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  min-width: 48px;
+  max-width: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  border: solid 1px #c1c1c1;
+  border-radius: 48px;
+}
+.number > span {
+  font-size: 14px;
+  color: #282930;
+  margin: auto;
+}
+.number_selected {
+  background-color: #ff7101;
+  text-align: center;
+  border: solid 1px #ff7101;
+}
+.number_selected > span {
+  color: #fff;
+  font-weight: 500;
+}

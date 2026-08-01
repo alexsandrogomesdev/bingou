@@ -9,14 +9,21 @@ import { useMainContext } from "../hooks/useMainContext.tsx";
 import { useFetch } from "../hooks/useFetch.tsx";
 
 // COMPONENTS
+import Card from "../components/Card.tsx";
+import CalledBalls from "../components/CalledBalls.tsx";
 
 const Pack = () => {
   const mainContext = useMainContext();
   interface Card {
     id: number;
-    numbers: Uint8Array;
+    numbers: {
+      data: number[];
+    };
   }
   const [cards, setCards] = useState<Card[]>([]);
+  const [numbers, setNumbers] = useState<number[]>();
+  const [packName, setPackName] = useState<string>("");
+  const [balls, setBalls] = useState<number[]>();
 
   const { request } = useFetch();
   const { id } = useParams();
@@ -27,30 +34,45 @@ const Pack = () => {
         message: string;
         result: {
           cards: Card[];
+          name: string;
+          numbers: {
+            data: number[];
+          };
         };
       }
       const response: GetCardsType = await request(`/packs/${id}`, "GET");
       setCards(response.result.cards);
-    };
+      setPackName(response.result.name);
+      setNumbers(response.result.numbers.data);
 
+      const balls: number[] = [];
+      for (let c = 1; c <= 75; c++) {
+        balls.push(c);
+      }
+      setBalls(balls);
+    };
     getCards();
   }, []);
 
   return (
-    <>
-      <h2>Pack</h2>
-      <ul>
-        {cards.map((item, index) => (
-          <li key={item.id}>
-            #{item.id}
-            <br></br>
-            {item.numbers.data.map((num, index) => (
-              <span key={index}>{num}&nbsp;</span>
-            ))}
-          </li>
-        ))}
-      </ul>
-    </>
+    <section className={styles.section_pack}>
+      <h2 className={styles.pack_title}>{packName}</h2>
+      <br></br>
+      {numbers && id && <CalledBalls numbers={numbers} packId={id} />}
+      <br></br>
+      <div className={styles.cards}>
+        {numbers &&
+          cards.map((card, index) => (
+            <Card
+              key={index}
+              index={index + 1}
+              id={card.id}
+              numbers={numbers}
+              cardNumbers={card.numbers.data}
+            />
+          ))}
+      </div>
+    </section>
   );
 };
 

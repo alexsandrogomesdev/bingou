@@ -1,0 +1,91 @@
+.card {
+  display: flex;
+  flex-flow: column;
+  gap: 5px;
+  border: solid 1px #c7c7c7;
+  border-radius: 8px;
+  padding: 5px;
+  min-width: 175px;
+  max-width: 175px;
+  background-color: #fff;
+}
+.card_header {
+  display: flex;
+  align-items: center;
+}
+.card_header > p {
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+.card_letters {
+  display: flex;
+  align-items: center;
+}
+.card_letters > strong {
+  font-size: 16px;
+  color: #282930;
+  font-weight: 800;
+  min-width: 32px;
+  max-width: 32px;
+  text-align: center;
+}
+.card_body {
+  display: flex;
+  align-items: center;
+  border: solid 1px #c1c1c1;
+  border-radius: 2px;
+}
+.card_column {
+  display: flex;
+  flex-flow: column;
+  min-width: 32px;
+  max-width: 32px;
+  text-align: center;
+}
+.card_column:nth-of-type(1),
+.card_column:nth-of-type(2),
+.card_column:nth-of-type(3),
+.card_column:nth-of-type(4) {
+  border-right: solid 1px #c1c1c1;
+}
+.number {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  min-width: 32px;
+  max-width: 32px;
+  min-height: 32px;
+  max-height: 32px;
+}
+.number > span {
+  font-size: 12px;
+  color: #282930;
+  margin: auto;
+}
+.number:nth-of-type(1),
+.number:nth-of-type(2),
+.number:nth-of-type(3),
+.number:nth-of-type(4) {
+  border-bottom: solid 1px #c1c1c1;
+}
+.number_selected {
+  background-color: #ff7101;
+  padding: 3px;
+  min-width: 21px;
+  max-width: 21px;
+  min-height: 21px;
+  max-height: 21px;
+  border-radius: 21px;
+  color: #fff !important;
+  text-align: center;
+}
+.joker > svg {
+  color: #ff7101;
+  width: 16px;
+  height: 16px;
+  position: relative;
+  top: 1px;
+  left: -0.7px;
+}

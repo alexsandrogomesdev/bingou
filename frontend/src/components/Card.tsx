@@ -1,0 +1,61 @@
+import { useState } from "react";
+import { Globe } from "lucide-react";
+
+// STYLES
+import styles from "./Card.module.css";
+
+// HOOKS
+import { useMainContext } from "../hooks/useMainContext.tsx";
+
+// COMPONENTS
+interface CardsProps {
+  index: number;
+  id: number;
+  numbers: number[];
+  cardNumbers: number[];
+}
+const Card: React.FC<CardsProps> = ({ index, id, numbers, cardNumbers }) => {
+  const mainContext = useMainContext();
+
+  const columns: Array<number[]> = [[], [], [], [], []];
+  cardNumbers.forEach((number, index) => {
+    const column = Math.floor(index / 5);
+    columns[column].push(number);
+  });
+
+  return (
+    <>
+      <article className={styles.card}>
+        <div className={styles.card_header}>
+          <p>
+            Cartela: #{index} ({id})
+          </p>
+        </div>
+        <div className={styles.card_letters}>
+          <strong>B</strong>
+          <strong>I</strong>
+          <strong>N</strong>
+          <strong>G</strong>
+          <strong>O</strong>
+        </div>
+        <div className={styles.card_body}>
+          {columns.map((column, index) => (
+            <ul key={index} className={styles.card_column}>
+              {column.map((number) => (
+                <li key={number} className={styles.number}>
+                  <span
+                    className={`${numbers.includes(number) && styles.number_selected} ${number === 0 && styles.joker}`}
+                  >
+                    {number === 0 ? <Globe /> : number}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ))}
+        </div>
+      </article>
+    </>
+  );
+};
+
+export default Card;

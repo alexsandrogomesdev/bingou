@@ -18,6 +18,7 @@
   box-sizing: border-box;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
+  list-style-type: none;
 }
 body {
   background-color: #f2f1f1;

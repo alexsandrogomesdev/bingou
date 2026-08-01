@@ -9,14 +9,18 @@ export const createCardNumbers = (base: number[]): Uint8Array => {
   const G: number[] = [];
   const O: number[] = [];
 
-  while (newBase.length > 51) {
+  while (newBase.length > 50) {
     const number = newBase[getRandomNumber(0, newBase.length - 1)]!;
     if (number >= 1 && number <= 15 && B.length <= 4) {
       B.push(number);
     } else if (number >= 16 && number <= 30 && I.length <= 4) {
       I.push(number);
-    } else if (number >= 31 && number <= 45 && N.length <= 3) {
-      N.push(number);
+    } else if (number >= 31 && number <= 45 && N.length <= 4) {
+      if (N.length === 2) {
+        N.push(0);
+      } else {
+        N.push(number);
+      }
     } else if (number >= 46 && number <= 60 && G.length <= 4) {
       G.push(number);
     } else if (number >= 61 && number <= 75 && O.length <= 4) {

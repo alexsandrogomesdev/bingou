@@ -1,15 +1,21 @@
-.section_main {
+.section_packs {
   display: flex;
   flex-flow: column;
   padding: 17px;
   position: relative;
   height: calc(100dvh - 63px);
+  top: 63px;
 }
 .packs_title {
   font-size: 18px;
   color: #282930;
   margin: 0 0 10px 0;
   font-weight: 500;
+}
+.none_packs {
+  font-size: 16px;
+  color: #4a4b50;
+  margin: 25px auto;
 }
 .packs {
   display: flex;

@@ -1,0 +1,22 @@
+.section_pack {
+  display: flex;
+  flex-flow: column;
+  position: relative;
+  height: calc(100dvh - 63px);
+  top: 63px;
+  padding: 17px;
+}
+.pack_title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #282930;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  justify-content: space-around;
+  margin: 0 auto;
+  flex: 1;
+  overflow-y: auto;
+}

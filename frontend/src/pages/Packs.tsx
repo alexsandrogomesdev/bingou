@@ -10,37 +10,14 @@ import styles from "./Packs.module.css";
 
 // HOOKS
 import { useMainContext } from "../hooks/useMainContext.tsx";
+import { useFetch } from "../hooks/useFetch.tsx";
 
 // COMPONENTS
 import NewPack from "../components/NewPack.tsx";
 
 const Packs = () => {
   const mainContext = useMainContext();
-
-  // TEMPORARY, AFTER I WILL CREATE A NODE JS SERVER WITH POSTGRESQL, AND GET PACKS WITH A REQ HTTP
-  const mockPacks = [
-    {
-      id: 1,
-      name: "Bingo de hoje",
-      cards: 48,
-      starts_at: 1785095123,
-      created_at: 1785094123,
-    },
-    {
-      id: 2,
-      name: "Bingo de amanha",
-      cards: 125,
-      starts_at: 1785095123,
-      created_at: 1785094123,
-    },
-    {
-      id: 3,
-      name: "Bingo de depois de amanha",
-      cards: 450,
-      starts_at: 1785095123,
-      created_at: 1785094123,
-    },
-  ];
+  const { request } = useFetch();
 
   // STATE VARIABLES
   type Pack = {
@@ -50,8 +27,19 @@ const Packs = () => {
     starts_at: number;
     created_at: number;
   };
-  const [packs, setPacks] = useState<Pack[]>(mockPacks);
+  const [packs, setPacks] = useState<Pack[]>([]);
   const [sectionNewPack, setSectionNewPack] = useState<boolean>(false);
+  useEffect(() => {
+    const getPacks = async () => {
+      interface Packs {
+        message: string;
+        result: [];
+      }
+      const packs = await request<Packs>("/packs", "GET");
+      setPacks(packs.result);
+    };
+    getPacks();
+  }, []);
 
   return (
     <>
@@ -60,14 +48,19 @@ const Packs = () => {
         setSectionNewPack={setSectionNewPack}
       />
 
-      <section className={styles.section_main}>
+      <section className={styles.section_packs}>
         <h2 className={styles.packs_title}>Meus Maços</h2>
+        {packs.length === 0 && (
+          <p className={styles.none_packs}>
+            Nenhum maço criado, crie um no botão abaixo!
+          </p>
+        )}
         <ul className={styles.packs}>
           {packs.map((pack) => (
             <li key={pack.id} className={styles.pack}>
               <div>
                 <b>{pack.name}</b>
-                <span>{fts.dateFromUnix(pack.starts_at)}</span>
+                <span>{fts.dateFromUnix(pack.created_at)}</span>
                 <p>{pack.cards} Cartelas</p>
               </div>
               <NavLink to={`/pack/${pack.id}`}>

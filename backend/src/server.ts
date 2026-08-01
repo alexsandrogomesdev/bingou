@@ -213,13 +213,20 @@ fastify.get(
   async (request: FastifyRequest, reply: FastifyReply) => {
     const userId = request.user.sub;
 
-    const packs = await query("SELECT * FROM packs WHERE user_id = $1", [
-      userId,
-    ]);
+    interface Packs {
+      id: number;
+      name: string;
+      created_at: number;
+      cards: number;
+    }
+    const packs = await query<Packs>(
+      "SELECT p.id, p.name, p.created_at, COUNT(c.id)::bigint AS cards FROM packs p LEFT JOIN cards c ON c.pack_id = p.id WHERE p.user_id = $1 GROUP BY p.id ORDER BY p.created_at DESC",
+      [userId],
+    );
 
     return reply.status(200).send({
       message: "ok",
-      result: packs.rows,
+      result: packs.rowCount && packs.rowCount > 0 ? packs.rows : [],
     });
   },
 );
@@ -246,7 +253,7 @@ fastify.get(
     return reply.status(200).send({
       message: "ok",
       result: {
-        ...pack,
+        ...pack.rows[0],
         cards: cards.rows,
       },
     });
