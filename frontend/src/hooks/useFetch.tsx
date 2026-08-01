@@ -7,7 +7,6 @@ export const useFetch = () => {
       method: string = "GET",
       headers?: HeadersInit,
       body?: object,
-      credentials?: boolean,
     ): Promise<T> => {
       if (!url.includes("://")) {
         url = `http://localhost:3001${url}`;
@@ -25,9 +24,7 @@ export const useFetch = () => {
         config.body = JSON.stringify(body);
       }
 
-      if (credentials) {
-        config.credentials = "include";
-      }
+      config.credentials = "include";
 
       const response = await fetch(url, config);
       if (!response.ok) {

@@ -1,4 +1,4 @@
-import { Pool, QueryResult } from "pg";
+import { Pool, QueryResult, QueryResultRow } from "pg";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -14,10 +14,10 @@ export const pool = new Pool({
   connectionTimeoutMillis: 2000,
 });
 
-export const query = async <T = any>(
+export const query = async <T extends QueryResultRow = any>(
   text: string,
   params?: any[],
-): Promise<T[]> => {
+): Promise<QueryResult<T>> => {
   const start = Date.now();
   const res = await pool.query(text, params);
   const duration = Date.now() - start;
@@ -27,7 +27,7 @@ export const query = async <T = any>(
     rows: res.rowCount,
   });
 
-  return res.rows;
+  return res;
 };
 
 pool.connect((err, client, release) => {

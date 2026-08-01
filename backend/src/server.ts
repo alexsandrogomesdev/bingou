@@ -1,5 +1,5 @@
 import Fastify from "fastify";
-import { FastifyRequest, FastifyReply } from "fastify";
+import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import cors from "@fastify/cors";
 import bcrypt from "bcryptjs";
 import fastifyCookie from "@fastify/cookie";
@@ -24,6 +24,11 @@ const authenticate = async (request: any, reply: any) => {
   }
 };
 
+// GLOBALS
+import { modalities } from "./modalities";
+import { shuffleArray, getRandomNumber } from "./utils";
+import { createCardNumbers } from "./functions/createCardNumbers";
+
 // DATABASE
 import { pool, query } from "./database";
 
@@ -43,6 +48,24 @@ const responseStatus: ResponseStatus = {
 
 // ROUTES
 // GET
+fastify.get(
+  "/modalities",
+  { preHandler: [authenticate] },
+  async (request: FastifyRequest, reply: FastifyReply) => {
+    const id = request.user.sub;
+    if (!id) {
+      return reply.status(401).send({
+        message: "Não autorizado!",
+      });
+    }
+
+    return reply.status(200).send({
+      message: "ok",
+      result: modalities,
+    });
+  },
+);
+
 fastify.get(
   "/user",
   { preHandler: [authenticate] },
@@ -64,26 +87,7 @@ fastify.get(
     );
     return reply.status(responseStatus.code).send({
       message: responseStatus.text,
-      result: result[0],
-    });
-  },
-);
-
-interface Packs {
-  user_id: number;
-}
-fastify.get(
-  "/user/:user_id/packs",
-  { preHandler: [authenticate] },
-  async (request: FastifyRequest<{ Params: Packs }>, reply: FastifyReply) => {
-    const { user_id } = request.params;
-    const result = await query("SELECT * FROM packs WHERE user_id = $1", [
-      user_id,
-    ]);
-
-    return reply.status(200).send({
-      message: "ok",
-      result: result,
+      result: result.rows[0],
     });
   },
 );
@@ -122,7 +126,7 @@ fastify.post(
       ],
     );
 
-    if (result.length > 0) {
+    if (result.rowCount && result.rowCount > 0) {
       responseStatus.code = 201;
     } else {
       responseStatus.text = "failed";
@@ -152,7 +156,7 @@ fastify.post(
       [email],
     );
 
-    if (result.length === 0) {
+    if (!result.rowCount || result.rowCount === 0) {
       return reply.status(401).send({
         message: "Email ou senha inválidos",
       });
@@ -164,7 +168,7 @@ fastify.post(
       email: string;
       password: string;
     }
-    const user: UserSignIn = result[0];
+    const user: UserSignIn = result.rows[0];
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
@@ -202,6 +206,52 @@ fastify.post(
   },
 );
 
+// PACKS
+fastify.get(
+  "/packs",
+  { preHandler: [authenticate] },
+  async (request: FastifyRequest, reply: FastifyReply) => {
+    const userId = request.user.sub;
+
+    const packs = await query("SELECT * FROM packs WHERE user_id = $1", [
+      userId,
+    ]);
+
+    return reply.status(200).send({
+      message: "ok",
+      result: packs.rows,
+    });
+  },
+);
+fastify.get(
+  "/packs/:id",
+  { preHandler: [authenticate] },
+  async (
+    request: FastifyRequest<{ Params: { id: number } }>,
+    reply: FastifyReply,
+  ) => {
+    const userId = request.user.sub;
+    const packId = request.params.id;
+
+    const pack = await query(
+      "SELECT id, name, modalities, numbers, victories FROM packs WHERE id = $1 AND user_id = $2",
+      [packId, userId],
+    );
+
+    const cards = await query(
+      "SELECT id, numbers FROM cards WHERE pack_id = $1 AND user_id = $2",
+      [packId, userId],
+    );
+
+    return reply.status(200).send({
+      message: "ok",
+      result: {
+        ...pack,
+        cards: cards.rows,
+      },
+    });
+  },
+);
 interface NewPackBody {
   name: string;
   qty: number;
@@ -215,23 +265,47 @@ fastify.post(
   ) => {
     const user_id = request.user.sub;
     const name = request.body.name;
-    const qty = request.body.qty;
+    let qty = request.body.qty;
 
-    interface Modalities {}
-    const modalities: Modalities = [];
+    const mods = new Uint8Array(modalities.map((modality) => modality.id));
+    const numbers = new Uint8Array();
+    const victories = new Uint8Array();
+    const time = Math.floor(Date.now() / 1000);
 
     const createPack = await query(
-      "INSERT INTO packs (user_id, name, modalities, numbers, victories, starts_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-      [
-        user_id,
-        name,
-        modalities,
-        [],
-        [],
-        Math.floor(Date.now() / 1000),
-        Math.floor(Date.now() / 1000),
-      ],
+      "INSERT INTO packs (user_id, name, modalities, numbers, victories, starts_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
+      [user_id, name, mods, numbers, victories, time, time],
     );
+    const packId: number = createPack.rows[0].id;
+
+    // GENERATE CARDS
+    const cards: Uint8Array[] = [];
+
+    const base: number[] = [];
+    for (let d = 1; d <= 75; d++) base.push(d);
+
+    for (let c = 0; c < qty; c++) {
+      cards.push(createCardNumbers(base));
+    }
+
+    while (cards.length > 0) {
+      for (let c = 0; c < cards.length; c++) {
+        const insert = await query(
+          "INSERT INTO cards (pack_id, user_id, numbers, created_at) VALUES ($1, $2, $3, $4)",
+          [packId, user_id, cards[c], time],
+        );
+        if (insert.rowCount && insert.rowCount > 0) {
+          cards.splice(c, 1);
+        }
+      }
+    }
+
+    return reply.status(201).send({
+      message: "ok",
+      result: {
+        packId: packId,
+      },
+    });
   },
 );
 

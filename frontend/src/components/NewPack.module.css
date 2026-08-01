@@ -56,7 +56,7 @@
   border: solid 1px #b7b7b7;
   border-radius: 12px;
 }
-.form_create_pack > input[type="submit"] {
+.form_create_pack > button {
   min-height: 45px;
   max-height: 45px;
   font-size: 16px;

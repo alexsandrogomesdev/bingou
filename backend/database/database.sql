@@ -20,9 +20,9 @@ CREATE TABLE packs (
   id BIGSERIAL PRIMARY KEY,
   user_id BIGINT NOT NULL,
   name VARCHAR(32) NOT NULL,
-  modalities JSONB NOT NULL,
-  numbers BYTEA DEFAULT '',
-  victories JSONB DEFAULT '[]'::jsonb,
+  modalities BYTEA NOT NULL,
+  numbers BYTEA DEFAULT ''::bytea,
+  victories BYTEA DEFAULT ''::bytea,
   starts_at BIGINT DEFAULT 0,
   created_at BIGINT NOT NULL,
   
@@ -38,7 +38,7 @@ CREATE TABLE cards (
   id BIGSERIAL PRIMARY KEY,
   pack_id BIGINT NOT NULL,
   user_id BIGINT NOT NULL,
-  numbers BYTEA DEFAULT '',
+  numbers BYTEA DEFAULT ''::bytea,
   created_at BIGINT NOT NULL,
   
   -- Foreign Keys
