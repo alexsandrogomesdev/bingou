@@ -36,17 +36,24 @@ const SignIn = () => {
         email: email,
         password: password,
       },
-      true,
     );
-    localStorage.setItem("userId", signIn.userId.toString());
+
+    setSigning(false);
 
     if (signIn.message === "ok") {
-      navigate("/");
+      navigate("/packs");
+    } else {
+      console.log(signIn.message);
+      mainContext.setAlert({
+        id: Date.now(),
+        type: "error",
+        message: signIn.message,
+      });
     }
   };
 
   return (
-    <section className={styles.section}>
+    <section className={styles.section_signin}>
       <form className={styles.form} onSubmit={handleSignIn}>
         <h2>Acessar</h2>
 

@@ -11,10 +11,10 @@ import { useMainContext } from "../hooks/useMainContext.tsx";
 interface CardsProps {
   index: number;
   id: number;
-  numbers: number[];
+  balls: number[];
   cardNumbers: number[];
 }
-const Card: React.FC<CardsProps> = ({ index, id, numbers, cardNumbers }) => {
+const Card: React.FC<CardsProps> = ({ index, id, balls, cardNumbers }) => {
   const mainContext = useMainContext();
 
   const columns: Array<number[]> = [[], [], [], [], []];
@@ -44,7 +44,7 @@ const Card: React.FC<CardsProps> = ({ index, id, numbers, cardNumbers }) => {
               {column.map((number) => (
                 <li key={number} className={styles.number}>
                   <span
-                    className={`${numbers.includes(number) && styles.number_selected} ${number === 0 && styles.joker}`}
+                    className={`${balls.includes(number) && styles.number_selected} ${number === 0 && styles.joker}`}
                   >
                     {number === 0 ? <Globe /> : number}
                   </span>

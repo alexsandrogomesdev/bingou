@@ -50,7 +50,7 @@ const SignUp = () => {
   };
 
   return (
-    <section className={styles.section}>
+    <section className={styles.section_signup}>
       <form className={styles.form} onSubmit={handleSignUp}>
         <h2>Fazer Cadastro</h2>
 

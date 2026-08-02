@@ -8,14 +8,14 @@ import "./App.css";
 import { useMainContext } from "./hooks/useMainContext.tsx";
 
 // COMPONENTS
-import SignUp from "./components/SignUp.tsx";
-import SignIn from "./components/SignIn.tsx";
 import Alert from "./components/Alert.tsx";
 import MainMenu from "./components/MainMenu.tsx";
 import Header from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
 
 // PAGES
+import SignUp from "./pages/SignUp.tsx";
+import SignIn from "./pages/SignIn.tsx";
 import Profile from "./pages/Profile.tsx";
 import Pack from "./pages/Pack.tsx";
 import Packs from "./pages/Packs.tsx";

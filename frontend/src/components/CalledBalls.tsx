@@ -4,18 +4,13 @@ import { useState } from "react";
 import styles from "./CalledBalls.module.css";
 
 // HOOKS
-import { useFetch } from "../hooks/useFetch";
 
 // COMPONENTS
 interface Props {
-  numbers: number[];
-  packId: string;
+  balls: number[];
+  handleSelectBall: (ball: number) => void;
 }
-
-const CalledBalls: React.FC<Props> = ({ numbers, packId }) => {
-  const { request } = useFetch();
-  const [balls, setBalls] = useState<number[]>(numbers);
-
+const CalledBalls: React.FC<Props> = ({ balls, handleSelectBall }) => {
   const table_numbers: Array<number[]> = [[], [], [], [], []];
   for (let c = 0; c < 5; c++) {
     const min = 1 + c * 15;
@@ -25,27 +20,19 @@ const CalledBalls: React.FC<Props> = ({ numbers, packId }) => {
     }
   }
 
-  const handleChooseBall = (number: number) => {
-    setBalls((prevBalls) => {
-      if (prevBalls.includes(number)) {
-        return prevBalls.filter((b) => b !== number);
-      }
-      return [...prevBalls, number];
-    });
-  };
-
   return (
     <section className={styles.section_called_balls}>
       <h3>Bolas chamadas</h3>
       <div className={styles.table_body}>
-        {table_numbers.map((column) => (
-          <ul className={styles.table_column}>
-            {column.map((number) => (
+        {table_numbers.map((column, index) => (
+          <ul key={index} className={styles.table_column}>
+            {column.map((ball) => (
               <li
-                className={`${styles.number} ${balls.includes(number) && styles.number_selected}`}
-                onClick={() => handleChooseBall(number)}
+                key={ball}
+                className={`${styles.number} ${balls.includes(ball) && styles.number_selected}`}
+                onClick={() => handleSelectBall(ball)}
               >
-                <span>{number}</span>
+                <span>{ball}</span>
               </li>
             ))}
           </ul>

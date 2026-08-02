@@ -27,13 +27,13 @@ export const useFetch = () => {
       config.credentials = "include";
 
       const response = await fetch(url, config);
-      if (!response.ok) {
-        throw new Error(
-          `Failed to request: ${response.status} ${response.statusText}`,
-        );
-      }
+      // if (!response.ok) {
+      // throw new Error(
+      // `Failed to request: ${response.status} ${response.statusText}`,
+      // );
+      // }
 
-      const statusOk = [200, 201];
+      const statusOk = [200, 201, 401];
       if (!statusOk.includes(response.status)) return {} as T;
 
       const json = await response.json();

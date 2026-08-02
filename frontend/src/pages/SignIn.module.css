@@ -1,6 +1,10 @@
-.section {
+.section_signin {
   display: flex;
   flex-flow: column;
+  position: relative;
+  height: calc(100dvh - 63px);
+  top: 63px;
+  padding: 17px;
 }
 .form {
   display: flex;

@@ -54,7 +54,7 @@ const Alert = () => {
         <div
           className={`${styles.alert} ${type === "error" ? styles.alert_error : styles.alert_success}`}
         >
-          <p>Rooooooois</p>
+          <p>{message}</p>
           <X onClick={handleCloseAlert} />
         </div>
       )}
