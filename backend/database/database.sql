@@ -21,8 +21,8 @@ CREATE TABLE packs (
   user_id BIGINT NOT NULL,
   name VARCHAR(32) NOT NULL,
   modalities BYTEA NOT NULL,
-  numbers BYTEA DEFAULT ''::bytea,
-  victories BYTEA DEFAULT ''::bytea,
+  balls BYTEA DEFAULT ''::bytea,
+  winnings JSONB DEFAULT '[]'::jsonb,
   starts_at BIGINT DEFAULT 0,
   created_at BIGINT NOT NULL,
   

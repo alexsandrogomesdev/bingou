@@ -1,0 +1,82 @@
+.section_winning_cards {
+  display: flex;
+  flex-flow: column;
+  position: absolute;
+  width: 100vw;
+  height: 100dvh;
+  top: 0;
+  left: 0;
+  padding: 17px;
+  background-color: rgba(7, 7, 7, 0.7);
+  z-index: 2;
+}
+.div_winnings_cards {
+  display: flex;
+  flex-flow: column;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  max-height: calc(100dvh - 34px);
+  overflow: hidden;
+}
+.div_winnings_cards > svg {
+  margin: 0 0 0 auto;
+  cursor: pointer;
+  min-height: 24px;
+}
+.div_winnings_cards > h3 {
+  font-size: 18px;
+  color: #ff7101;
+  letter-spacing: 5px;
+  margin: 10px auto;
+  animation: zoomInOut 1s ease-in-out infinite;
+}
+@keyframes zoomInOut {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.div_winnings_cards > p {
+  font-size: 14px;
+  color: #282930;
+  margin: 0 0 10px;
+}
+
+.div_winnings {
+  display: flex;
+  flex-flow: column;
+  gap: 16px;
+  flex: 1;
+  overflow-y: auto;
+}
+.winnings_per_ball {
+  display: flex;
+  flex-flow: column;
+  gap: 16px;
+  padding: 5px;
+  border: solid 1px #c7c7c7;
+  border-radius: 8px;
+}
+.winnings_per_ball > p {
+  font-size: 16px;
+  color: #ff7101;
+}
+.cards_per_modality {
+  display: flex;
+  flex-flow: column;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  justify-content: space-around;
+  margin: 0 auto;
+  flex: 1;
+  overflow-y: auto;
+}

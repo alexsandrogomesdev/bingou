@@ -25,7 +25,7 @@ const authenticate = async (request: any, reply: any) => {
 };
 
 // GLOBALS
-import { modalities } from "./modalities";
+import { allModalities } from "./allModalities";
 import { shuffleArray, getRandomNumber } from "./utils";
 import { createCardNumbers } from "./functions/createCardNumbers";
 
@@ -47,18 +47,11 @@ const responseStatus: ResponseStatus = {
 };
 
 // ROUTES
-// GET
+// MODALITIES
 fastify.get(
   "/modalities",
   { preHandler: [authenticate] },
   async (request: FastifyRequest, reply: FastifyReply) => {
-    const id = request.user.sub;
-    if (!id) {
-      return reply.status(401).send({
-        message: "Não autorizado!",
-      });
-    }
-
     return reply.status(200).send({
       message: "ok",
       result: modalities,
@@ -66,10 +59,11 @@ fastify.get(
   },
 );
 
+// USER
 fastify.get(
   "/user",
   { preHandler: [authenticate] },
-  async (request: FastifyRequest<{}>, reply: FastifyReply) => {
+  async (request: FastifyRequest, reply: FastifyReply) => {
     const id = request.user.sub;
 
     interface User {
@@ -213,13 +207,7 @@ fastify.get(
   async (request: FastifyRequest, reply: FastifyReply) => {
     const userId = request.user.sub;
 
-    interface Packs {
-      id: number;
-      name: string;
-      created_at: number;
-      cards: number;
-    }
-    const packs = await query<Packs>(
+    const packs = await query(
       "SELECT p.id, p.name, p.created_at, COUNT(c.id)::bigint AS cards FROM packs p LEFT JOIN cards c ON c.pack_id = p.id WHERE p.user_id = $1 GROUP BY p.id ORDER BY p.created_at DESC",
       [userId],
     );
@@ -227,35 +215,6 @@ fastify.get(
     return reply.status(200).send({
       message: "ok",
       result: packs.rowCount && packs.rowCount > 0 ? packs.rows : [],
-    });
-  },
-);
-fastify.get(
-  "/packs/:id",
-  { preHandler: [authenticate] },
-  async (
-    request: FastifyRequest<{ Params: { id: number } }>,
-    reply: FastifyReply,
-  ) => {
-    const userId = request.user.sub;
-    const packId = request.params.id;
-
-    const pack = await query(
-      "SELECT id, name, modalities, numbers, victories FROM packs WHERE id = $1 AND user_id = $2",
-      [packId, userId],
-    );
-
-    const cards = await query(
-      "SELECT id, numbers FROM cards WHERE pack_id = $1 AND user_id = $2",
-      [packId, userId],
-    );
-
-    return reply.status(200).send({
-      message: "ok",
-      result: {
-        ...pack.rows[0],
-        cards: cards.rows,
-      },
     });
   },
 );
@@ -274,14 +233,14 @@ fastify.post(
     const name = request.body.name;
     let qty = request.body.qty;
 
-    const mods = new Uint8Array(modalities.map((modality) => modality.id));
-    const numbers = new Uint8Array();
-    const victories = new Uint8Array();
+    const mods = new Uint8Array(allModalities.map((modality) => modality.id));
+    const balls = new Uint8Array();
+    const winnings: Array<object> = [];
     const time = Math.floor(Date.now() / 1000);
 
     const createPack = await query(
-      "INSERT INTO packs (user_id, name, modalities, numbers, victories, starts_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
-      [user_id, name, mods, numbers, victories, time, time],
+      "INSERT INTO packs (user_id, name, modalities, balls, winnings, starts_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
+      [user_id, name, mods, balls, winnings, time, time],
     );
     const packId: number = createPack.rows[0].id;
 
@@ -312,6 +271,66 @@ fastify.post(
       result: {
         packId: packId,
       },
+    });
+  },
+);
+fastify.get(
+  "/packs/:id",
+  { preHandler: [authenticate] },
+  async (
+    request: FastifyRequest<{ Params: { id: number } }>,
+    reply: FastifyReply,
+  ) => {
+    const userId = request.user.sub;
+    const packId = request.params.id;
+
+    const pack = await query(
+      "SELECT id, name, modalities, balls, winnings FROM packs WHERE id = $1 AND user_id = $2",
+      [packId, userId],
+    );
+
+    const cards = await query(
+      "SELECT id, numbers FROM cards WHERE pack_id = $1 AND user_id = $2",
+      [packId, userId],
+    );
+
+    return reply.status(200).send({
+      message: "ok",
+      result: {
+        ...pack.rows[0],
+        cards: cards.rows,
+        allModalities: allModalities,
+      },
+    });
+  },
+);
+
+interface PacksPatchBody {
+  action: string;
+  ball: number;
+  balls: number[];
+  winnings: Array<object>;
+}
+fastify.patch(
+  "/packs/:id",
+  { preHandler: [authenticate] },
+  async (
+    request: FastifyRequest<{ Body: PacksPatchBody; Params: { id: number } }>,
+    reply: FastifyReply,
+  ) => {
+    const balls = request.body.balls;
+    const winnings = request.body.winnings;
+
+    const packId = request.params.id;
+    const userId = request.user.sub;
+
+    const update = await query(
+      "UPDATE packs SET balls = $1, winnings = $2 WHERE id = $3 AND user_id = $4",
+      [new Uint8Array(balls), JSON.stringify(winnings), packId, userId],
+    );
+
+    return reply.status(201).send({
+      message: update.rowCount && update.rowCount === 1 ? "ok" : "failed",
     });
   },
 );

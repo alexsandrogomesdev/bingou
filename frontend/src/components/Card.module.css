@@ -81,6 +81,10 @@
   color: #fff !important;
   text-align: center;
 }
+.number_selected_2 {
+  background-color: #0112ff !important;
+  font-weight: bold;
+}
 .joker > svg {
   color: #ff7101;
   width: 16px;

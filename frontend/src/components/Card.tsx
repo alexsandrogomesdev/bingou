@@ -13,8 +13,15 @@ interface CardsProps {
   id: number;
   balls: number[];
   cardNumbers: number[];
+  pattern?: number[];
 }
-const Card: React.FC<CardsProps> = ({ index, id, balls, cardNumbers }) => {
+const Card: React.FC<CardsProps> = ({
+  index,
+  id,
+  balls,
+  cardNumbers,
+  pattern,
+}) => {
   const mainContext = useMainContext();
 
   const columns: Array<number[]> = [[], [], [], [], []];
@@ -44,7 +51,7 @@ const Card: React.FC<CardsProps> = ({ index, id, balls, cardNumbers }) => {
               {column.map((number) => (
                 <li key={number} className={styles.number}>
                   <span
-                    className={`${balls.includes(number) && styles.number_selected} ${number === 0 && styles.joker}`}
+                    className={`${balls.includes(number) && styles.number_selected} ${number === 0 && styles.joker} ${pattern && pattern.includes(number) && styles.number_selected_2}`}
                   >
                     {number === 0 ? <Globe /> : number}
                   </span>
