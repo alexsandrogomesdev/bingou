@@ -26,6 +26,8 @@ const Card: React.FC<CardsProps> = ({
     const column = Math.floor(index / 5);
     columns[column].push(number);
   });
+  const ballsSet = new Set(balls);
+  const patternSet = new Set(pattern);
 
   return (
     <>
@@ -48,7 +50,7 @@ const Card: React.FC<CardsProps> = ({
               {column.map((number) => (
                 <li key={number} className={styles.number}>
                   <span
-                    className={`${balls.includes(number) && styles.number_selected} ${number === 0 && styles.joker} ${pattern && pattern.includes(number) && styles.number_selected_2}`}
+                    className={`${ballsSet.has(number) && styles.number_selected} ${number === 0 && styles.joker} ${patternSet && patternSet.has(number) && styles.number_selected_2}`}
                   >
                     {number === 0 ? <Globe /> : number}
                   </span>

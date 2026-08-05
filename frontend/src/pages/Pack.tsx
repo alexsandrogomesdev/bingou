@@ -44,44 +44,10 @@ const Pack = () => {
   const [showWinnings, setShowWinnings] = useState<boolean>(false);
   const [showModalities, setShowModalities] = useState<boolean>(false);
   const [showBallTable, setShowBallTable] = useState<boolean>(true);
-
-  // PAGINATION
-  const [atualPage, setAtualPage] = useState<number>(1);
-  const [maxPage, setMaxPage] = useState<number>(1);
-  const [cardsToRender, setCardsToRender] = useState<Cards[]>([]);
+  const [ballsToCards, setBallsToCards] = useState<number[]>([]);
 
   const { request } = useFetch();
   const { id } = useParams();
-
-  const updateCardsToRender = (count: number) => {
-    let page = 0;
-    if (atualPage === 1 && count === -1) {
-      page = maxPage;
-    } else if (atualPage === maxPage && count === 1) {
-      page = 1;
-    } else {
-      page = atualPage + count;
-    }
-
-    setAtualPage((prevAtualPage) => {
-      if (prevAtualPage === 1 && count === -1) {
-        return maxPage;
-      } else if (prevAtualPage === maxPage && count === 1) {
-        return 1;
-      } else {
-        return prevAtualPage + count;
-      }
-    });
-
-    const CardsToRender: Cards[] = [];
-    let q = -1;
-    for (const card of cards) {
-      q++;
-      if (q >= page * 50 - 50) CardsToRender.push(card);
-      if (CardsToRender.length === 50) break;
-    }
-    setCardsToRender(CardsToRender);
-  };
 
   useEffect(() => {
     const getPack = async () => {
@@ -92,19 +58,10 @@ const Pack = () => {
       setWinnings(response.result.winnings);
       setModalities(response.result.modalities.data);
       setAllModalities(response.result.allModalities);
-
-      const qty = Math.ceil(response.result.cards.length / 50);
-      setMaxPage(qty);
-
-      const CardsToRender: Cards[] = [];
-      for (const card of response.result.cards) {
-        CardsToRender.push(card);
-        if (CardsToRender.length === 50) break;
-      }
-      setCardsToRender(CardsToRender);
+      setBallsToCards(response.result.balls.data);
     };
     getPack();
-  }, [id, setMaxPage]);
+  }, [id]);
 
   useEffect(() => {
     setHeaderTitle(packName);
@@ -137,8 +94,6 @@ const Pack = () => {
   }, [request, id, balls, modalities, winnings]);
 
   const handleSelectBall = (ball: number) => {
-    const startTime = Date.now();
-
     const action: string = balls.includes(ball) ? "REMOVE" : "ADD";
     setBalls((prevBalls) => {
       if (prevBalls.includes(ball)) {
@@ -207,10 +162,14 @@ const Pack = () => {
         return [...prevWinnings, { ball: ball, winnings: tempWinnings }];
       });
       updatedWinnings.push({ ball: ball, winnings: tempWinnings });
-
-      setShowWinnings(true);
+      setTimeout(() => {
+        setShowWinnings(true);
+      }, 1);
     }
-    console.log(`Exec time: ${Date.now() - startTime}ms`);
+
+    setTimeout(() => {
+      setBallsToCards([...updatedBalls]);
+    }, 1);
   };
 
   return (
@@ -262,26 +221,16 @@ const Pack = () => {
           />
         )}
 
-        <nav className={styles.nav_pagination}>
-          <button onClick={() => updateCardsToRender(-1)}>
-            <ChevronLeft />
-          </button>
-          <input type="text" inputMode={"numeric"} value={atualPage} />
-          <button onClick={() => updateCardsToRender(1)}>
-            <ChevronRight />
-          </button>
-        </nav>
         <div className={styles.cards}>
-          {balls &&
-            cardsToRender.map((card, index) => (
-              <Card
-                key={card.id}
-                index={index + 1 + atualPage * 50 - 50}
-                id={card.id}
-                balls={balls}
-                cardNumbers={card.numbers.data}
-              />
-            ))}
+          {cards.map((card, index) => (
+            <Card
+              key={card.id}
+              index={index + 1}
+              id={card.id}
+              balls={ballsToCards}
+              cardNumbers={card.numbers.data}
+            />
+          ))}
         </div>
       </section>
     </>
