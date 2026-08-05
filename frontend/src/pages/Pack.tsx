@@ -209,7 +209,6 @@ const Pack = () => {
             <Grid3x3 />
           </button>
         </div>
-        <br></br>
 
         {balls && id && showBallTable && (
           <BallTable
@@ -219,7 +218,6 @@ const Pack = () => {
           />
         )}
 
-        <br></br>
         <div className={styles.cards}>
           {balls &&
             cards.map((card, index) => (

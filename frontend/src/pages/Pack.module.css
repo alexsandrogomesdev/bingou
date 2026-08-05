@@ -5,6 +5,7 @@
   height: calc(100dvh - 63px);
   top: 63px;
   padding: 17px;
+  gap: 16px;
 }
 .div_actions {
   display: flex;
