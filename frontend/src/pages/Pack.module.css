@@ -31,6 +31,37 @@
   background-color: #d1d1d1;
   color: #a1a1a1;
 }
+.nav_pagination {
+  display: flex;
+  align-items: center;
+  margin: 0 0 0 auto;
+  background-color: #fff;
+  padding: 2px;
+  border-radius: 5px;
+}
+.nav_pagination > button {
+  min-height: 34px;
+  max-height: 34px;
+  min-width: 34px;
+  max-width: 34px;
+  background-color: #ff7101;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+}
+.nav_pagination > input {
+  font-size: 16px;
+  color: #282930;
+  margin: 0 auto;
+  min-height: 34px;
+  max-height: 34px;
+  min-width: 34px;
+  max-width: 34px;
+  border: none;
+  text-align: center;
+  outline: 0;
+}
+
 .cards {
   display: grid;
   grid-template-columns: repeat(2, auto);

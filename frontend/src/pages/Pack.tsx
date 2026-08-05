@@ -1,6 +1,14 @@
 import { useEffect, useEffectEvent, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FileText, GamepadDirectional, Gift, Grid3x3 } from "lucide-react";
+import {
+  FileText,
+  GamepadDirectional,
+  Gift,
+  Grid3x3,
+  Plus,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 // STYLES
 import styles from "./Pack.module.css";
@@ -35,11 +43,45 @@ const Pack = () => {
   const [winnings, setWinnings] = useState<Winnings[]>([]);
   const [showWinnings, setShowWinnings] = useState<boolean>(false);
   const [showModalities, setShowModalities] = useState<boolean>(false);
-  const [cardsThatSelected, setCardsThatSelected] = useState<number[]>([]);
   const [showBallTable, setShowBallTable] = useState<boolean>(true);
+
+  // PAGINATION
+  const [atualPage, setAtualPage] = useState<number>(1);
+  const [maxPage, setMaxPage] = useState<number>(1);
+  const [cardsToRender, setCardsToRender] = useState<Cards[]>([]);
 
   const { request } = useFetch();
   const { id } = useParams();
+
+  const updateCardsToRender = (count: number) => {
+    let page = 0;
+    if (atualPage === 1 && count === -1) {
+      page = maxPage;
+    } else if (atualPage === maxPage && count === 1) {
+      page = 1;
+    } else {
+      page = atualPage + count;
+    }
+
+    setAtualPage((prevAtualPage) => {
+      if (prevAtualPage === 1 && count === -1) {
+        return maxPage;
+      } else if (prevAtualPage === maxPage && count === 1) {
+        return 1;
+      } else {
+        return prevAtualPage + count;
+      }
+    });
+
+    const CardsToRender: Cards[] = [];
+    let q = -1;
+    for (const card of cards) {
+      q++;
+      if (q >= page * 50 - 50) CardsToRender.push(card);
+      if (CardsToRender.length === 50) break;
+    }
+    setCardsToRender(CardsToRender);
+  };
 
   useEffect(() => {
     const getPack = async () => {
@@ -50,9 +92,19 @@ const Pack = () => {
       setWinnings(response.result.winnings);
       setModalities(response.result.modalities.data);
       setAllModalities(response.result.allModalities);
+
+      const qty = Math.ceil(response.result.cards.length / 50);
+      setMaxPage(qty);
+
+      const CardsToRender: Cards[] = [];
+      for (const card of response.result.cards) {
+        CardsToRender.push(card);
+        if (CardsToRender.length === 50) break;
+      }
+      setCardsToRender(CardsToRender);
     };
     getPack();
-  }, [id]);
+  }, [id, setMaxPage]);
 
   useEffect(() => {
     setHeaderTitle(packName);
@@ -159,17 +211,6 @@ const Pack = () => {
       setShowWinnings(true);
     }
     console.log(`Exec time: ${Date.now() - startTime}ms`);
-
-    const tempCardsThatSelected: number[] = [];
-    if (action === "ADD") {
-      for (const card of cards) {
-        if (card.numbers.data.includes(ball)) {
-          if (!tempCardsThatSelected.includes(card.id))
-            tempCardsThatSelected.push(card.id);
-        }
-      }
-    }
-    setCardsThatSelected(tempCardsThatSelected);
   };
 
   return (
@@ -200,13 +241,16 @@ const Pack = () => {
           </button>
           <button>
             <FileText />
-            Exportar Maço
+            Exportar
           </button>
           <button
             onClick={() => setShowBallTable(true)}
             disabled={showBallTable}
           >
             <Grid3x3 />
+          </button>
+          <button>
+            <Plus />
           </button>
         </div>
 
@@ -218,12 +262,21 @@ const Pack = () => {
           />
         )}
 
+        <nav className={styles.nav_pagination}>
+          <button onClick={() => updateCardsToRender(-1)}>
+            <ChevronLeft />
+          </button>
+          <input type="text" inputMode={"numeric"} value={atualPage} />
+          <button onClick={() => updateCardsToRender(1)}>
+            <ChevronRight />
+          </button>
+        </nav>
         <div className={styles.cards}>
           {balls &&
-            cards.map((card, index) => (
+            cardsToRender.map((card, index) => (
               <Card
                 key={card.id}
-                index={index + 1}
+                index={index + 1 + atualPage * 50 - 50}
                 id={card.id}
                 balls={balls}
                 cardNumbers={card.numbers.data}

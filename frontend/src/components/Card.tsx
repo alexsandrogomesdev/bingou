@@ -13,7 +13,6 @@ interface CardsProps {
   balls: number[];
   cardNumbers: number[];
   pattern?: number[];
-  hasChanged?: boolean;
 }
 const Card: React.FC<CardsProps> = ({
   index,
@@ -21,7 +20,6 @@ const Card: React.FC<CardsProps> = ({
   balls,
   cardNumbers,
   pattern,
-  hasChanged,
 }) => {
   const columns: Array<number[]> = [[], [], [], [], []];
   cardNumbers.forEach((number, index) => {
