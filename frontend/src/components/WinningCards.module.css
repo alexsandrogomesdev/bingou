@@ -16,6 +16,7 @@
   background-color: #fff;
   border-radius: 12px;
   padding: 16px;
+  min-height: calc(100dvh - 34px);
   max-height: calc(100dvh - 34px);
   overflow: hidden;
 }
@@ -29,6 +30,8 @@
   color: #ff7101;
   letter-spacing: 5px;
   margin: 10px auto;
+}
+.animated_title {
   animation: zoomInOut 1s ease-in-out infinite;
 }
 @keyframes zoomInOut {

@@ -6,10 +6,25 @@
   top: 63px;
   padding: 17px;
 }
-.pack_title {
-  font-size: 16px;
-  font-weight: 500;
-  color: #282930;
+.div_actions {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 10px;
+  margin: 0 0 0 auto;
+}
+.div_actions > button {
+  background-color: #ff7101;
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  padding: 5px;
+  color: #fff;
+  gap: 5px;
+}
+.div_actions > button > svg {
+  max-width: 16px;
 }
 .cards {
   display: grid;

@@ -240,7 +240,7 @@ fastify.post(
 
     const createPack = await query(
       "INSERT INTO packs (user_id, name, modalities, balls, winnings, starts_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
-      [user_id, name, mods, balls, winnings, time, time],
+      [user_id, name, mods, balls, JSON.stringify(winnings), time, time],
     );
     const packId: number = createPack.rows[0].id;
 
@@ -310,6 +310,7 @@ interface PacksPatchBody {
   ball: number;
   balls: number[];
   winnings: Array<object>;
+  modalities: number[];
 }
 fastify.patch(
   "/packs/:id",
@@ -318,15 +319,37 @@ fastify.patch(
     request: FastifyRequest<{ Body: PacksPatchBody; Params: { id: number } }>,
     reply: FastifyReply,
   ) => {
-    const balls = request.body.balls;
-    const winnings = request.body.winnings;
+    const { balls, winnings, modalities } = request.body;
 
     const packId = request.params.id;
     const userId = request.user.sub;
 
+    const fieldsToUpdate = [];
+    const values = [];
+    let queryIndex = 1;
+
+    if (balls !== undefined) {
+      fieldsToUpdate.push(`balls = $${queryIndex++}`);
+      values.push(new Uint8Array(balls));
+    }
+    if (winnings !== undefined) {
+      fieldsToUpdate.push(`winnings = $${queryIndex++}`);
+      values.push(JSON.stringify(winnings));
+    }
+    if (modalities !== undefined) {
+      fieldsToUpdate.push(`modalities = $${queryIndex++}`);
+      values.push(new Uint8Array(modalities));
+    }
+
+    if (fieldsToUpdate.length === 0) {
+      return reply.status(200).send({
+        message: "ok",
+      });
+    }
+
     const update = await query(
-      "UPDATE packs SET balls = $1, winnings = $2 WHERE id = $3 AND user_id = $4",
-      [new Uint8Array(balls), JSON.stringify(winnings), packId, userId],
+      `UPDATE packs SET ${fieldsToUpdate.join(", ")} WHERE id = $${queryIndex++} AND user_id = $${queryIndex++}`,
+      [...values, packId, userId],
     );
 
     return reply.status(201).send({

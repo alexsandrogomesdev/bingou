@@ -16,7 +16,7 @@ import { useFetch } from "../hooks/useFetch.tsx";
 import NewPack from "../components/NewPack.tsx";
 
 const Packs = () => {
-  const mainContext = useMainContext();
+  const { setHeaderTitle } = useMainContext();
   const { request } = useFetch();
 
   // STATE VARIABLES
@@ -40,6 +40,10 @@ const Packs = () => {
     };
     getPacks();
   }, []);
+
+  useEffect(() => {
+    setHeaderTitle("Packs");
+  }, [setHeaderTitle]);
 
   return (
     <>

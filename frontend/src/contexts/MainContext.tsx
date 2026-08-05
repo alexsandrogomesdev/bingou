@@ -12,8 +12,10 @@ export type MainContextData = {
   setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   alert: AlertObject;
   setAlert: React.Dispatch<React.SetStateAction<AlertObject>>;
-  userId: number;
-  setUserId: React.Dispatch<React.SetStateAction<number>>;
+  userId: number | null;
+  setUserId: React.Dispatch<React.SetStateAction<number | null>>;
+  headerTitle: string;
+  setHeaderTitle: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const MainContext = createContext<MainContextData>(
@@ -24,13 +26,14 @@ export const MainContextProvider = ({ children }: { children: ReactNode }) => {
   const [contextStatus, setContextStatus] = useState<string>("Main Context...");
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [userId, setUserId] = useState<number | null>(null);
+  const [headerTitle, setHeaderTitle] = useState<string>("WMS Cartelas");
   const [alert, setAlert] = useState<AlertObject>({
     id: 0,
     type: "",
     message: "",
   });
 
-  const contextVariables = useMemo(
+  const contextVariables = useMemo<MainContextData>(
     () => ({
       contextStatus,
       setContextStatus,
@@ -40,8 +43,10 @@ export const MainContextProvider = ({ children }: { children: ReactNode }) => {
       setAlert,
       userId,
       setUserId,
+      headerTitle,
+      setHeaderTitle,
     }),
-    [contextStatus, menuOpen, alert, userId],
+    [contextStatus, menuOpen, alert, userId, headerTitle],
   );
 
   return (

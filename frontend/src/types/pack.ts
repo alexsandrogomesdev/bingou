@@ -52,3 +52,8 @@ export interface CardsOnModality {
     };
   }>;
 }
+export interface BodyUpdatePack {
+  balls?: number[];
+  modalities?: number[];
+  winnings?: Winnings[];
+}

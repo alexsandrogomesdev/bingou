@@ -14,10 +14,8 @@ const Header = () => {
           mainContext.setMenuOpen(mainContext.menuOpen ? false : true)
         }
       />
-
       <div>
-        <Globe className={styles.logo} />
-        <h2 className={styles.header_title}>WMS Cartelas</h2>
+        <h2 className={styles.header_title}>{mainContext.headerTitle}</h2>
       </div>
     </header>
   );

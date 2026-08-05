@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import { useParams } from "react-router-dom";
+import { FileText, GamepadDirectional, Gift } from "lucide-react";
 
 // STYLES
 import styles from "./Pack.module.css";
@@ -12,6 +13,7 @@ import { useFetch } from "../hooks/useFetch.tsx";
 import Card from "../components/Card.tsx";
 import CalledBalls from "../components/CalledBalls.tsx";
 import WinningCards from "../components/WinningCards.tsx";
+import Modalities from "../components/Modalities.tsx";
 
 // INTERFACES AND TYPES
 import type {
@@ -20,23 +22,25 @@ import type {
   Winnings,
   PackType,
   WinningsObject,
+  BodyUpdatePack,
 } from "../types/pack.ts";
 
 const Pack = () => {
-  const mainContext = useMainContext();
+  const { setHeaderTitle } = useMainContext();
   const [cards, setCards] = useState<Cards[]>([]);
-  const [modalities, setModalities] = useState<number[]>([]);
+  const [modalities, setModalities] = useState<number[]>([171]);
   const [allModalities, setAllModalities] = useState<AllModalities[]>([]);
   const [packName, setPackName] = useState<string>("");
-  const [balls, setBalls] = useState<number[]>([]);
+  const [balls, setBalls] = useState<number[]>([171]);
   const [winnings, setWinnings] = useState<Winnings[]>([]);
   const [showWinnings, setShowWinnings] = useState<boolean>(false);
+  const [showModalities, setShowModalities] = useState<boolean>(false);
 
   const { request } = useFetch();
   const { id } = useParams();
 
   useEffect(() => {
-    const getCards = async () => {
+    const getPack = async () => {
       const response: PackType = await request(`/packs/${id}`, "GET");
       setCards(response.result.cards);
       setPackName(response.result.name);
@@ -45,12 +49,41 @@ const Pack = () => {
       setModalities(response.result.modalities.data);
       setAllModalities(response.result.allModalities);
     };
-    getCards();
-  }, []);
+    getPack();
+  }, [id]);
+
+  useEffect(() => {
+    setHeaderTitle(packName);
+  }, [setHeaderTitle, packName]);
+
+  useEffect(() => {
+    if (!modalities.includes(171)) {
+      request(
+        `/packs/${id}`,
+        "PATCH",
+        {},
+        {
+          modalities: modalities,
+        },
+      );
+    }
+  }, [id, modalities]);
+
+  useEffect(() => {
+    const body: BodyUpdatePack = {};
+    if (!balls.includes(171)) {
+      body.balls = balls;
+    }
+    if (!modalities.includes(171)) {
+      body.modalities = modalities;
+    }
+    body.winnings = winnings;
+
+    request(`/packs/${id}`, "PATCH", {}, body);
+  }, [request, id, balls, modalities, winnings]);
 
   const handleSelectBall = (ball: number) => {
     const action: string = balls.includes(ball) ? "REMOVE" : "ADD";
-
     setBalls((prevBalls) => {
       if (prevBalls.includes(ball)) {
         return prevBalls.filter((b) => b !== ball);
@@ -59,18 +92,17 @@ const Pack = () => {
       }
     });
 
-    const updatedBalls: number[] = [...balls];
+    const updatedBalls: Set<number> = new Set(balls);
     if (action === "REMOVE") {
-      const index = updatedBalls.indexOf(ball);
-      updatedBalls.splice(index);
+      updatedBalls.delete(ball);
     } else if (action === "ADD") {
-      updatedBalls.push(ball);
+      updatedBalls.add(ball);
     }
 
     // CHECK WINNINGS
     const tempWinnings: WinningsObject[] = [];
     for (const modality of allModalities) {
-      if (modalities.includes(modality.id)) {
+      if (modalities && modalities.includes(modality.id)) {
         const cardsOnModality: WinningsObject = {
           modality: {
             id: modality.id,
@@ -80,15 +112,18 @@ const Pack = () => {
         };
 
         for (const map of modality.map) {
+          const mapSet = new Set(map);
+
           for (const card of cards) {
             const numbers: number[] = [];
             card.numbers.data.forEach((number, index) => {
-              if (map.includes(index)) numbers.push(number);
+              if (mapSet.has(index)) numbers.push(number);
             });
+
             if (!numbers.includes(ball)) continue;
 
             const numbersSelecteds: number[] = numbers.filter((n) =>
-              updatedBalls.includes(n),
+              updatedBalls.has(n),
             );
 
             if (numbersSelecteds.length === numbers.length) {
@@ -120,16 +155,6 @@ const Pack = () => {
       updatedWinnings.push({ ball: ball, winnings: tempWinnings });
       setShowWinnings(true);
     }
-
-    request(
-      `/packs/${id}`,
-      "PATCH",
-      {},
-      {
-        balls: updatedBalls,
-        winnings: updatedWinnings,
-      },
-    );
   };
 
   return (
@@ -141,8 +166,28 @@ const Pack = () => {
           setShowWinnings={setShowWinnings}
         />
       )}
+      {showModalities && (
+        <Modalities
+          setShowModalities={setShowModalities}
+          modalities={modalities}
+          setModalities={setModalities}
+          allModalities={allModalities}
+        />
+      )}
       <section className={styles.section_pack}>
-        <h2 className={styles.pack_title}>{packName}</h2>
+        <div className={styles.div_actions}>
+          <button onClick={() => setShowWinnings(true)}>
+            <Gift />
+          </button>
+          <button onClick={() => setShowModalities(true)}>
+            <GamepadDirectional />
+            Modalidades
+          </button>
+          <button>
+            <FileText />
+            Exportar Maço(PDF)
+          </button>
+        </div>
         <br></br>
         {balls && id && (
           <CalledBalls balls={balls} handleSelectBall={handleSelectBall} />

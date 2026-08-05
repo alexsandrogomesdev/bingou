@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 
@@ -23,7 +23,6 @@ import Home from "./pages/Home.tsx";
 
 function App() {
   const mainContext = useMainContext();
-  // const location = useLocation();
   // const hideOnRoutes = ["/access"];
   // const showComponent = !hideOnRoutes.includes(location.pathname);
 
