@@ -5,7 +5,6 @@ import { Globe } from "lucide-react";
 import styles from "./Card.module.css";
 
 // HOOKS
-import { useMainContext } from "../hooks/useMainContext.tsx";
 
 // COMPONENTS
 interface CardsProps {
@@ -14,6 +13,7 @@ interface CardsProps {
   balls: number[];
   cardNumbers: number[];
   pattern?: number[];
+  hasChanged?: boolean;
 }
 const Card: React.FC<CardsProps> = ({
   index,
@@ -21,9 +21,8 @@ const Card: React.FC<CardsProps> = ({
   balls,
   cardNumbers,
   pattern,
+  hasChanged,
 }) => {
-  const mainContext = useMainContext();
-
   const columns: Array<number[]> = [[], [], [], [], []];
   cardNumbers.forEach((number, index) => {
     const column = Math.floor(index / 5);

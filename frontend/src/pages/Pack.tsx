@@ -1,6 +1,6 @@
 import { useEffect, useEffectEvent, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FileText, GamepadDirectional, Gift } from "lucide-react";
+import { FileText, GamepadDirectional, Gift, Grid3x3 } from "lucide-react";
 
 // STYLES
 import styles from "./Pack.module.css";
@@ -11,7 +11,7 @@ import { useFetch } from "../hooks/useFetch.tsx";
 
 // COMPONENTS
 import Card from "../components/Card.tsx";
-import CalledBalls from "../components/CalledBalls.tsx";
+import BallTable from "../components/BallTable.tsx";
 import WinningCards from "../components/WinningCards.tsx";
 import Modalities from "../components/Modalities.tsx";
 
@@ -35,6 +35,8 @@ const Pack = () => {
   const [winnings, setWinnings] = useState<Winnings[]>([]);
   const [showWinnings, setShowWinnings] = useState<boolean>(false);
   const [showModalities, setShowModalities] = useState<boolean>(false);
+  const [cardsThatSelected, setCardsThatSelected] = useState<number[]>([]);
+  const [showBallTable, setShowBallTable] = useState<boolean>(true);
 
   const { request } = useFetch();
   const { id } = useParams();
@@ -83,6 +85,8 @@ const Pack = () => {
   }, [request, id, balls, modalities, winnings]);
 
   const handleSelectBall = (ball: number) => {
+    const startTime = Date.now();
+
     const action: string = balls.includes(ball) ? "REMOVE" : "ADD";
     setBalls((prevBalls) => {
       if (prevBalls.includes(ball)) {
@@ -101,6 +105,7 @@ const Pack = () => {
 
     // CHECK WINNINGS
     const tempWinnings: WinningsObject[] = [];
+
     for (const modality of allModalities) {
       if (modalities && modalities.includes(modality.id)) {
         const cardsOnModality: WinningsObject = {
@@ -116,17 +121,14 @@ const Pack = () => {
 
           for (const card of cards) {
             const numbers: number[] = [];
-            card.numbers.data.forEach((number, index) => {
-              if (mapSet.has(index)) numbers.push(number);
-            });
 
-            if (!numbers.includes(ball)) continue;
+            for (const i of mapSet) {
+              if (updatedBalls.has(card.numbers.data[i])) {
+                numbers.push(card.numbers.data[i]);
+              }
+            }
 
-            const numbersSelecteds: number[] = numbers.filter((n) =>
-              updatedBalls.has(n),
-            );
-
-            if (numbersSelecteds.length === numbers.length) {
+            if (mapSet.size === numbers.length && numbers.includes(ball)) {
               cardsOnModality.cards.push({
                 id: card.id,
                 pattern: numbers,
@@ -153,8 +155,21 @@ const Pack = () => {
         return [...prevWinnings, { ball: ball, winnings: tempWinnings }];
       });
       updatedWinnings.push({ ball: ball, winnings: tempWinnings });
+
       setShowWinnings(true);
     }
+    console.log(`Exec time: ${Date.now() - startTime}ms`);
+
+    const tempCardsThatSelected: number[] = [];
+    if (action === "ADD") {
+      for (const card of cards) {
+        if (card.numbers.data.includes(ball)) {
+          if (!tempCardsThatSelected.includes(card.id))
+            tempCardsThatSelected.push(card.id);
+        }
+      }
+    }
+    setCardsThatSelected(tempCardsThatSelected);
   };
 
   return (
@@ -185,19 +200,31 @@ const Pack = () => {
           </button>
           <button>
             <FileText />
-            Exportar Maço(PDF)
+            Exportar Maço
+          </button>
+          <button
+            onClick={() => setShowBallTable(true)}
+            disabled={showBallTable}
+          >
+            <Grid3x3 />
           </button>
         </div>
         <br></br>
-        {balls && id && (
-          <CalledBalls balls={balls} handleSelectBall={handleSelectBall} />
+
+        {balls && id && showBallTable && (
+          <BallTable
+            balls={balls}
+            handleSelectBall={handleSelectBall}
+            setShowBallTable={setShowBallTable}
+          />
         )}
+
         <br></br>
         <div className={styles.cards}>
           {balls &&
             cards.map((card, index) => (
               <Card
-                key={index}
+                key={card.id}
                 index={index + 1}
                 id={card.id}
                 balls={balls}

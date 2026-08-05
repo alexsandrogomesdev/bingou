@@ -40,7 +40,7 @@ const WinningCards: React.FC<Props> = ({
         <div className={styles.div_winnings}>
           {winnings.length >= 0 &&
             winnings.reverse().map((item) => (
-              <div className={styles.winnings_per_ball}>
+              <div key={item.ball} className={styles.winnings_per_ball}>
                 <p>Bola: {item.ball}</p>
                 {item.winnings.map((win) => (
                   <div className={styles.cards_per_modality}>
