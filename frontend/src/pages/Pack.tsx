@@ -227,7 +227,7 @@ const Pack = () => {
               key={card.id}
               index={index + 1}
               id={card.id}
-              balls={ballsToCards}
+              balls={new Set(balls)}
               cardNumbers={card.numbers.data}
             />
           ))}
