@@ -1,4 +1,10 @@
-import { useEffect, useEffectEvent, useState } from "react";
+import {
+  useEffect,
+  useEffectEvent,
+  useState,
+  useRef,
+  useCallback,
+} from "react";
 import { useParams } from "react-router-dom";
 import {
   FileText,
@@ -39,12 +45,12 @@ const Pack = () => {
   const [modalities, setModalities] = useState<number[]>([171]);
   const [allModalities, setAllModalities] = useState<AllModalities[]>([]);
   const [packName, setPackName] = useState<string>("");
-  const [balls, setBalls] = useState<number[]>([171]);
+  const [balls, setBalls] = useState<Set<number>>(new Set([171]));
   const [winnings, setWinnings] = useState<Winnings[]>([]);
   const [showWinnings, setShowWinnings] = useState<boolean>(false);
   const [showModalities, setShowModalities] = useState<boolean>(false);
   const [showBallTable, setShowBallTable] = useState<boolean>(true);
-  const [ballsToCards, setBallsToCards] = useState<number[]>([]);
+  const [ballsToCards, setBallsToCards] = useState<Set<number>>(new Set([]));
 
   const { request } = useFetch();
   const { id } = useParams();
@@ -54,14 +60,14 @@ const Pack = () => {
       const response: PackType = await request(`/packs/${id}`, "GET");
       setCards(response.result.cards);
       setPackName(response.result.name);
-      setBalls(response.result.balls.data);
+      setBalls(new Set(response.result.balls.data));
       setWinnings(response.result.winnings);
       setModalities(response.result.modalities.data);
       setAllModalities(response.result.allModalities);
-      setBallsToCards(response.result.balls.data);
+      setBallsToCards(new Set(response.result.balls.data));
     };
     getPack();
-  }, [id]);
+  }, [id, request]);
 
   useEffect(() => {
     setHeaderTitle(packName);
@@ -78,12 +84,12 @@ const Pack = () => {
         },
       );
     }
-  }, [id, modalities]);
+  }, [id, modalities, request]);
 
   useEffect(() => {
     const body: BodyUpdatePack = {};
-    if (!balls.includes(171)) {
-      body.balls = balls;
+    if (!balls.has(171)) {
+      body.balls = [...balls];
     }
     if (!modalities.includes(171)) {
       body.modalities = modalities;
@@ -93,83 +99,95 @@ const Pack = () => {
     request(`/packs/${id}`, "PATCH", {}, body);
   }, [request, id, balls, modalities, winnings]);
 
-  const handleSelectBall = (ball: number) => {
-    const action: string = balls.includes(ball) ? "REMOVE" : "ADD";
-    setBalls((prevBalls) => {
-      if (prevBalls.includes(ball)) {
-        return prevBalls.filter((b) => b !== ball);
-      } else {
-        return [...prevBalls, ball];
+  const handleSelectBall = useCallback(
+    (ball: number) => {
+      const action: string = balls.has(ball) ? "REMOVE" : "ADD";
+      setBalls((prevBalls) => {
+        if (prevBalls.has(ball)) {
+          return new Set([...prevBalls].filter((b) => b !== ball));
+        } else {
+          return new Set([...prevBalls, ball]);
+        }
+      });
+
+      const updatedBalls: Set<number> = new Set(balls);
+      if (action === "REMOVE") {
+        updatedBalls.delete(ball);
+      } else if (action === "ADD") {
+        updatedBalls.add(ball);
       }
-    });
 
-    const updatedBalls: Set<number> = new Set(balls);
-    if (action === "REMOVE") {
-      updatedBalls.delete(ball);
-    } else if (action === "ADD") {
-      updatedBalls.add(ball);
-    }
+      // CHECK WINNINGS
+      const tempWinnings: WinningsObject[] = [];
 
-    // CHECK WINNINGS
-    const tempWinnings: WinningsObject[] = [];
+      for (const modality of allModalities) {
+        if (modalities && modalities.includes(modality.id)) {
+          const cardsOnModality: WinningsObject = {
+            modality: {
+              id: modality.id,
+              name: modality.name,
+            },
+            cards: new Set(),
+          };
 
-    for (const modality of allModalities) {
-      if (modalities && modalities.includes(modality.id)) {
-        const cardsOnModality: WinningsObject = {
-          modality: {
-            id: modality.id,
-            name: modality.name,
-          },
-          cards: [],
-        };
+          for (const map of modality.map) {
+            const mapSet = new Set(map);
 
-        for (const map of modality.map) {
-          const mapSet = new Set(map);
+            for (const card of cards) {
+              const pattern: Set<number> = new Set();
 
-          for (const card of cards) {
-            const numbers: number[] = [];
+              for (const i of mapSet) {
+                if (updatedBalls.has(card.numbers.data[i])) {
+                  pattern.add(card.numbers.data[i]);
+                }
+              }
 
-            for (const i of mapSet) {
-              if (updatedBalls.has(card.numbers.data[i])) {
-                numbers.push(card.numbers.data[i]);
+              if (mapSet.size === pattern.size && pattern.has(ball)) {
+                cardsOnModality.cards.add({
+                  id: card.id,
+                  pattern: pattern,
+                  numbers: card.numbers.data,
+                });
               }
             }
-
-            if (mapSet.size === numbers.length && numbers.includes(ball)) {
-              cardsOnModality.cards.push({
-                id: card.id,
-                pattern: numbers,
-                numbers: card.numbers.data,
-              });
-            }
+          }
+          if (cardsOnModality.cards.size >= 1) {
+            tempWinnings.push(cardsOnModality);
           }
         }
-        if (cardsOnModality.cards.length >= 1) {
-          tempWinnings.push(cardsOnModality);
-        }
       }
-    }
 
-    const updatedWinnings: Winnings[] = [...winnings];
-    if (action === "REMOVE") {
-      setWinnings((prevWinnings) => {
-        return prevWinnings.filter((item) => item.ball !== ball);
-      });
-      const index = updatedWinnings.findIndex((item) => item.ball === ball);
-      updatedWinnings.splice(index, 1);
-    } else if (action === "ADD" && tempWinnings.length >= 1) {
-      setWinnings((prevWinnings) => {
-        return [...prevWinnings, { ball: ball, winnings: tempWinnings }];
-      });
-      updatedWinnings.push({ ball: ball, winnings: tempWinnings });
-      setTimeout(() => {
-        setShowWinnings(true);
-      }, 1);
-    }
+      const updatedWinnings: Winnings[] = [...winnings];
+      if (action === "REMOVE") {
+        setWinnings((prevWinnings) => {
+          return prevWinnings.filter((item) => item.ball !== ball);
+        });
+        const index = updatedWinnings.findIndex((item) => item.ball === ball);
+        updatedWinnings.splice(index, 1);
+      } else if (action === "ADD" && tempWinnings.length >= 1) {
+        setWinnings((prevWinnings) => {
+          return [...prevWinnings, { ball: ball, winnings: tempWinnings }];
+        });
+        updatedWinnings.push({ ball: ball, winnings: tempWinnings });
+        setTimeout(() => {
+          setShowWinnings(true);
+        }, 1);
+      }
+    },
+    [balls, allModalities, cards, modalities, winnings],
+  );
 
-    setTimeout(() => {
-      setBallsToCards([...updatedBalls]);
-    }, 1);
+  const [loading, setLoading] = useState(false);
+  const containerRef = useRef<
+    string | HTMLElement | HTMLCanvasElement | HTMLImageElement
+  >("");
+
+  const handleDownloadPdf = async () => {
+    setLoading(true);
+    console.log("Iniciando impressão nativa...");
+    // Dispara a caixa de diálogo nativa do navegador
+    window.print();
+    setLoading(false);
   };
 
   return (
@@ -198,7 +216,7 @@ const Pack = () => {
             <GamepadDirectional />
             Modalidades
           </button>
-          <button>
+          <button onClick={handleDownloadPdf}>
             <FileText />
             Exportar
           </button>
@@ -221,13 +239,13 @@ const Pack = () => {
           />
         )}
 
-        <div className={styles.cards}>
+        <div className={styles.cards} id="area-impressao-cartelas">
           {cards.map((card, index) => (
             <Card
               key={card.id}
               index={index + 1}
               id={card.id}
-              balls={new Set(balls)}
+              balls={balls}
               cardNumbers={card.numbers.data}
             />
           ))}

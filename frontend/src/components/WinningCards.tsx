@@ -14,7 +14,7 @@ import Card from "../components/Card";
 import type { Winnings } from "../types/pack";
 
 interface Props {
-  balls: number[];
+  balls: Set<number>;
   winnings: Winnings[];
   setShowWinnings: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -24,7 +24,6 @@ const WinningCards: React.FC<Props> = ({
   winnings,
   setShowWinnings,
 }) => {
-  console.log(winnings);
   return (
     <section className={styles.section_winning_cards}>
       <div className={styles.div_winnings_cards}>
@@ -47,7 +46,7 @@ const WinningCards: React.FC<Props> = ({
                     <p>Modalidade: {win.modality.name}</p>
                     <span>Cartelas</span>
                     <div className={styles.cards}>
-                      {win.cards.map((card, index) => (
+                      {[...win.cards].map((card, index) => (
                         <Card
                           key={card.id}
                           index={index + 1}

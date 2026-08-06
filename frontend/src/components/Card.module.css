@@ -8,6 +8,7 @@
   min-width: 175px;
   max-width: 175px;
   background-color: #fff;
+  max-height: 220px;
 }
 .card_header {
   display: flex;
@@ -34,7 +35,7 @@
 .card_body {
   display: flex;
   align-items: center;
-  border: solid 1px #c1c1c1;
+  /* border: solid 1px #c1c1c1; */
   border-radius: 2px;
 }
 .card_column {
@@ -48,9 +49,9 @@
 .card_column:nth-of-type(2),
 .card_column:nth-of-type(3),
 .card_column:nth-of-type(4) {
-  border-right: solid 1px #c1c1c1;
+  /* border-right: solid 1px #c1c1c1; */
 }
-.number {
+.card_column > li {
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -59,50 +60,26 @@
   min-height: 32px;
   max-height: 32px;
 }
-.number > span {
+.card_column > li > span {
   font-size: 12px;
   color: #282930;
   margin: auto;
+  /* border: solid 1px #e7e7e7; */
 }
-.number:nth-of-type(1),
-.number:nth-of-type(2),
-.number:nth-of-type(3),
-.number:nth-of-type(4) {
-  border-bottom: solid 1px #c1c1c1;
+.card_column > li:nth-of-type(1),
+.card_column > li:nth-of-type(2),
+.card_column > li:nth-of-type(3),
+.card_column > li:nth-of-type(4) {
+  /* border-bottom: solid 1px #c1c1c1; */
 }
-.number_selected {
-  background-color: #ff7101;
-  padding: 3px;
-  min-width: 21px;
-  max-width: 21px;
-  min-height: 21px;
-  max-height: 21px;
-  border-radius: 21px;
-  color: #fff !important;
-  text-align: center;
-}
-.number_selected_2 {
-  background-color: #5fce1f !important;
-  font-weight: bold;
-  animation: zoomInOut 1s ease-in-out infinite;
-}
-@keyframes zoomInOut {
-  0% {
-    transform: scale(1);
+@media print {
+  .card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    break-after: auto !important;
+    page-break-after: auto !important;
+    height: 60mm !important; /* Altura fixa baixa pra caber 4 por folha */
+    margin-bottom: 5mm !important;
+    box-sizing: border-box !important;
   }
-  50% {
-    transform: scale(1.15);
-  }
-  100% {
-    tranform: scale(1);
-  }
-}
-
-.joker > svg {
-  color: #ff7101;
-  width: 16px;
-  height: 16px;
-  position: relative;
-  top: 1px;
-  left: -0.7px;
 }

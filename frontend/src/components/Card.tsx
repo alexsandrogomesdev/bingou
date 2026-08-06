@@ -7,6 +7,8 @@ import styles from "./Card.module.css";
 // HOOKS
 
 // COMPONENTS
+import CardNumber from "./CardNumber.tsx";
+
 interface CardsProps {
   index: number;
   id: number;
@@ -14,53 +16,50 @@ interface CardsProps {
   cardNumbers: number[];
   pattern?: Set<number>;
 }
-const Card: React.FC<CardsProps> = memo(
-  ({ index, id, balls, cardNumbers, pattern }) => {
-    const columns = useMemo(() => {
-      const cols: number[][] = [[], [], [], [], []];
-      for (let i = 0; i < cardNumbers.length; i++) {
-        const colIndex = Math.floor(i / 5);
-        cols[colIndex].push(cardNumbers[i]);
-      }
-      return cols;
-    }, [cardNumbers]);
+const Card = memo(({ index, id, balls, cardNumbers, pattern }: CardsProps) => {
+  const cardNumbersKey = cardNumbers.join(",");
+  const columns = useMemo(() => {
+    const cols: number[][] = [[], [], [], [], []];
+    for (let i = 0; i < cardNumbers.length; i++) {
+      cols[Math.floor(i / 5)].push(cardNumbers[i]);
+    }
+    return cols;
+  }, [cardNumbersKey]);
 
-    useEffect(() => {}, [balls, pattern]);
-
-    return (
-      <>
-        <article className={styles.card}>
-          <div className={styles.card_header}>
-            <p>
-              Cartela: #{index} ({id})
-            </p>
-          </div>
-          <div className={styles.card_letters}>
-            <strong>B</strong>
-            <strong>I</strong>
-            <strong>N</strong>
-            <strong>G</strong>
-            <strong>O</strong>
-          </div>
-          <div className={styles.card_body}>
-            {columns.map((column, index) => (
-              <ul key={index} className={styles.card_column}>
-                {column.map((number) => (
-                  <li key={number} className={styles.number}>
-                    <span
-                      className={`${balls.has(number) ? styles.number_selected : ""} ${number === 0 ? styles.joker : ""} ${pattern ? (pattern.has(number) ? styles.number_selected_2 : "") : ""}`}
-                    >
-                      {number === 0 ? <Globe /> : number}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ))}
-          </div>
-        </article>
-      </>
-    );
-  },
-);
+  return (
+    <>
+      <article className={styles.card}>
+        <div className={styles.card_header}>
+          <p>
+            Cartela: #{index} ({id})
+          </p>
+        </div>
+        <div className={styles.card_letters}>
+          <strong>B</strong>
+          <strong>I</strong>
+          <strong>N</strong>
+          <strong>G</strong>
+          <strong>O</strong>
+        </div>
+        <div className={styles.card_body}>
+          {columns.map((column, index) => (
+            <ul key={`${id}_c_${index}`} className={styles.card_column}>
+              {column.map((number) => {
+                return (
+                  <CardNumber
+                    key={`${id}_${number}`}
+                    number={number}
+                    isMarked={balls.has(number)}
+                    onPattern={pattern && pattern.has(number) ? true : false}
+                  />
+                );
+              })}
+            </ul>
+          ))}
+        </div>
+      </article>
+    </>
+  );
+});
 
 export default Card;

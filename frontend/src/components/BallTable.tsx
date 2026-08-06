@@ -9,7 +9,7 @@ import styles from "./BallTable.module.css";
 
 // COMPONENTS
 interface Props {
-  balls: number[];
+  balls: Set<number>;
   handleSelectBall: (ball: number) => void;
   setShowBallTable: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -39,7 +39,7 @@ const BallTable: React.FC<Props> = ({
             {column.map((ball) => (
               <li
                 key={ball}
-                className={`${styles.number} ${balls.includes(ball) && styles.number_selected}`}
+                className={`${styles.number} ${balls.has(ball) && styles.number_selected}`}
                 onClick={() => handleSelectBall(ball)}
               >
                 <span>{ball}</span>
