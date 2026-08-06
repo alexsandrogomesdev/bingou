@@ -46,10 +46,11 @@ const Pack = () => {
   const [allModalities, setAllModalities] = useState<AllModalities[]>([]);
   const [packName, setPackName] = useState<string>("");
   const [balls, setBalls] = useState<Set<number>>(new Set([171]));
+  const [lastBall, setLastBall] = useState<number>(171);
   const [winnings, setWinnings] = useState<Winnings[]>([]);
   const [showWinnings, setShowWinnings] = useState<boolean>(false);
   const [showModalities, setShowModalities] = useState<boolean>(false);
-  const [showBallTable, setShowBallTable] = useState<boolean>(true);
+  const [showBallTable, setShowBallTable] = useState<boolean>(false);
   const [ballsToCards, setBallsToCards] = useState<Set<number>>(new Set([]));
 
   const { request } = useFetch();
@@ -87,6 +88,7 @@ const Pack = () => {
   }, [id, modalities, request]);
 
   useEffect(() => {
+    const startTime = Date.now();
     const body: BodyUpdatePack = {};
     if (!balls.has(171)) {
       body.balls = [...balls];
@@ -97,10 +99,14 @@ const Pack = () => {
     body.winnings = winnings;
 
     request(`/packs/${id}`, "PATCH", {}, body);
+    console.log(`Resquest time: ${Date.now() - startTime}ms`);
   }, [request, id, balls, modalities, winnings]);
 
   const handleSelectBall = useCallback(
     (ball: number) => {
+      const startTime = Date.now();
+      setLastBall(ball);
+
       const action: string = balls.has(ball) ? "REMOVE" : "ADD";
       setBalls((prevBalls) => {
         if (prevBalls.has(ball)) {
@@ -173,21 +179,14 @@ const Pack = () => {
           setShowWinnings(true);
         }, 1);
       }
+      console.log(`Select ball time: ${Date.now() - startTime}ms`);
     },
     [balls, allModalities, cards, modalities, winnings],
   );
 
-  const [loading, setLoading] = useState(false);
-  const containerRef = useRef<
-    string | HTMLElement | HTMLCanvasElement | HTMLImageElement
-  >("");
-
   const handleDownloadPdf = async () => {
-    setLoading(true);
     console.log("Iniciando impressão nativa...");
-    // Dispara a caixa de diálogo nativa do navegador
     window.print();
-    setLoading(false);
   };
 
   return (
@@ -239,12 +238,13 @@ const Pack = () => {
           />
         )}
 
-        <div className={styles.cards} id="area-impressao-cartelas">
+        <div className={styles.cards}>
           {cards.map((card, index) => (
             <Card
               key={card.id}
               index={index + 1}
               id={card.id}
+              ball={lastBall}
               balls={balls}
               cardNumbers={card.numbers.data}
             />

@@ -12,11 +12,13 @@ import CardNumber from "./CardNumber.tsx";
 interface CardsProps {
   index: number;
   id: number;
+  ball: number;
   balls: Set<number>;
   cardNumbers: number[];
   pattern?: Set<number>;
 }
-const Card = memo(({ index, id, balls, cardNumbers, pattern }: CardsProps) => {
+const Card = ({ index, id, ball, balls, cardNumbers, pattern }: CardsProps) => {
+  // console.log(`Card: ${id}`);
   const cardNumbersKey = cardNumbers.join(",");
   const columns = useMemo(() => {
     const cols: number[][] = [[], [], [], [], []];
@@ -60,6 +62,11 @@ const Card = memo(({ index, id, balls, cardNumbers, pattern }: CardsProps) => {
       </article>
     </>
   );
-});
+};
 
-export default Card;
+export default memo(Card, (prevProps, nextProps) => {
+  if (prevProps.cardNumbers.includes(nextProps.ball)) {
+    return false;
+  }
+  return true;
+});

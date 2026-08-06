@@ -361,7 +361,11 @@ fastify.patch(
 const start = async () => {
   try {
     await fastify.register(cors, {
-      origin: ["http://localhost:5173"],
+      origin: [
+        "http://localhost:5173",
+        "http://192.168.100.15:5173",
+        "http://localhost:3001",
+      ],
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,
