@@ -33,7 +33,7 @@ export const useFetch = () => {
       // );
       // }
 
-      const statusOk = [200, 201, 401];
+      const statusOk = [200, 201, 400, 401];
       if (!statusOk.includes(response.status)) return {} as T;
 
       const json = await response.json();

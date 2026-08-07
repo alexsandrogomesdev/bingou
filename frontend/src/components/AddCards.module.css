@@ -1,0 +1,70 @@
+.section_add_cards {
+  display: flex;
+  flex-flow: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(7, 7, 7, 0.7);
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+}
+.div_add_cards {
+  display: flex;
+  flex-flow: column;
+  margin: auto;
+  min-width: calc(100vw - 100px);
+  max-width: calc(100vw - 100px);
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 17px;
+}
+.div_add_cards nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.div_add_cards nav > p {
+  font-size: 18px;
+  color: #282930;
+  font-weight: 500;
+}
+.form_add_cards {
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+  margin-top: 25px;
+}
+.form_add_cards > label {
+  color: #282930;
+  font-size: 14px;
+  font-weight: 500;
+}
+.form_add_cards > div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.form_add_cards > div > input {
+  min-height: 45px;
+  max-height: 45px;
+  border: solid 1px #c7c7c7;
+  border-radius: 5px;
+  padding: 0 10px;
+  min-width: 120px;
+  max-width: 120px;
+  font-size: 16px;
+  color: #282930;
+}
+.form_add_cards > div > button {
+  min-height: 45px;
+  max-height: 45px;
+  border-radius: 5px;
+  border: none;
+  background-color: #ff7101;
+  padding: 0 10px;
+  color: #fff;
+}
+.form_add_cards > div > button:disabled {
+  background-color: #c1c1c1 !important;
+}

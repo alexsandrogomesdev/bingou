@@ -72,6 +72,29 @@
   overflow-y: auto;
 }
 
+.div_no_cards {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 100%;
+}
+.div_no_cards > p {
+  font-size: 18px;
+  color: #282930;
+  font-weight: 500;
+}
+.div_no_cards > button {
+  min-height: 45px;
+  max-height: 45px;
+  border-radius: 5px;
+  border: none;
+  background-color: #ff7101;
+  padding: 0 10px;
+  color: #fff;
+}
+
 /* Estilos aplicados APENAS na hora de gerar o PDF/Imprimir */
 @media print {
   /* Esconde tudo no site que NÃO seja a área de impressão */

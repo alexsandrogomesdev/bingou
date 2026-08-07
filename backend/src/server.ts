@@ -229,7 +229,7 @@ fastify.post(
     request: FastifyRequest<{ Body: NewPackBody }>,
     reply: FastifyReply,
   ) => {
-    const user_id = request.user.sub;
+    const userId = request.user.sub;
     const name = request.body.name;
     let qty = request.body.qty;
 
@@ -238,9 +238,29 @@ fastify.post(
     const winnings: Array<object> = [];
     const time = Math.floor(Date.now() / 1000);
 
+    let limit: number = 20;
+    const userDueDate = await query("SELECT due_at FROM users WHERE id = $1", [
+      userId,
+    ]);
+    if (userDueDate.rows[0].due_at > Math.floor(Date.now() / 1000)) {
+      limit = 2000;
+    }
+    if (userDueDate.rows[0].cards >= limit) {
+      return reply.status(400).send({
+        message:
+          "Você só pode gerar no máximo 20 cartelas por vez. Para gerar mais compre ou renove seu plano.",
+      });
+    }
+
+    if (qty > 2000) {
+      return reply.status(400).send({
+        message: "Limite máximo de 2000 cartelas por maço.",
+      });
+    }
+
     const createPack = await query(
       "INSERT INTO packs (user_id, name, modalities, balls, winnings, starts_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
-      [user_id, name, mods, balls, JSON.stringify(winnings), time, time],
+      [userId, name, mods, balls, JSON.stringify(winnings), time, time],
     );
     const packId: number = createPack.rows[0].id;
 
@@ -258,7 +278,7 @@ fastify.post(
       for (let c = 0; c < cards.length; c++) {
         const insert = await query(
           "INSERT INTO cards (pack_id, user_id, numbers, created_at) VALUES ($1, $2, $3, $4)",
-          [packId, user_id, cards[c], time],
+          [packId, userId, cards[c], time],
         );
         if (insert.rowCount && insert.rowCount > 0) {
           cards.splice(c, 1);
@@ -354,6 +374,61 @@ fastify.patch(
 
     return reply.status(201).send({
       message: update.rowCount && update.rowCount === 1 ? "ok" : "failed",
+    });
+  },
+);
+
+fastify.post(
+  "/pack/:id/addCards",
+  { preHandler: [authenticate] },
+  async (
+    request: FastifyRequest<{ Body: { qty: number }; Params: { id: number } }>,
+    reply: FastifyReply,
+  ) => {
+    const qty = request.body.qty;
+    const packId = request.params.id;
+    const userId = request.user.sub;
+
+    let limit: number = 20;
+    const userDueDate = await query(
+      "SELECT p.due_at, COUNT(c.id)::bigint AS cards FROM users p LEFT JOIN cards c ON c.pack_id = $1 WHERE p.id = $2 GROUP BY p.due_at",
+      [packId, userId],
+    );
+    if (userDueDate.rows[0].due_at > Math.floor(Date.now() / 1000)) {
+      limit = 2000;
+    }
+    if (userDueDate.rows[0].cards + qty >= limit) {
+      return reply.status(400).send({
+        message: `Limite máximo de ${limit} excedido.`,
+      });
+    }
+
+    // GENERATE CARDS
+    const cards: Uint8Array[] = [];
+
+    const base: number[] = [];
+    for (let d = 1; d <= 75; d++) base.push(d);
+
+    for (let c = 0; c < qty; c++) {
+      cards.push(createCardNumbers(base));
+    }
+
+    const time = Math.floor(Date.now() / 1000);
+
+    while (cards.length > 0) {
+      for (let c = 0; c < cards.length; c++) {
+        const insert = await query(
+          "INSERT INTO cards (pack_id, user_id, numbers, created_at) VALUES ($1, $2, $3, $4)",
+          [packId, userId, cards[c], time],
+        );
+        if (insert.rowCount && insert.rowCount > 0) {
+          cards.splice(c, 1);
+        }
+      }
+    }
+
+    return reply.status(201).send({
+      message: cards.length !== 0 ? "Falha ao adicionar cartelas." : "ok",
     });
   },
 );

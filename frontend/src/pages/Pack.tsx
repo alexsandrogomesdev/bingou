@@ -28,6 +28,7 @@ import Card from "../components/Card.tsx";
 import BallTable from "../components/BallTable.tsx";
 import WinningCards from "../components/WinningCards.tsx";
 import Modalities from "../components/Modalities.tsx";
+import AddCards from "../components/AddCards.tsx";
 
 // INTERFACES AND TYPES
 import type {
@@ -51,6 +52,8 @@ const Pack = () => {
   const [showWinnings, setShowWinnings] = useState<boolean>(false);
   const [showModalities, setShowModalities] = useState<boolean>(false);
   const [showBallTable, setShowBallTable] = useState<boolean>(false);
+  const [showAddCards, setShowAddCards] = useState<boolean>(false);
+  const [cardsAdded, setCardsAdded] = useState<boolean>(false);
   const [ballsToCards, setBallsToCards] = useState<Set<number>>(new Set([]));
 
   const { request } = useFetch();
@@ -68,7 +71,7 @@ const Pack = () => {
       setBallsToCards(new Set(response.result.balls.data));
     };
     getPack();
-  }, [id, request]);
+  }, [id, request, cardsAdded]);
 
   useEffect(() => {
     setHeaderTitle(packName);
@@ -191,6 +194,13 @@ const Pack = () => {
 
   return (
     <>
+      {showAddCards && (
+        <AddCards
+          packId={id ? id : ""}
+          setShowAddCards={setShowAddCards}
+          setCardsAdded={setCardsAdded}
+        />
+      )}
       {showWinnings && (
         <WinningCards
           balls={balls}
@@ -225,7 +235,7 @@ const Pack = () => {
           >
             <Grid3x3 />
           </button>
-          <button>
+          <button onClick={() => setShowAddCards(true)}>
             <Plus />
           </button>
         </div>
@@ -239,6 +249,15 @@ const Pack = () => {
         )}
 
         <div className={styles.cards}>
+          {cards.length === 0 && (
+            <div className={styles.div_no_cards}>
+              <p>Não há cartelas neste maço.</p>
+              <button onClick={() => setShowAddCards(true)}>
+                <Plus />
+              </button>
+            </div>
+          )}
+
           {cards.map((card, index) => (
             <Card
               key={card.id}
