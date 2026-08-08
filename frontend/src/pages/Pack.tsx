@@ -14,6 +14,7 @@ import {
   Plus,
   ChevronLeft,
   ChevronRight,
+  Loader,
 } from "lucide-react";
 
 // STYLES
@@ -55,6 +56,7 @@ const Pack = () => {
   const [showAddCards, setShowAddCards] = useState<boolean>(false);
   const [cardsAdded, setCardsAdded] = useState<boolean>(false);
   const [ballsToCards, setBallsToCards] = useState<Set<number>>(new Set([]));
+  const [loader, setLoader] = useState<boolean>(true);
 
   const { request } = useFetch();
   const { id } = useParams();
@@ -69,6 +71,7 @@ const Pack = () => {
       setModalities(response.result.modalities.data);
       setAllModalities(response.result.allModalities);
       setBallsToCards(new Set(response.result.balls.data));
+      setLoader(false);
     };
     getPack();
   }, [id, request, cardsAdded]);
@@ -217,39 +220,43 @@ const Pack = () => {
         />
       )}
       <section className={styles.section_pack}>
-        <div className={styles.div_actions}>
-          <button onClick={() => setShowWinnings(true)}>
-            <Gift />
-          </button>
-          <button onClick={() => setShowModalities(true)}>
-            <GamepadDirectional />
-            Modalidades
-          </button>
-          <button onClick={handleDownloadPdf}>
-            <FileText />
-            Exportar
-          </button>
-          <button
-            onClick={() => setShowBallTable(true)}
-            disabled={showBallTable}
-          >
-            <Grid3x3 />
-          </button>
-          <button onClick={() => setShowAddCards(true)}>
-            <Plus />
-          </button>
-        </div>
+        <div className={styles.div_pack}>
+          <div className={styles.div_actions}>
+            <button onClick={() => setShowWinnings(true)}>
+              <Gift />
+            </button>
+            <button onClick={() => setShowModalities(true)}>
+              <GamepadDirectional />
+              Modalidades
+            </button>
+            <button onClick={handleDownloadPdf}>
+              <FileText />
+              Exportar
+            </button>
+            <button
+              onClick={() => setShowBallTable(true)}
+              disabled={showBallTable}
+            >
+              <Grid3x3 />
+            </button>
+            <button onClick={() => setShowAddCards(true)}>
+              <Plus />
+            </button>
+          </div>
 
-        {balls && id && showBallTable && (
-          <BallTable
-            balls={balls}
-            handleSelectBall={handleSelectBall}
-            setShowBallTable={setShowBallTable}
-          />
-        )}
-
-        <div className={styles.cards}>
-          {cards.length === 0 && (
+          {balls && id && showBallTable && (
+            <BallTable
+              balls={balls}
+              handleSelectBall={handleSelectBall}
+              setShowBallTable={setShowBallTable}
+            />
+          )}
+          {loader && (
+            <div className={styles.loader}>
+              <Loader />
+            </div>
+          )}
+          {!loader && cards.length === 0 && (
             <div className={styles.div_no_cards}>
               <p>Não há cartelas neste maço.</p>
               <button onClick={() => setShowAddCards(true)}>
@@ -257,17 +264,18 @@ const Pack = () => {
               </button>
             </div>
           )}
-
-          {cards.map((card, index) => (
-            <Card
-              key={card.id}
-              index={index + 1}
-              id={card.id}
-              ball={lastBall}
-              balls={balls}
-              cardNumbers={card.numbers.data}
-            />
-          ))}
+          <div className={styles.cards}>
+            {cards.map((card, index) => (
+              <Card
+                key={card.id}
+                index={index + 1}
+                id={card.id}
+                ball={lastBall}
+                balls={balls}
+                cardNumbers={card.numbers.data}
+              />
+            ))}
+          </div>
         </div>
       </section>
     </>

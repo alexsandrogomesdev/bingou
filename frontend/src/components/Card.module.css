@@ -4,11 +4,11 @@
   gap: 5px;
   border: solid 1px #c7c7c7;
   border-radius: 8px;
-  padding: 5px;
-  min-width: 175px;
-  max-width: 175px;
+  /* padding: 5px; */
+  min-width: 146px;
+  max-width: 146px;
   background-color: #fff;
-  max-height: 220px;
+  max-height: 205px;
 }
 .card_header {
   display: flex;
@@ -28,8 +28,8 @@
   font-size: 16px;
   color: #282930;
   font-weight: 800;
-  min-width: 32px;
-  max-width: 32px;
+  min-width: 28px;
+  max-width: 28px;
   text-align: center;
 }
 .card_body {
@@ -41,8 +41,8 @@
 .card_column {
   display: flex;
   flex-flow: column;
-  min-width: 32px;
-  max-width: 32px;
+  min-width: 28px;
+  max-width: 28px;
   text-align: center;
 }
 .card_column:nth-of-type(1),

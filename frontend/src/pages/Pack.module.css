@@ -2,16 +2,33 @@
   display: flex;
   flex-flow: column;
   position: relative;
-  height: calc(100dvh - 63px);
+  height: auto;
+  min-width: 100%;
+  max-width: 100%;
   top: 63px;
-  padding: 17px;
-  gap: 16px;
+}
+.div_pack {
+  display: flex;
+  flex-flow: column;
+  position: relative;
+  min-width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
 }
 .div_actions {
   display: flex;
   flex-flow: row wrap;
   gap: 10px;
   margin: 0 0 0 auto;
+  padding: 17px;
+  width: max-content;
+  justify-content: right;
+
+  position: fixed;
+  z-index: 1;
+  background-color: #fff;
+  min-width: 100%;
+  max-width: 100%;
 }
 .div_actions > button {
   background-color: #ff7101;
@@ -70,15 +87,46 @@
   margin: 0 auto;
   flex: 1;
   overflow-y: auto;
-}
+  max-height: max-content;
+  min-width: 100%;
+  max-width: 100%;
+  padding-bottom: 25px;
 
+  position: relative;
+  top: 70px;
+}
+.loader {
+  display: flex;
+  align-items: center;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 60dvh;
+}
+.loader svg {
+  color: #ff7101;
+  min-width: 48px;
+  min-height: 48px;
+  margin: auto;
+  animation: Loader 1s ease-in-out infinite;
+}
+@keyframes Loader {
+  0% {
+    transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
 .div_no_cards {
   display: flex;
   flex-flow: column;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  height: 100%;
+  min-height: 60dvh;
 }
 .div_no_cards > p {
   font-size: 18px;
@@ -90,9 +138,37 @@
   max-height: 45px;
   border-radius: 5px;
   border: none;
-  background-color: #ff7101;
   padding: 0 10px;
   color: #fff;
+}
+
+@media screen and (min-width: 768px) {
+  .section_pack {
+    flex: 1;
+  }
+  .div_pack {
+    min-width: 1100px;
+    max-width: 1100px;
+    flex: 1;
+    margin: 0 auto;
+  }
+  .cards {
+    grid-template-columns: repeat(6, auto);
+  }
+  .loader {
+    min-width: 1100px;
+    max-width: 1100px;
+  }
+  .div_no_cards > button {
+    cursor: pointer;
+  }
+  .div_actions {
+    min-width: 1100px;
+    max-width: 1100px;
+  }
+  .div_actions > button:enabled {
+    cursor: pointer;
+  }
 }
 
 /* Estilos aplicados APENAS na hora de gerar o PDF/Imprimir */
@@ -119,6 +195,11 @@
     left: 0 !important;
     top: 0 !important;
     width: 100% !important;
-    grid-template-columns: repeat(3, auto) !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    justify-content: space-around !important;
+  }
+
+  .cards::-webkit-scrollbar {
+    background-color: #ffffff;
   }
 }

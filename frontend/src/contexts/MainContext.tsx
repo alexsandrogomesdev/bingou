@@ -26,7 +26,7 @@ export const MainContextProvider = ({ children }: { children: ReactNode }) => {
   const [contextStatus, setContextStatus] = useState<string>("Main Context...");
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [userId, setUserId] = useState<number | null>(null);
-  const [headerTitle, setHeaderTitle] = useState<string>("WMS Cartelas");
+  const [headerTitle, setHeaderTitle] = useState<string>("Bingou");
   const [alert, setAlert] = useState<AlertObject>({
     id: 0,
     type: "",

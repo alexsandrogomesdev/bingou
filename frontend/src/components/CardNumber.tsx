@@ -1,5 +1,5 @@
 import { useState, memo } from "react";
-import { Globe } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 // STYLES
 import styles from "./CardNumber.module.css";
@@ -19,7 +19,7 @@ const CardNumber = memo(({ number, isMarked, onPattern }: Props) => {
       <span
         className={`${isMarked && styles.number_selected} ${number === 0 && styles.joker} ${onPattern && styles.number_selected_2}`}
       >
-        {number === 0 ? <Globe /> : number}
+        {number === 0 ? <Sparkles /> : number}
       </span>
     </li>
   );

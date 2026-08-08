@@ -1,25 +1,30 @@
-.section_ball_tables {
+.section_balls_table {
   display: flex;
   flex-flow: column;
   background-color: #fff;
-  padding: 16px;
-  min-width: 100vw;
+  padding: 8px 8px 0;
+  min-width: calc(100% - 34px);
+  max-width: calc(100% - 34px);
   max-height: 180px;
-  margin-left: -17px;
+  margin: 0 auto 20px;
+  border: solid 1px #e7e7e7;
+  border-radius: 12px;
+  position: relative;
+  top: 70px;
 }
-.section_ball_tables > nav {
+.section_balls_table > nav {
   display: flex;
   flex-flow: row;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
 }
-.section_ball_tables > nav > h3 {
+.section_balls_table > nav > h3 {
   font-size: 16px;
   font-weight: 500;
   color: #282930;
 }
-.section_ball_tables > nav > svg {
+.section_balls_table > nav > svg {
   color: #282930;
   min-height: 24px;
   max-height: 24px;
@@ -65,4 +70,35 @@
 .number_selected > span {
   color: #fff;
   font-weight: 500;
+}
+
+@media screen and (min-width: 768px) {
+  .section_balls_table {
+    min-width: max-content;
+    max-width: max-content;
+    margin: 0 auto 25px;
+    min-height: max-content;
+    padding-bottom: 8px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+  }
+  .section_balls_table > nav {
+    justify-content: space-between;
+    min-width: 100%;
+    max-width: 100%;
+  }
+  .section_balls_table > nav svg {
+    cursor: pointer;
+  }
+  .table_column {
+    grid-template-columns: repeat(15, auto);
+  }
+  .number {
+    min-width: 48px;
+    max-width: 48px;
+    min-height: 48px;
+    max-height: 48px;
+    cursor: pointer;
+  }
 }

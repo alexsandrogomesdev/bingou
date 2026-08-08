@@ -28,7 +28,7 @@ const BallTable: React.FC<Props> = ({
   }
 
   return (
-    <section className={styles.section_ball_tables}>
+    <section className={styles.section_balls_table}>
       <nav>
         <h3>Bolas chamadas</h3>
         <X onClick={() => setShowBallTable(false)} />

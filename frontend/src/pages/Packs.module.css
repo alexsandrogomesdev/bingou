@@ -3,8 +3,11 @@
   flex-flow: column;
   padding: 17px;
   position: relative;
-  height: calc(100dvh - 63px);
   top: 63px;
+}
+.div_packs {
+  display: flex;
+  flex-flow: column;
 }
 .packs_title {
   font-size: 18px;
@@ -22,7 +25,6 @@
   flex-flow: column;
   gap: 10px;
   flex: 1;
-  overflow-y: auto;
 }
 .pack {
   display: flex;
@@ -32,6 +34,7 @@
   background-color: #fff;
   border-radius: 12px;
   padding: 10px;
+  border: solid 1px oklch(93% 0 0);
 }
 .pack > a {
   color: #ff7101;
@@ -56,9 +59,14 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  position: absolute;
+  position: fixed;
+
+  min-height: 32px;
+  max-height: 32px;
+
   bottom: 35px;
   right: 17px;
+
   background-color: #ff7101;
   border: none;
   border-radius: 22px;
@@ -66,10 +74,28 @@
   color: #fff;
   font-weight: 600;
   font-size: 16px;
+  z-index: 2;
 }
 .button_new_pack > svg {
   min-width: 20px;
   max-width: 20px;
   min-height: 20px;
   max-height: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .div_packs {
+    min-width: 1100px;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .button_new_pack {
+    position: absolute;
+    top: -8px;
+    right: 0;
+    z-index: 1;
+    max-width: max-content;
+    cursor: pointer;
+  }
 }

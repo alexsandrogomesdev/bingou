@@ -41,8 +41,12 @@ const AddCards = ({ packId, setShowAddCards, setCardsAdded }: Props) => {
         return prevCardsAdded ? false : true;
       });
       setShowAddCards(false);
+      mainContext.setAlert({
+        id: Date.now(),
+        type: "success",
+        message: `${qty} cartelas foram adicionadas ao seu maço.`,
+      });
     } else {
-      console.log(addCards.message);
       mainContext.setAlert({
         id: Date.now(),
         type: "error",

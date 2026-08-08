@@ -53,33 +53,35 @@ const Packs = () => {
       />
 
       <section className={styles.section_packs}>
-        <h2 className={styles.packs_title}>Meus Maços</h2>
-        {packs.length === 0 && (
-          <p className={styles.none_packs}>
-            Nenhum maço criado, crie um no botão abaixo!
-          </p>
-        )}
-        <ul className={styles.packs}>
-          {packs.map((pack) => (
-            <li key={pack.id} className={styles.pack}>
-              <div>
-                <b>{pack.name}</b>
-                <span>{fts.dateFromUnix(pack.created_at)}</span>
-                <p>{pack.cards} Cartelas</p>
-              </div>
-              <NavLink to={`/pack/${pack.id}`}>
-                <ExternalLink />
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-        <button
-          className={styles.button_new_pack}
-          onClick={() => setSectionNewPack(true)}
-        >
-          <Plus />
-          Novo
-        </button>
+        <div className={styles.div_packs}>
+          <h2 className={styles.packs_title}>Meus Maços</h2>
+          {packs.length === 0 && (
+            <p className={styles.none_packs}>
+              Nenhum maço criado, crie um no botão abaixo!
+            </p>
+          )}
+          <ul className={styles.packs}>
+            {packs.map((pack) => (
+              <li key={pack.id} className={styles.pack}>
+                <div>
+                  <b>{pack.name}</b>
+                  <span>{fts.dateFromUnix(pack.created_at)}</span>
+                  <p>{pack.cards} Cartelas</p>
+                </div>
+                <NavLink to={`/pack/${pack.id}`}>
+                  <ExternalLink />
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+          <button
+            className={styles.button_new_pack}
+            onClick={() => setSectionNewPack(true)}
+          >
+            <Plus />
+            Novo
+          </button>
+        </div>
       </section>
     </>
   );

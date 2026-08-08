@@ -242,10 +242,10 @@ fastify.post(
     const userDueDate = await query("SELECT due_at FROM users WHERE id = $1", [
       userId,
     ]);
-    if (userDueDate.rows[0].due_at > Math.floor(Date.now() / 1000)) {
+    if (Number(userDueDate.rows[0].due_at) > Math.floor(Date.now() / 1000)) {
       limit = 2000;
     }
-    if (userDueDate.rows[0].cards >= limit) {
+    if (Number(userDueDate.rows[0].cards) >= limit) {
       return reply.status(400).send({
         message:
           "Você só pode gerar no máximo 20 cartelas por vez. Para gerar mais compre ou renove seu plano.",
@@ -394,10 +394,10 @@ fastify.post(
       "SELECT p.due_at, COUNT(c.id)::bigint AS cards FROM users p LEFT JOIN cards c ON c.pack_id = $1 WHERE p.id = $2 GROUP BY p.due_at",
       [packId, userId],
     );
-    if (userDueDate.rows[0].due_at > Math.floor(Date.now() / 1000)) {
+    if (Number(userDueDate.rows[0].due_at) > Math.floor(Date.now() / 1000)) {
       limit = 2000;
     }
-    if (userDueDate.rows[0].cards + qty >= limit) {
+    if (Number(userDueDate.rows[0].cards) + qty >= limit) {
       return reply.status(400).send({
         message: `Limite máximo de ${limit} excedido.`,
       });

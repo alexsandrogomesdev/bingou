@@ -23,14 +23,15 @@ import Home from "./pages/Home.tsx";
 
 function App() {
   const mainContext = useMainContext();
-  // const hideOnRoutes = ["/access"];
-  // const showComponent = !hideOnRoutes.includes(location.pathname);
+  const hideOnRoutes: Array<string> = [];
+  const location = useLocation();
+  const showComponent = !hideOnRoutes.includes(location.pathname);
 
   return (
     <>
       {mainContext.alert.type !== "" && <Alert />}
 
-      <Header />
+      {showComponent && <Header />}
       <MainMenu />
 
       <main>
@@ -44,7 +45,7 @@ function App() {
         </Routes>
       </main>
 
-      <Footer />
+      {location.pathname === "/" && <Footer />}
     </>
   );
 }

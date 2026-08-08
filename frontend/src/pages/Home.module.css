@@ -1,6 +1,333 @@
 .section_home {
   display: flex;
   flex-flow: column;
-  position: relative;
-  top: 63px;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+.div_home {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 25px;
+}
+
+.div_1 {
+  display: flex;
+  flex-flow: column;
+  background-image: radial-gradient(
+    circle at 50% 5%,
+    #ffe8d6 0%,
+    #ffe8d6 17%,
+    transparent 50%
+  );
+  max-width: 100%;
+}
+
+.initial_presentation {
+  display: flex;
+  flex-flow: column;
+
+  /* Gradiente radial saindo do topo para criar o foco de luz laranja pastel */
+
+  /* Garante o espaçamento correto para o conteúdo */
+  padding: 20px;
+
+  text-align: center;
+}
+.initial_presentation > span {
+  font-size: 12px;
+  color: #ff7101;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  max-width: max-content;
+  background-color: #fff1e5;
+  padding: 1px 15px;
+  border-radius: 22px;
+  border: solid 1px #eee6e0;
+  gap: 10px;
+}
+.initial_presentation > span > svg {
+  min-width: 14px;
+  max-width: 14px;
+}
+.initial_presentation > h1 {
+  font-size: 2.25rem;
+  color: #282930;
+  margin: 0;
+}
+.initial_presentation > h2 {
+  font-size: 2.25rem;
+  color: #ff7101;
+  margin: -15px 0 0 0;
+}
+.initial_presentation > p {
+  color: #816d62;
+  margin: 17px 0;
+}
+.initial_presentation > ul {
+  display: flex;
+  flex-flow: column;
+  gap: 17px;
+}
+.initial_presentation > ul a {
+  width: 100%;
+  text-decoration: none;
+}
+.initial_presentation > ul li:nth-of-type(1) a {
+  background-color: #ff7101;
+  border: none;
+  border-radius: 52px;
+  min-height: 52px;
+  max-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0px 5px 20px 0px #ff710180;
+  -webkit-box-shadow: 0px 5px 20px 0px #ff710180;
+}
+.initial_presentation > ul li:nth-of-type(2) a {
+  width: 100%;
+  color: #0f0f0f;
+  border: solid 1px #f1e5dd;
+  border-radius: 52px;
+  min-height: 52px;
+  max-height: 52px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #fffaf5;
+}
+
+.template_card {
+  display: flex;
+  flex-flow: column;
+  margin: 25px;
+  box-shadow: 0 20px 50px -24px #fb68008c;
+  border-radius: 34px;
+  border: solid 1px #fbefe7;
+  background-color: #fff;
+}
+.template_card > ul {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 15px 0;
+  gap: 5px;
+}
+.template_card > ul > li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 800;
+  background-color: #ff7101;
+  min-height: 44px;
+  max-height: 44px;
+  min-width: 55px;
+  max-width: 55px;
+  border-radius: 20px;
+}
+.template_card > div {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  padding: 15px;
+  gap: 2px;
+}
+.template_card > div > ul {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: space-between;
+  row-gap: 10px;
+}
+.template_card > div > ul > li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 16px;
+  color: #282930;
+  font-weight: 500;
+  min-height: 51px;
+  max-height: 51px;
+  min-width: 55px;
+  max-width: 55px;
+  border-radius: 17px;
+  border: solid 1px #eee6e0;
+}
+.joker {
+  background-color: #fff1e5;
+  border: none !important;
+}
+.joker svg {
+  color: #ff7101;
+  min-height: 18px;
+  max-height: 18px;
+}
+.number_selected {
+  background-color: #ff7101;
+  color: #fff !important;
+  border: none !important;
+}
+
+.div_2 {
+  display: flex;
+  flex-flow: column;
+  margin: 20px;
+}
+.div_2 > ul {
+  display: flex;
+  flex-flow: column;
+  gap: 20px;
+}
+.div_2 > ul > li {
+  display: flex;
+  flex-flow: column;
+  background-color: #fff1e5b5;
+  padding: 20px;
+  border-radius: 26px;
+}
+.div_2 > ul > li > i {
+  min-width: 44px;
+  max-width: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  border-radius: 44px;
+  background-color: #ffffff;
+  color: #ff7101;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  box-shadow:
+    0 1px 3px 0 #0000001a,
+    0 1px 2px -1px #0000001a;
+}
+.div_2 > ul > li > i > svg {
+  min-width: 20px;
+  max-width: 20px;
+}
+.div_2 > ul > li > p {
+  font-size: 16px;
+  font-weight: 800;
+  color: #282930;
+  margin: 10px 0;
+}
+.div_2 > ul > li > span {
+  font-size: 14px;
+  font-weight: 300;
+  color: #816d62;
+}
+
+.div_3 {
+  display: flex;
+  flex-flow: column;
+  background-color: #ff7101;
+  padding: 45px 17px;
+  margin: 0 20px 40px;
+  border-radius: 20px;
+  color: #fff;
+  text-align: center;
+  justify-content: center;
+}
+.div_3 > h3 {
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+.div_3 p {
+  font-size: 14px;
+  margin: 17px 0;
+  font-weight: 300;
+}
+.div_3 > a {
+  color: #ff7101;
+  background-color: #fff;
+  min-width: 156px;
+  max-width: 156px;
+  min-height: 52px;
+  max-height: 52px;
+  margin: 0 auto;
+  border-radius: 32px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+@media screen and (min-width: 768px) {
+  .div_home {
+    min-width: 1100px;
+    max-width: 1100px;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+  }
+  .div_1 {
+    min-width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    flex-flow: row;
+    justify-content: space-between;
+  }
+  .initial_presentation {
+    max-width: 40%;
+    text-align: left;
+    justify-content: left;
+  }
+  .initial_presentation > span {
+    margin: 25px 0 0 0;
+  }
+  .initial_presentation > h1 {
+    margin: 25px 0 0 0;
+    font-size: 3em;
+  }
+  .initial_presentation > h2 {
+    margin: -10px 0 25px 0;
+    font-size: 3em;
+  }
+  .initial_presentation > p {
+    margin: 0 0 35px;
+  }
+  .initial_presentation > ul {
+    flex-flow: row;
+  }
+  .initial_presentation > ul li a {
+    min-width: 180px;
+    max-width: 180px;
+  }
+  .initial_presentation > ul li:nth-of-type(2) a {
+    background-color: #ffffff;
+  }
+
+  .div_2 > ul {
+    min-width: 100%;
+    max-width: 100%;
+    flex-flow: row;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: space-between;
+  }
+
+  .div_3 {
+    min-width: calc(100% - 40px);
+    max-width: calc(100% - 40px);
+    margin: 25px 0 0;
+  }
 }

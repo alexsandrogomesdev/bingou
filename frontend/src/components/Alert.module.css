@@ -8,10 +8,9 @@
   justify-content: space-between;
   padding: 17px;
   border-radius: 12px;
-  min-width: calc(100vw - 34px);
-  max-width: calc(100vw - 34px);
+  min-width: calc(100% - 34px);
+  max-width: calc(100% - 34px);
   top: 17px;
-  left: 17px;
 }
 .alert_error {
   background-color: #ec4848;
@@ -27,4 +26,17 @@
 .alert > svg {
   color: #fff;
   cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .alert {
+    left: 17px;
+  }
+}
+@media screen and (min-width: 768px) {
+  .alert {
+    min-width: 350px;
+    max-width: 350px;
+    right: 17px;
+  }
 }

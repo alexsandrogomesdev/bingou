@@ -13,7 +13,7 @@
   top: 0;
   left: 0;
   background-color: rgba(7, 7, 7, 0.7);
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   z-index: 2;
 }
@@ -21,8 +21,8 @@
   display: flex;
   flex-flow: column;
   margin: auto;
-  min-width: calc(100vw - 34px);
-  max-width: calc(100vw - 34px);
+  min-width: calc(100% - 34px);
+  max-width: calc(100% - 34px);
   background-color: #fff;
   border-radius: 12px;
   padding: 17px;
@@ -70,4 +70,16 @@
 }
 .submit_disabled {
   background-color: #b7b7b7;
+}
+
+@media screen and (min-width: 768px) {
+  .div_new_pack {
+    min-width: 500px;
+    max-width: 500px;
+    margin: auto;
+  }
+  .div_new_pack svg,
+  .div_new_pack button:enabled {
+    cursor: pointer;
+  }
 }
