@@ -20,7 +20,7 @@ const MainMenu = () => {
       <div className={styles.menu_div}>
         <div className={styles.menu_header}>
           <Globe />
-          <h2>WMS Cartelas</h2>
+          <h2>Bingou</h2>
         </div>
 
         <ul className={styles.menu_ul}>
