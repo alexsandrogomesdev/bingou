@@ -1,6 +1,6 @@
 import { Boxes, UserRound, Globe, UserKey, House } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import Cookies from "js-cookie";
+import Cookies from "../../node_modules/@types/js-cookie/index";
 
 // STYLES
 import styles from "./MainMenu.module.css";

@@ -8,7 +8,7 @@ import styles from "./WinningCards.module.css";
 // HOOKS
 
 // COMPONENTS
-import Card from "../components/Card";
+import Card from "./Card";
 
 // INTERFACES AND TYPES
 import type { Winnings } from "../types/pack";
