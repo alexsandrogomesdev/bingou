@@ -1,5 +1,4 @@
-import { useState, useMemo, memo, useEffect } from "react";
-import { Globe } from "lucide-react";
+import { useMemo, memo } from "react";
 
 // STYLES
 import styles from "./Card.module.css";

@@ -1,9 +1,7 @@
-import { useState, useEffect, type Dispatch, type SetStateAction } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { X } from "lucide-react";
-
-import * as fts from "../utils/functions.ts";
 
 // STYLES
 import styles from "./NewPack.module.css";
@@ -17,7 +15,7 @@ import { useFetch } from "../hooks/useFetch.tsx";
 // TYPES AND INTERFACES
 type Props = {
   sectionNewPack: boolean;
-  setSectionNewPack: Dispatch<SetStateAction<boolean>>;
+  setSectionNewPack: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const NewPack = ({ sectionNewPack, setSectionNewPack }: Props) => {

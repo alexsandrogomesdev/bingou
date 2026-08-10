@@ -20,7 +20,6 @@ const SignUp = () => {
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
   const [signuping, setSignuping] = useState<boolean>(false);
 
   const handleSignUp = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -28,7 +27,7 @@ const SignUp = () => {
     // setSignuping(true);
 
     interface SignUp {
-      status: string;
+      message: string;
     }
     const signUp: SignUp = await request(
       "/user/signup",
@@ -43,9 +42,15 @@ const SignUp = () => {
       },
     );
 
-    if (signUp.status === "ok") {
+    if (signUp.message === "ok") {
       navigate("/signin");
       setSignuping(false);
+    } else {
+      mainContext.setAlert({
+        id: Date.now(),
+        type: "error",
+        message: signUp.message,
+      });
     }
   };
 
@@ -114,9 +119,6 @@ const SignUp = () => {
             required
           />
         </div>
-
-        {error && <p className={styles.error_message}>{error}</p>}
-
         <button type="submit" disabled={signuping}>
           {signuping ? "Entrando..." : "Entrar"}
         </button>

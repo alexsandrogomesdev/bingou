@@ -5,13 +5,11 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Profile.module.css";
 
 // HOOKS
-import { useMainContext } from "../hooks/useMainContext.tsx";
 import { useFetch } from "../hooks/useFetch.tsx";
 
 // COMPONENTS
 
 const Profile = () => {
-  const mainContext = useMainContext();
   const { request } = useFetch();
   const navigate = useNavigate();
 

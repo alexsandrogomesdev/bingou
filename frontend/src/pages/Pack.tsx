@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useEffectEvent,
-  useState,
-  useRef,
-  useCallback,
-} from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   FileText,
@@ -12,8 +6,6 @@ import {
   Gift,
   Grid3x3,
   Plus,
-  ChevronLeft,
-  ChevronRight,
   Loader,
 } from "lucide-react";
 
@@ -55,7 +47,6 @@ const Pack = () => {
   const [showBallTable, setShowBallTable] = useState<boolean>(false);
   const [showAddCards, setShowAddCards] = useState<boolean>(false);
   const [cardsAdded, setCardsAdded] = useState<boolean>(false);
-  const [ballsToCards, setBallsToCards] = useState<Set<number>>(new Set([]));
   const [loader, setLoader] = useState<boolean>(true);
 
   const { request } = useFetch();
@@ -76,11 +67,10 @@ const Pack = () => {
       setWinnings(response.result.winnings);
       setModalities(response.result.modalities.data);
       setAllModalities(response.result.allModalities);
-      setBallsToCards(new Set(response.result.balls.data));
       setLoader(false);
     };
     getPack();
-  }, [id, request, cardsAdded]);
+  }, [id, request, cardsAdded, navigate]);
 
   useEffect(() => {
     setHeaderTitle(packName);

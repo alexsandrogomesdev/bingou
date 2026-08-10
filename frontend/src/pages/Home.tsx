@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { Sparkles, Play, Grid3x3, Check, Printer } from "lucide-react";
 import { Link } from "react-router-dom";
 

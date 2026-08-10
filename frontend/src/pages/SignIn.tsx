@@ -17,7 +17,6 @@ const SignIn = () => {
 
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
-  const [error, setError] = useState<string>();
   const [signing, setSigning] = useState<boolean>(false);
 
   const handleSignIn = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -43,7 +42,6 @@ const SignIn = () => {
     if (signIn.message === "ok") {
       navigate("/packs");
     } else {
-      console.log(signIn.message);
       mainContext.setAlert({
         id: Date.now(),
         type: "error",
@@ -78,11 +76,6 @@ const SignIn = () => {
             required
           />
         </div>
-
-        {error && (
-          <p className={styles.error_message}>Verifique seu email e senha.</p>
-        )}
-
         <button type="submit" disabled={signing}>
           {signing ? "Entrando..." : "Entrar"}
         </button>

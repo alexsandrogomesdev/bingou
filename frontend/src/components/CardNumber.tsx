@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { memo } from "react";
 import { Sparkles } from "lucide-react";
 
 // STYLES
