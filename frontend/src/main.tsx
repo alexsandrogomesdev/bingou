@@ -7,7 +7,13 @@ import App from "./App.tsx";
 // CONTEXT
 import { MainContextProvider } from "./contexts/MainContext.tsx";
 
-createRoot(document.getElementById("root")).render(
+const container = document.getElementById("root");
+
+if (!container) {
+  throw new Error("'#root' Element not found!");
+}
+
+createRoot(container).render(
   <StrictMode>
     <BrowserRouter>
       <MainContextProvider>

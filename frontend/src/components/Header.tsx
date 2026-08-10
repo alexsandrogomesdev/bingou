@@ -1,5 +1,5 @@
 import styles from "./Header.module.css";
-import { Menu, Globe, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
 import { useMainContext } from "../hooks/useMainContext.tsx";

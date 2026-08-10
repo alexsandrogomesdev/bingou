@@ -16,7 +16,8 @@ interface CardsProps {
   cardNumbers: number[];
   pattern?: Set<number>;
 }
-const Card = ({ index, id, ball, balls, cardNumbers, pattern }: CardsProps) => {
+
+const Card = ({ index, id, balls, cardNumbers, pattern }: CardsProps) => {
   // console.log(`Card: ${id}`);
   const cardNumbersKey = cardNumbers.join(",");
   const columns = useMemo(() => {

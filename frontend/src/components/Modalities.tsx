@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-
 import { X, ToggleRight, ToggleLeft } from "lucide-react";
 
 // STYLES
