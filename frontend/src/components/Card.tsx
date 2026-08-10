@@ -12,7 +12,7 @@ import CardNumber from "./CardNumber.tsx";
 interface CardsProps {
   index: number;
   id: number;
-  ball: number;
+  ball?: number;
   balls: Set<number>;
   cardNumbers: number[];
   pattern?: Set<number>;
@@ -65,7 +65,7 @@ const Card = ({ index, id, ball, balls, cardNumbers, pattern }: CardsProps) => {
 };
 
 export default memo(Card, (prevProps, nextProps) => {
-  if (prevProps.cardNumbers.includes(nextProps.ball)) {
+  if (nextProps.ball && prevProps.cardNumbers.includes(nextProps.ball)) {
     return false;
   }
   return true;

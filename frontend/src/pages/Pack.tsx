@@ -5,7 +5,7 @@ import {
   useRef,
   useCallback,
 } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   FileText,
   GamepadDirectional,
@@ -60,10 +60,16 @@ const Pack = () => {
 
   const { request } = useFetch();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getPack = async () => {
       const response: PackType = await request(`/packs/${id}`, "GET");
+      if (response.message === "Unauthorized") {
+        navigate("/signin");
+        return;
+      }
+
       setCards(response.result.cards);
       setPackName(response.result.name);
       setBalls(new Set(response.result.balls.data));

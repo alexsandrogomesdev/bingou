@@ -1,5 +1,5 @@
 import styles from "./Header.module.css";
-import { Menu, Globe } from "lucide-react";
+import { Menu, Globe, X } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
 import { useMainContext } from "../hooks/useMainContext.tsx";
@@ -18,14 +18,22 @@ const Header = () => {
       <div className={styles.div_header}>
         <p>B</p>
         <h2 className={styles.header_title}>{mainContext.headerTitle}</h2>
-        {showComponent && (
-          <Menu
-            className={styles.menu_icon}
-            onClick={() =>
-              mainContext.setMenuOpen(mainContext.menuOpen ? false : true)
-            }
-          />
-        )}
+        {showComponent &&
+          (!mainContext.menuOpen ? (
+            <Menu
+              className={styles.menu_icon}
+              onClick={() =>
+                mainContext.setMenuOpen(mainContext.menuOpen ? false : true)
+              }
+            />
+          ) : (
+            <X
+              className={styles.menu_icon}
+              onClick={() =>
+                mainContext.setMenuOpen(mainContext.menuOpen ? false : true)
+              }
+            />
+          ))}
       </div>
     </header>
   );

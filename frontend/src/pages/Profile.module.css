@@ -1,1 +1,33 @@
+.section_profile {
+  display: flex;
+  flex-flow: column;
+  position: relative;
+  padding: 10px;
+  top: 63px;
+}
+.div_profile {
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+}
+.div_profile > div {
+  display: flex;
+  flex-flow: column;
+  /* gap: 5px; */
+}
+.div_profile > div > p {
+  font-size: 14px;
+  color: #717171;
+}
+.div_profile > div > span {
+  font-size: 14px;
+  color: #282930;
+}
 
+@media (min-width: 768px) {
+  .section_profile {
+    margin: 0 auto;
+    min-width: 1100px;
+    max-width: 1100px;
+  }
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Plus, ExternalLink } from "lucide-react";
 
 // FUNCTIONS
@@ -18,6 +18,7 @@ import NewPack from "../components/NewPack.tsx";
 const Packs = () => {
   const { setHeaderTitle } = useMainContext();
   const { request } = useFetch();
+  const navigate = useNavigate();
 
   // STATE VARIABLES
   type Pack = {
@@ -36,7 +37,11 @@ const Packs = () => {
         result: [];
       }
       const packs = await request<Packs>("/packs", "GET");
-      setPacks(packs.result);
+      if (packs.message === "Unauthorized") {
+        navigate("/signin");
+      } else {
+        setPacks(packs.result);
+      }
     };
     getPacks();
   }, []);
@@ -68,9 +73,9 @@ const Packs = () => {
                   <span>{fts.dateFromUnix(pack.created_at)}</span>
                   <p>{pack.cards} Cartelas</p>
                 </div>
-                <NavLink to={`/pack/${pack.id}`}>
+                <Link to={`/pack/${pack.id}`}>
                   <ExternalLink />
-                </NavLink>
+                </Link>
               </li>
             ))}
           </ul>

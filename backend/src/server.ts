@@ -19,7 +19,7 @@ const authenticate = async (request: any, reply: any) => {
     await request.jwtVerify();
   } catch (err) {
     return reply.status(401).send({
-      message: "Não autorizado.",
+      message: "Unauthorized",
     });
   }
 };
@@ -54,7 +54,7 @@ fastify.get(
   async (request: FastifyRequest, reply: FastifyReply) => {
     return reply.status(200).send({
       message: "ok",
-      result: modalities,
+      result: allModalities,
     });
   },
 );
@@ -71,12 +71,13 @@ fastify.get(
       document: string;
       email: string;
       phone: string;
+      plan: number;
       starts_at: number;
       due_at: number;
       status: number;
     }
     const result = await query<User>(
-      "SELECT name,document,email,phone,starts_at,due_at,status FROM users WHERE id = $1",
+      "SELECT name,document,email,phone,plan,starts_at,due_at,status FROM users WHERE id = $1",
       [id],
     );
     return reply.status(responseStatus.code).send({
@@ -106,13 +107,14 @@ fastify.post(
     const passwordHash = await bcrypt.hash(password, 10);
 
     const result = await query(
-      "INSERT INTO users (name, document, phone, email, password, starts_at, due_at, status, created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id",
+      "INSERT INTO users (name, document, email, password, phone, plan, starts_at, due_at, status, created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id",
       [
         name,
         document,
-        phone,
         email,
         passwordHash,
+        phone,
+        0,
         time, // start_at
         time, // due_at
         1, // status
@@ -239,13 +241,20 @@ fastify.post(
     const time = Math.floor(Date.now() / 1000);
 
     let limit: number = 20;
-    const userDueDate = await query("SELECT due_at FROM users WHERE id = $1", [
-      userId,
-    ]);
-    if (Number(userDueDate.rows[0].due_at) > Math.floor(Date.now() / 1000)) {
-      limit = 2000;
+    const userDetails = await query(
+      "SELECT plan,due_at FROM users WHERE id = $1",
+      [userId],
+    );
+    if (Number(userDetails.rows[0].due_at) > Math.floor(Date.now() / 1000)) {
+      if (userDetails.rows[0].plan === 1) {
+        // BASIC
+        limit = 500;
+      } else if (userDetails.rows[0].plan === 2) {
+        // FULL
+        limit = 2000;
+      }
     }
-    if (Number(userDueDate.rows[0].cards) >= limit) {
+    if (Number(userDetails.rows[0].cards) >= limit) {
       return reply.status(400).send({
         message:
           "Você só pode gerar no máximo 20 cartelas por vez. Para gerar mais compre ou renove seu plano.",
@@ -390,14 +399,20 @@ fastify.post(
     const userId = request.user.sub;
 
     let limit: number = 20;
-    const userDueDate = await query(
+    const userDetails = await query(
       "SELECT p.due_at, COUNT(c.id)::bigint AS cards FROM users p LEFT JOIN cards c ON c.pack_id = $1 WHERE p.id = $2 GROUP BY p.due_at",
       [packId, userId],
     );
-    if (Number(userDueDate.rows[0].due_at) > Math.floor(Date.now() / 1000)) {
-      limit = 2000;
+    if (Number(userDetails.rows[0].due_at) > Math.floor(Date.now() / 1000)) {
+      if (userDetails.rows[0].plan === 1) {
+        // BASIC
+        limit = 500;
+      } else if (userDetails.rows[0].plan === 2) {
+        // FULL
+        limit = 2000;
+      }
     }
-    if (Number(userDueDate.rows[0].cards) + qty >= limit) {
+    if (Number(userDetails.rows[0].cards) + qty >= limit) {
       return reply.status(400).send({
         message: `Limite máximo de ${limit} excedido.`,
       });

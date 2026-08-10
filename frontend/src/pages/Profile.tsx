@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // STYLES
 import styles from "./Profile.module.css";
@@ -12,18 +13,21 @@ import { useFetch } from "../hooks/useFetch.tsx";
 const Profile = () => {
   const mainContext = useMainContext();
   const { request } = useFetch();
+  const navigate = useNavigate();
 
   interface User {
     name: string;
     document: string;
     phone: string;
     email: string;
+    plan: number;
   }
   const [profile, setProfile] = useState<User>({
     name: "",
     document: "",
     phone: "",
     email: "",
+    plan: 0,
   });
 
   interface Response {
@@ -32,20 +36,37 @@ const Profile = () => {
   }
   useEffect(() => {
     const getProfile = async () => {
-      const response = await request<Response>("/user", "GET", {}, {}, true);
-
+      const response = await request<Response>("/user", "GET", {}, {});
+      if (response.message === "Unauthorized") {
+        navigate("/signin");
+        return;
+      }
       setProfile(response.result);
     };
     getProfile();
   }, []);
+  const plans: Array<string> = ["Gratuito", "Básico", "Completo"];
 
   return (
-    <>
-      <p>Nome: {profile.name}</p>
-      <p>Documento: {profile.document}</p>
-      <p>Telefone: {profile.phone}</p>
-      <p>Email: {profile.email}</p>
-    </>
+    <section className={styles.section_profile}>
+      <div className={styles.div_profile}>
+        <div>
+          <p>Nome:</p> <span>{profile.name}</span>
+        </div>
+        <div>
+          <p>Documento:</p> <span>{profile.document}</span>
+        </div>
+        <div>
+          <p>Telefone:</p> <span>{profile.phone}</span>
+        </div>
+        <div>
+          <p>Email:</p> <span>{profile.email}</span>
+        </div>
+        <div>
+          <p>Plano:</p> <span>{plans[profile.plan]}</span>
+        </div>
+      </div>
+    </section>
   );
 };
 
