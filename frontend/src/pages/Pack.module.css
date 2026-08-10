@@ -31,7 +31,7 @@
   max-width: 100%;
 }
 .div_actions > button {
-  background-color: #ff7101;
+  background-color: #32a96d;
   border: none;
   border-radius: 5px;
   display: flex;
@@ -61,7 +61,7 @@
   max-height: 34px;
   min-width: 34px;
   max-width: 34px;
-  background-color: #ff7101;
+  background-color: #32a96d;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -103,7 +103,7 @@
   min-height: 60dvh;
 }
 .loader svg {
-  color: #ff7101;
+  color: #32a96d;
   min-width: 48px;
   min-height: 48px;
   margin: auto;

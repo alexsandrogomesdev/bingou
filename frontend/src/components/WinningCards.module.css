@@ -32,7 +32,7 @@
 }
 .div_winnings_cards > nav > h3 {
   font-size: 18px;
-  color: #ff7101;
+  color: #32a96d;
   letter-spacing: 5px;
   margin: 0 0 0 20px;
 }
@@ -73,7 +73,7 @@
 }
 .winnings_per_ball > p {
   font-size: 16px;
-  color: #ff7101;
+  color: #32a96d;
 }
 .cards_per_modality {
   display: flex;

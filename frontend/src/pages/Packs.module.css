@@ -37,7 +37,7 @@
   border: solid 1px oklch(93% 0 0);
 }
 .pack > a {
-  color: #ff7101;
+  color: #32a96d;
   text-decoration: none;
 }
 .pack > div {
@@ -67,7 +67,7 @@
   bottom: 35px;
   right: 17px;
 
-  background-color: #ff7101;
+  background-color: #32a96d;
   border: none;
   border-radius: 22px;
   padding: 7px 22px;

@@ -1,5 +1,5 @@
 .number_selected {
-  background-color: #ff7101;
+  background-color: #32a96d;
   color: #fff !important;
   text-align: center;
   padding: 3px;
@@ -26,7 +26,7 @@
   }
 }
 .joker > svg {
-  color: #ff7101;
+  color: #32a96d;
   width: 16px;
   height: 16px;
   position: relative;
