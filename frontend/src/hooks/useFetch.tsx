@@ -9,7 +9,7 @@ export const useFetch = () => {
       body?: object,
     ): Promise<T> => {
       if (!url.includes("://")) {
-        url = `http://localhost:3001${url}`;
+        url = `https://backend-bingou.alexsandrogomes.dev${url}`;
       }
 
       const config: RequestInit = {
@@ -34,7 +34,9 @@ export const useFetch = () => {
       // }
 
       const statusOk = [200, 201, 400, 401];
-      if (!statusOk.includes(response.status)) return {} as T;
+      if (!statusOk.includes(response.status)) {
+        return { message: "failed to fetch" } as T;
+      }
 
       const json = await response.json();
       return json as T;

@@ -18,8 +18,8 @@
   flex-flow: column;
   background-image: radial-gradient(
     circle at 50% 5%,
-    #ffe8d6 0%,
-    #ffe8d6 17%,
+    #c5ffe2 0%,
+    #c5ffe2 17%,
     transparent 50%
   );
   max-width: 100%;
@@ -44,10 +44,10 @@
   align-items: center;
   margin: 0 auto;
   max-width: max-content;
-  background-color: #fff1e5;
+  background-color: #32a96d1a;
   padding: 1px 15px;
   border-radius: 22px;
-  border: solid 1px #eee6e0;
+  border: solid 1px #32a96d1a;
   gap: 10px;
 }
 .initial_presentation > span > svg {
@@ -113,9 +113,9 @@
   display: flex;
   flex-flow: column;
   margin: 25px;
-  box-shadow: 0 20px 50px -24px #fb68008c;
+  box-shadow: 0 20px 50px -24px #32a96d8c;
   border-radius: 34px;
-  border: solid 1px #fbefe7;
+  border: solid 1px #cffce5;
   background-color: #fff;
 }
 .template_card > ul {
@@ -167,10 +167,10 @@
   min-width: 55px;
   max-width: 55px;
   border-radius: 17px;
-  border: solid 1px #eee6e0;
+  border: solid 1px #c1dbce;
 }
 .joker {
-  background-color: #fff1e5;
+  background-color: #e2fff2;
   border: none !important;
 }
 .joker svg {
@@ -197,7 +197,7 @@
 .div_2 > ul > li {
   display: flex;
   flex-flow: column;
-  background-color: #fff1e5b5;
+  background-color: rgba(50, 169, 109, 0.1);
   padding: 20px;
   border-radius: 26px;
 }
