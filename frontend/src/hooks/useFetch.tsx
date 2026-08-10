@@ -32,10 +32,10 @@ export const useFetch = () => {
       // `Failed to request: ${response.status} ${response.statusText}`,
       // );
       // }
-
+      console.log(response);
       const statusOk = [200, 201, 400, 401];
       if (!statusOk.includes(response.status)) {
-        return { message: "failed to fetch" } as T;
+        return { message: "failed" } as T;
       }
 
       const json = await response.json();
