@@ -9,15 +9,12 @@ import * as fts from "../utils/functions.ts";
 import styles from "./Packs.module.css";
 
 // HOOKS
-import { useMainContext } from "../hooks/useMainContext.tsx";
 import { useFetch } from "../hooks/useFetch.tsx";
 
 // COMPONENTS
 import NewPack from "../components/NewPack.tsx";
 
 const Packs = () => {
-  const mainContext = useMainContext();
-
   const { setHeaderTitle } = useMainContext();
   const { request } = useFetch();
   const navigate = useNavigate();
