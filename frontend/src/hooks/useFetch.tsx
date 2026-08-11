@@ -9,7 +9,7 @@ export const useFetch = () => {
       body?: object,
     ): Promise<T> => {
       if (!url.includes("://")) {
-        url = `https://backend-bingou.alexsandrogomes.dev${url}`;
+        url = `https://api.bingou.alexsandrogomes.dev${url}`;
       }
 
       const config: RequestInit = {

@@ -454,7 +454,7 @@ const start = async () => {
       origin: [
         "http://localhost:5173",
         "http://192.168.100.15:5173",
-        "http://localhost:3001",
+        "http://localhost:1171",
       ],
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"],
@@ -471,7 +471,7 @@ const start = async () => {
       },
     });
 
-    await fastify.listen({ port: 3001, host: "0.0.0.0" });
+    await fastify.listen({ port: Number(process.env.PORT), host: "0.0.0.0" });
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
