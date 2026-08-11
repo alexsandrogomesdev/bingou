@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  # Banco de Dados PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    container_name: bingou_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-bingou_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bingou_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-bingou_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - bingou_net
+
+  # API Backend (Node.js 22)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bingou_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgres://${POSTGRES_USER:-bingou_user}:${POSTGRES_PASSWORD:-bingou_pass}@postgres:5432/${POSTGRES_DB:-bingou_db}
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+    networks:
+      - bingou_net
+
+volumes:
+  pgdata:
+
+networks:
+  bingou_net:
+    driver: bridge

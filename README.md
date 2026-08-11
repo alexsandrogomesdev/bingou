@@ -7,7 +7,7 @@
 ## 🚀 Tecnologias
 
 - **Frontend:** React, TypeScript, Vite, CSS Modules
-- **Backend:** Node.js, TypeScript, PostgreSQL
+- **Backend:** NGINX, Docker, Node.js, TypeScript, PostgreSQL
 - **Deploy Frontend:** Cloudflare Pages
 
 ---
