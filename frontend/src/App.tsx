@@ -25,7 +25,7 @@ function App() {
   const hideOnRoutes: Array<string> = [];
   const location = useLocation();
   const showComponent = !hideOnRoutes.includes(location.pathname);
-
+  // here...
   return (
     <>
       {mainContext.alert.type !== "" && <Alert />}
