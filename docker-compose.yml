@@ -22,15 +22,12 @@ services:
     container_name: bingou_db
     restart: always
     command: postgres -p 1172
-    environment:
-      POSTGRES_DB: bingou
-      POSTGRES_USER: bingou_user
-      POSTGRES_PASSWORD: secretpassword
+    env_file:
+      - ./backend/.env
     ports:
       - "1172:1172"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./backend/databases/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -p 1172"]
       interval: 3s
