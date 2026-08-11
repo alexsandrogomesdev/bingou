@@ -16,6 +16,8 @@ import { useFetch } from "../hooks/useFetch.tsx";
 import NewPack from "../components/NewPack.tsx";
 
 const Packs = () => {
+  const mainContext = useMainContext();
+
   const { setHeaderTitle } = useMainContext();
   const { request } = useFetch();
   const navigate = useNavigate();
@@ -37,7 +39,7 @@ const Packs = () => {
         result: [];
       }
       const packs = await request<Packs>("/packs", "GET");
-      if (packs.message === "Unauthorized") {
+      if (packs.message === "Unauthorized" || !packs.result) {
         navigate("/signin");
       } else {
         setPacks(packs.result);

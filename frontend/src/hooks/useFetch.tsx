@@ -25,21 +25,30 @@ export const useFetch = () => {
       }
 
       config.credentials = "include";
+      config.signal = AbortSignal.timeout(5000);
 
-      const response = await fetch(url, config);
-      // if (!response.ok) {
-      // throw new Error(
-      // `Failed to request: ${response.status} ${response.statusText}`,
-      // );
-      // }
-      console.log(response);
-      const statusOk = [200, 201, 400, 401];
-      if (!statusOk.includes(response.status)) {
-        return { message: "failed" } as T;
+      try {
+        const response = await fetch(url, config);
+        if (!response.ok) {
+          throw new Error(
+            `Failed to request: ${response.status} ${response.statusText}`,
+          );
+        }
+
+        const statusOk = [200, 201, 400, 401];
+        if (!statusOk.includes(response.status)) {
+          return { message: "failed" } as T;
+        }
+
+        const json = await response.json();
+        return json as T;
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          return { message: `${error.message}` } as T;
+        } else {
+          return { message: `${error}` } as T;
+        }
       }
-
-      const json = await response.json();
-      return json as T;
     },
     [],
   );
