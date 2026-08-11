@@ -1,32 +1,14 @@
 services:
-  # Banco de Dados PostgreSQL
-  postgres:
-    image: postgres:16-alpine
-    container_name: bingou_db
-    restart: always
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-bingou_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bingou_pass}
-      POSTGRES_DB: ${POSTGRES_DB:-bingou_db}
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    networks:
-      - bingou_net
-
-  # API Backend (Node.js 22)
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: bingou_backend
     restart: always
+    env_file:
+      - ./backend/.env
     ports:
-      - "3000:3000"
-    environment:
-      PORT: 3000
-      DATABASE_URL: postgres://${POSTGRES_USER:-bingou_user}:${POSTGRES_PASSWORD:-bingou_pass}@postgres:5432/${POSTGRES_DB:-bingou_db}
+      - "1171:1171"
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -35,16 +17,25 @@ services:
     networks:
       - bingou_net
 
-  bingou_nginx:
-    image: nginx:alpine
-    container_name: bingou_nginx
-    restart: unless-stopped
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  postgres:
+    image: postgres:16-alpine
+    container_name: bingou_db
+    restart: always
+    command: postgres -p 1172
+    environment:
+      POSTGRES_DB: bingou
+      POSTGRES_USER: bingou_user
+      POSTGRES_PASSWORD: secretpassword
     ports:
-      - "80:80"
-    depends_on:
-      - bingou_backend
+      - "1172:1172"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/databases/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -p 1172"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
     networks:
       - bingou_net
 
