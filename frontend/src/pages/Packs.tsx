@@ -9,6 +9,7 @@ import * as fts from "../utils/functions.ts";
 import styles from "./Packs.module.css";
 
 // HOOKS
+import { useMainContext } from "../hooks/useMainContext.tsx";
 import { useFetch } from "../hooks/useFetch.tsx";
 
 // COMPONENTS
