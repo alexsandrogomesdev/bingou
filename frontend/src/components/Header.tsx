@@ -1,6 +1,6 @@
 import styles from "./Header.module.css";
 import { Menu, X } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 
 import { useMainContext } from "../hooks/useMainContext.tsx";
 
@@ -16,7 +16,10 @@ const Header = () => {
       className={`${styles.header} ${showComponent && styles.header_fixed}`}
     >
       <div className={styles.div_header}>
-        <p>B</p>
+        <Link to="/">
+          <p>B</p>
+        </Link>
+
         <h2 className={styles.header_title}>{mainContext.headerTitle}</h2>
         {showComponent &&
           (!mainContext.menuOpen ? (

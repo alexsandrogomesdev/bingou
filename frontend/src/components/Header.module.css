@@ -23,7 +23,7 @@
   position: fixed;
   border: solid 1px #e8e8e8;
 }
-.div_header > p {
+.div_header > a > p {
   font-weight: 600;
   color: #ffffff;
   background-color: #32a96d;
