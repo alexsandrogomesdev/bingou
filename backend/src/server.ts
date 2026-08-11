@@ -452,6 +452,7 @@ const start = async () => {
   try {
     await fastify.register(cors, {
       origin: [
+        "https://bingou.alexsandrogomes.dev",
         "http://localhost:5173",
         "http://192.168.100.15:5173",
         "http://localhost:1171",

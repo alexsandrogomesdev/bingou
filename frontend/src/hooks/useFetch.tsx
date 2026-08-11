@@ -29,11 +29,6 @@ export const useFetch = () => {
 
       try {
         const response = await fetch(url, config);
-        if (!response.ok) {
-          throw new Error(
-            `Failed to request: ${response.status} ${response.statusText}`,
-          );
-        }
 
         const statusOk = [200, 201, 400, 401];
         if (!statusOk.includes(response.status)) {

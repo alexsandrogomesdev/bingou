@@ -120,7 +120,7 @@ const SignUp = () => {
           />
         </div>
         <button type="submit" disabled={signuping}>
-          {signuping ? "Entrando..." : "Entrar"}
+          {signuping ? "Cadastrando..." : "Cadastrar"}
         </button>
       </form>
       <p className={styles.sign_in}>
