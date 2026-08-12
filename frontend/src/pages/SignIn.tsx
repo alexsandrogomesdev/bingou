@@ -25,7 +25,7 @@ const SignIn = () => {
 
     interface Request {
       message: string;
-      userId: number;
+      userId: string;
     }
     const signIn: Request = await request(
       "/user/signin",
@@ -40,6 +40,7 @@ const SignIn = () => {
     setSigning(false);
 
     if (signIn.message === "ok") {
+      localStorage.setItem("userId", signIn.userId);
       navigate("/packs");
     } else {
       mainContext.setAlert({

@@ -36,6 +36,11 @@ export const useFetch = () => {
         }
 
         const json = await response.json();
+
+        if (json.message === "Unauthorized") {
+          localStorage.clear();
+        }
+
         return json as T;
       } catch (error: unknown) {
         if (error instanceof Error) {

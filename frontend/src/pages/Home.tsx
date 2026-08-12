@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { Sparkles, Play, Grid3x3, Check, Printer } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -11,8 +11,11 @@ import { useMainContext } from "../hooks/useMainContext.tsx";
 // COMPONENTS
 
 const Home = () => {
-  const mainContext = useMainContext();
-  mainContext.setHeaderTitle("Bingou");
+  const { setHeaderTitle } = useMainContext();
+
+  useEffect(() => {
+    setHeaderTitle("Bingou");
+  }, [setHeaderTitle]);
 
   const sectionHowItWorks = useRef<HTMLDivElement>(null);
   const scrollToHowItWorks = () => {
@@ -21,6 +24,7 @@ const Home = () => {
       block: "start",
     });
   };
+
   return (
     <section className={styles.section_home}>
       <div className={styles.div_home}>

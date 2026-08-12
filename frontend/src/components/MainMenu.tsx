@@ -1,17 +1,28 @@
-import { Boxes, UserRound, Globe, UserKey, House } from "lucide-react";
-import { NavLink } from "react-router-dom";
-import Cookies from "js-cookie";
+import { Boxes, UserRound, Globe, UserKey, House, LogOut } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 // STYLES
 import styles from "./MainMenu.module.css";
 
 // HOOKS
 import { useMainContext } from "../hooks/useMainContext.tsx";
+import { useFetch } from "../hooks/useFetch.tsx";
 
 // COMPONENTS
 
 const MainMenu = () => {
   const mainContext = useMainContext();
+  const { request } = useFetch();
+  const navigate = useNavigate();
+
+  const handleLogOut = async () => {
+    mainContext.setMenuOpen(false);
+    await request("/logout", "POST", {}, {});
+    localStorage.clear();
+    mainContext.setMenuOpen(false);
+    navigate("/");
+    return;
+  };
 
   return (
     <section
@@ -35,7 +46,9 @@ const MainMenu = () => {
             </NavLink>
           </li>
           <li
-            className={Cookies.get("userId") === undefined ? styles.hide : ""}
+            className={
+              localStorage.getItem("userId") === null ? styles.hide : ""
+            }
           >
             <NavLink
               to="/packs"
@@ -47,7 +60,9 @@ const MainMenu = () => {
             </NavLink>
           </li>
           <li
-            className={Cookies.get("userId") === undefined ? styles.hide : ""}
+            className={
+              localStorage.getItem("userId") === null ? styles.hide : ""
+            }
           >
             <NavLink
               to="/profile"
@@ -60,7 +75,9 @@ const MainMenu = () => {
           </li>
 
           <li
-            className={Cookies.get("userId") !== undefined ? styles.hide : ""}
+            className={
+              localStorage.getItem("userId") !== null ? styles.hide : ""
+            }
           >
             <NavLink
               to="/signin"
@@ -69,6 +86,17 @@ const MainMenu = () => {
             >
               <UserKey />
               <span>Acessar</span>
+            </NavLink>
+          </li>
+
+          <li
+            className={
+              localStorage.getItem("userId") === null ? styles.hide : ""
+            }
+          >
+            <NavLink to="/" onClick={handleLogOut}>
+              <LogOut />
+              <span>Sair</span>
             </NavLink>
           </li>
         </ul>

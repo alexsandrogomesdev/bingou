@@ -60,7 +60,7 @@ const NewPack = ({ sectionNewPack, setSectionNewPack }: Props) => {
       mainContext.setAlert({
         id: Date.now(),
         type: "error",
-        message: "Erro ao criar pack",
+        message: createPack.message,
       });
     }
   };
