@@ -21,5 +21,20 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "screenshots": [
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "416x905",
+      "type": "image/png",
+      "label": "Tela principal do Bingou no celular"
+    },
+    {
+      "src": "screenshot-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Tela principal do Bingou no computador"
+    }
+  ]
 }
