@@ -15,6 +15,7 @@ import styles from "./Modalities.module.css";
 
 // COMPONENTS
 import ModalityExample from "../components/ModalityExample.tsx";
+import NewModality from "./NewModality.tsx";
 
 // TYPES
 import type { AllModalities } from "../types/pack";
@@ -41,67 +42,76 @@ const Modalities: React.FC<Props> = ({
     });
   };
   const [openId, setOpenId] = useState<number>(0);
+  const [showNewModality, setShowNewModality] = useState<boolean>(false);
 
   return (
-    <section className={styles.section_modalities}>
-      <div className={styles.div_modalities}>
-        <div className={styles.div_modalities_header}>
-          <h3>Modalidades</h3>
-          <X onClick={() => setShowModalities(false)} />
-        </div>
-        <ul className={styles.ul_modalities}>
-          {allModalities.map((modality) => (
-            <li key={modality.id} className={styles.li_modality}>
-              <div>
-                <p>{modality.name}</p>
+    <>
+      {showNewModality && (
+        <NewModality setShowNewModality={setShowNewModality} />
+      )}
+      <section className={styles.section_modalities}>
+        <div className={styles.div_modalities}>
+          <div className={styles.div_modalities_header}>
+            <h3>Modalidades</h3>
+            <X onClick={() => setShowModalities(false)} />
+          </div>
+          <ul className={styles.ul_modalities}>
+            {allModalities.map((modality) => (
+              <li key={modality.id} className={styles.li_modality}>
                 <div>
-                  {modalities.includes(modality.id) ? (
-                    <ToggleRight
-                      className={styles.modality_actived}
-                      onClick={() => changeModality(modality.id)}
-                    />
-                  ) : (
-                    <ToggleLeft
-                      className={styles.modality_disabled}
-                      onClick={() => changeModality(modality.id)}
-                    />
-                  )}
-                  {openId === modality.id ? (
-                    <ChevronUp
-                      className={styles.open_close_modality}
-                      onClick={() => setOpenId(0)}
-                    />
-                  ) : (
-                    <ChevronDown
-                      className={styles.open_close_modality}
-                      onClick={() => setOpenId(modality.id)}
-                    />
-                  )}
+                  <p>{modality.name}</p>
+                  <div>
+                    {modalities.includes(modality.id) ? (
+                      <ToggleRight
+                        className={styles.modality_actived}
+                        onClick={() => changeModality(modality.id)}
+                      />
+                    ) : (
+                      <ToggleLeft
+                        className={styles.modality_disabled}
+                        onClick={() => changeModality(modality.id)}
+                      />
+                    )}
+                    {openId === modality.id ? (
+                      <ChevronUp
+                        className={styles.open_close_modality}
+                        onClick={() => setOpenId(0)}
+                      />
+                    ) : (
+                      <ChevronDown
+                        className={styles.open_close_modality}
+                        onClick={() => setOpenId(modality.id)}
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div
-                className={
-                  openId === modality.id
-                    ? styles.modality_details_show
-                    : styles.modality_details_hide
-                }
-              >
-                {modality.map.map((item, index) => (
-                  <ModalityExample
-                    key={`modality_example_${index}`}
-                    modality={modality.id}
-                    map={item}
-                  />
-                ))}
-              </div>
-            </li>
-          ))}
-        </ul>
-        <button className={styles.add_new_modality}>
-          <Plus />
-        </button>
-      </div>
-    </section>
+                <div
+                  className={
+                    openId === modality.id
+                      ? styles.modality_details_show
+                      : styles.modality_details_hide
+                  }
+                >
+                  {modality.map.map((item, index) => (
+                    <ModalityExample
+                      key={`modality_example_${index}`}
+                      modality={modality.id}
+                      map={item}
+                    />
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ul>
+          <button
+            className={styles.add_new_modality}
+            onClick={() => setShowNewModality(true)}
+          >
+            <Plus />
+          </button>
+        </div>
+      </section>
+    </>
   );
 };
 

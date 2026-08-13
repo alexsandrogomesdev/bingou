@@ -7,6 +7,7 @@ import "./App.css";
 import { useMainContext } from "./hooks/useMainContext.tsx";
 
 // COMPONENTS
+import NewModality from './components/NewModality.tsx'
 import Alert from "./components/Alert.tsx";
 import MainMenu from "./components/MainMenu.tsx";
 import Header from "./components/Header.tsx";
