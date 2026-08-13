@@ -8,9 +8,14 @@
   list-style-type: none;
 }
 body {
-  background-color: #ffffff;
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
+}
+html,
+body,
+#root {
+  background-color: #ffffff;
+  min-height: 100dvh;
 }
 
 button {
