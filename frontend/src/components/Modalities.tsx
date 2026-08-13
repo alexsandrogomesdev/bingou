@@ -4,6 +4,7 @@ import {
   ToggleLeft,
   ChevronDown,
   ChevronUp,
+  Plus,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -96,6 +97,9 @@ const Modalities: React.FC<Props> = ({
             </li>
           ))}
         </ul>
+        <button className={styles.add_new_modality}>
+          <Plus />
+        </button>
       </div>
     </section>
   );

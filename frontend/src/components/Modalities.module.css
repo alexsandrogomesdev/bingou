@@ -42,6 +42,9 @@
   flex-flow: column;
   gap: 16px;
   overflow-y: auto;
+  flex: 1;
+  min-height: calc(100dvh - 125px);
+  max-height: calc(100dvh - 125px);
 }
 .li_modality {
   display: flex;
@@ -91,6 +94,19 @@
   max-width: 26px;
   min-height: 26px;
   max-height: 26px;
+}
+.add_new_modality {
+  position: relative;
+  bottom: 50px;
+  margin: 0 0 0 auto;
+  min-width: 44px;
+  max-width: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  border-radius: 44px;
+  border: none;
+  color: #fff;
+  background-color: #24af60;
 }
 
 @media (min-width: 768px) {

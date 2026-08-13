@@ -31,7 +31,7 @@
   max-width: 100%;
 }
 .div_actions > button {
-  background-color: #32a96d;
+  background-color: #24af60;
   border: none;
   border-radius: 5px;
   display: flex;
@@ -61,7 +61,7 @@
   max-height: 34px;
   min-width: 34px;
   max-width: 34px;
-  background-color: #32a96d;
+  background-color: #24af60;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -94,6 +94,15 @@
 
   position: relative;
   top: 70px;
+  /* max-height: calc(); */
+}
+.blockScroll {
+  overflow-y: hidden !important;
+  touch-action: none !important;
+  overscroll-behavior: contain !important;
+  overflow: hidden !important;
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
 }
 .loader {
   display: flex;
@@ -103,7 +112,7 @@
   min-height: 60dvh;
 }
 .loader svg {
-  color: #32a96d;
+  color: #24af60;
   min-width: 48px;
   min-height: 48px;
   margin: auto;

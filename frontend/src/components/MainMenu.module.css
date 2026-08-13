@@ -38,7 +38,7 @@
   justify-content: center;
 }
 .menu_header > svg {
-  color: #32a96d;
+  color: #24af60;
 }
 .menu_header > h2 {
   font-size: 18px;
@@ -55,7 +55,7 @@
   gap: 16px;
 }
 .menu_ul > li:hover {
-  background-color: #32a96d4b;
+  background-color: #24af604b;
   color: #fff;
 }
 .menu_ul > li > a {
@@ -68,7 +68,7 @@
   padding: 10px;
 }
 .active {
-  background-color: #32a96d;
+  background-color: #24af60;
 }
 .active svg {
   color: #fff;

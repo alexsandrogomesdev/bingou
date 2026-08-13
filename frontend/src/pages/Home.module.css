@@ -38,16 +38,16 @@
 }
 .initial_presentation > span {
   font-size: 12px;
-  color: #32a96d;
+  color: #24af60;
   font-weight: 500;
   display: flex;
   align-items: center;
   margin: 0 auto;
   max-width: max-content;
-  background-color: #32a96d1a;
+  background-color: #24af601a;
   padding: 1px 15px;
   border-radius: 22px;
-  border: solid 1px #32a96d1a;
+  border: solid 1px #24af601a;
   gap: 10px;
 }
 .initial_presentation > span > svg {
@@ -61,7 +61,7 @@
 }
 .initial_presentation > h2 {
   font-size: 2.25rem;
-  color: #32a96d;
+  color: #24af60;
   margin: -15px 0 0 0;
 }
 .initial_presentation > p {
@@ -78,7 +78,7 @@
   text-decoration: none;
 }
 .initial_presentation > ul li:nth-of-type(1) a {
-  background-color: #32a96d;
+  background-color: #24af60;
   border: none;
   border-radius: 52px;
   min-height: 52px;
@@ -91,8 +91,8 @@
   font-weight: 500;
   font-size: 16px;
   cursor: pointer;
-  box-shadow: 0px 5px 20px 0px #32a96d80;
-  -webkit-box-shadow: 0px 5px 20px 0px #32a96d80;
+  box-shadow: 0px 5px 20px 0px #24af6080;
+  -webkit-box-shadow: 0px 5px 20px 0px #24af6080;
 }
 .initial_presentation > ul li:nth-of-type(2) a {
   width: 100%;
@@ -113,7 +113,7 @@
   display: flex;
   flex-flow: column;
   margin: 25px;
-  box-shadow: 0 20px 50px -24px #32a96d8c;
+  box-shadow: 0 20px 50px -24px #24af608c;
   border-radius: 34px;
   border: solid 1px #cffce5;
   background-color: #fff;
@@ -133,7 +133,7 @@
   font-size: 16px;
   color: #ffffff;
   font-weight: 800;
-  background-color: #32a96d;
+  background-color: #24af60;
   min-height: 44px;
   max-height: 44px;
   min-width: 55px;
@@ -174,12 +174,12 @@
   border: none !important;
 }
 .joker svg {
-  color: #32a96d;
+  color: #24af60;
   min-height: 18px;
   max-height: 18px;
 }
 .number_selected {
-  background-color: #32a96d;
+  background-color: #24af60;
   color: #fff !important;
   border: none !important;
 }
@@ -208,7 +208,7 @@
   max-height: 44px;
   border-radius: 44px;
   background-color: #ffffff;
-  color: #32a96d;
+  color: #24af60;
   display: flex;
   flex-flow: column;
   justify-content: center;
@@ -237,7 +237,7 @@
 .div_3 {
   display: flex;
   flex-flow: column;
-  background-color: #32a96d;
+  background-color: #24af60;
   padding: 45px 17px;
   margin: 0 20px 40px;
   border-radius: 20px;
@@ -255,7 +255,7 @@
   font-weight: 300;
 }
 .div_3 > a {
-  color: #32a96d;
+  color: #24af60;
   background-color: #fff;
   min-width: 156px;
   max-width: 156px;

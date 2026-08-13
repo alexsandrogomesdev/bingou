@@ -101,6 +101,16 @@ const Pack = () => {
     prevStateRef.current = { winnings, balls, modalities };
   }, [request, id, balls, modalities, winnings]);
 
+  useEffect(() => {
+    if (showWinnings || showBallTable || showModalities) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [showWinnings, showBallTable, showModalities]);
   const handleSelectBall = useCallback(
     (ball: number) => {
       setLastBall(ball);
@@ -252,7 +262,9 @@ const Pack = () => {
               </button>
             </div>
           )}
-          <div className={styles.cards}>
+          <div
+            className={`${styles.cards} ${(showWinnings || showBallTable || showWinnings) && styles.blockScroll}`}
+          >
             {cards.map((card, index) => (
               <Card
                 key={card.id}
