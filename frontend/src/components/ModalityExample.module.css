@@ -1,0 +1,43 @@
+.card_body {
+  display: flex;
+  align-items: center;
+  border: solid 1px #e7e7e7;
+  border-radius: 5px;
+  gap: 2px;
+  padding: 5px;
+  min-width: max-content;
+  max-width: max-content;
+}
+.card_column {
+  display: flex;
+  flex-flow: column;
+  text-align: center;
+  gap: 2px;
+}
+.card_column > li {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  min-width: 16px;
+  max-width: 16px;
+  min-height: 16px;
+  max-height: 16px;
+  border-radius: 16px;
+  background-color: #e2e2e2;
+  font-size: 8px;
+  color: #fff;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+.selected {
+  background-color: #24af60 !important;
+}
+.joker {
+  background-color: #fff !important;
+}
+.joker > svg {
+  color: #24af60;
+  min-width: 18px;
+  max-width: 18px;
+}

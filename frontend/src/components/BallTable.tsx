@@ -27,24 +27,26 @@ const BallTable: React.FC<Props> = ({
 
   return (
     <section className={styles.section_balls_table}>
-      <nav>
-        <h3>Bolas chamadas</h3>
-        <X onClick={() => setShowBallTable(false)} />
-      </nav>
-      <div className={styles.table_body}>
-        {table_numbers.map((column, index) => (
-          <ul key={index} className={styles.table_column}>
-            {column.map((ball) => (
-              <li
-                key={ball}
-                className={`${styles.number} ${balls.has(ball) && styles.number_selected}`}
-                onClick={() => handleSelectBall(ball)}
-              >
-                <span>{ball}</span>
-              </li>
-            ))}
-          </ul>
-        ))}
+      <div className={styles.div_balls_table}>
+        <nav>
+          <h3>Bolas chamadas</h3>
+          <X onClick={() => setShowBallTable(false)} />
+        </nav>
+        <div className={styles.table_body}>
+          {table_numbers.map((column, index) => (
+            <ul key={index} className={styles.table_column}>
+              {column.map((ball) => (
+                <li
+                  key={ball}
+                  className={`${styles.number} ${balls.has(ball) && styles.number_selected}`}
+                  onClick={() => handleSelectBall(ball)}
+                >
+                  <span>{ball}</span>
+                </li>
+              ))}
+            </ul>
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -22,6 +22,7 @@ const WinningCards: React.FC<Props> = ({
   winnings,
   setShowWinnings,
 }) => {
+  console.log(winnings);
   return (
     <section className={styles.section_winning_cards}>
       <div className={styles.div_winnings_cards}>
@@ -40,7 +41,13 @@ const WinningCards: React.FC<Props> = ({
           {winnings.length > 0 &&
             winnings
               .toReversed()
-              .map((item) => <WinningsPerBall item={item} balls={balls} />)}
+              .map((item, index) => (
+                <WinningsPerBall
+                  key={`winningsPerBall_${index}`}
+                  item={item}
+                  balls={balls}
+                />
+              ))}
         </div>
       </div>
     </section>

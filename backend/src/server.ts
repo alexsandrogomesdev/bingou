@@ -26,7 +26,7 @@ const authenticate = async (request: any, reply: any) => {
 
 // GLOBALS
 import { allModalities } from "./allModalities";
-import { shuffleArray, getRandomNumber } from "./utils";
+import { shuffleArray, getRandomNumber, isObjectEmpty } from "./utils";
 import { createCardNumbers } from "./functions/createCardNumbers";
 
 // DATABASE
@@ -184,25 +184,36 @@ fastify.post(
         path: "/", // all routes
         secure: process.env.NODE_ENV === "production", // https
         httpOnly: true, // XSS attacks protection
-        sameSite: "lax", // CSRF attacks protection
-        maxAge: 7 * 24 * 60 * 60, // expire in 7 days
-      })
-      .setCookie("userId", user.id.toString(), {
-        path: "/", // all routes
-        secure: process.env.NODE_ENV === "production", // https
-        httpOnly: false, // XSS attacks protection
-        sameSite: "lax", // CSRF attacks protection
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // CSRF attacks protection
         maxAge: 7 * 24 * 60 * 60, // expire in 7 days
       })
       .status(200)
       .send({
         message: "ok",
-        userId: user.id,
+        userId: String(user.id),
+      });
+  },
+);
+fastify.post(
+  "/logout",
+  async (request: FastifyRequest, reply: FastifyReply) => {
+    // CREATE JWT TOKEN
+    return reply
+      .clearCookie("token", {
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      })
+      .status(200)
+      .send({
+        message: "ok",
+        userId: "",
       });
   },
 );
 
-// PACKS
+// PACKSauthenticate
 fastify.get(
   "/packs",
   { preHandler: [authenticate] },
@@ -224,6 +235,7 @@ interface NewPackBody {
   name: string;
   qty: number;
 }
+const plans: Array<string> = ["Gratuito", "Basico", "Completo"];
 fastify.post(
   "/packs/new",
   { preHandler: authenticate },
@@ -235,12 +247,12 @@ fastify.post(
     const name = request.body.name;
     let qty = request.body.qty;
 
-    const mods = new Uint8Array(allModalities.map((modality) => modality.id));
+    const mods = new Uint8Array([]);
     const balls = new Uint8Array();
-    const winnings: Array<object> = [];
     const time = Math.floor(Date.now() / 1000);
 
-    let limit: number = 20;
+    let limit: number = 50;
+
     const userDetails = await query(
       "SELECT plan,due_at FROM users WHERE id = $1",
       [userId],
@@ -254,22 +266,16 @@ fastify.post(
         limit = 2000;
       }
     }
-    if (Number(userDetails.rows[0].cards) >= limit) {
-      return reply.status(400).send({
-        message:
-          "Você só pode gerar no máximo 20 cartelas por vez. Para gerar mais compre ou renove seu plano.",
-      });
-    }
 
-    if (qty > 2000) {
+    if (qty > limit) {
       return reply.status(400).send({
-        message: "Limite máximo de 2000 cartelas por maço.",
+        message: `Limite máximo de ${limit} cartelas por maço no plano ${plans[userDetails.rows[0].plan]}.`,
       });
     }
 
     const createPack = await query(
       "INSERT INTO packs (user_id, name, modalities, balls, winnings, starts_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
-      [userId, name, mods, balls, JSON.stringify(winnings), time, time],
+      [userId, name, mods, balls, JSON.stringify([]), time, time],
     );
     const packId: number = createPack.rows[0].id;
 
@@ -317,6 +323,11 @@ fastify.get(
       "SELECT id, name, modalities, balls, winnings FROM packs WHERE id = $1 AND user_id = $2",
       [packId, userId],
     );
+    if (pack.rowCount === 0) {
+      return reply.status(401).send({
+        message: "Maço não encontrado!",
+      });
+    }
 
     const cards = await query(
       "SELECT id, numbers FROM cards WHERE pack_id = $1 AND user_id = $2",
@@ -341,6 +352,23 @@ interface PacksPatchBody {
   winnings: Array<object>;
   modalities: number[];
 }
+
+interface CardWinningObject {
+  id: number;
+  numbers: number[];
+  pattern: number[];
+}
+interface WinningsObject {
+  modality: {
+    id: number;
+    name: string;
+  };
+  cards: CardWinningObject[];
+}
+interface Winnings {
+  ball: number;
+  winnings: WinningsObject[];
+}
 fastify.patch(
   "/packs/:id",
   { preHandler: [authenticate] },
@@ -349,6 +377,10 @@ fastify.patch(
     reply: FastifyReply,
   ) => {
     const { balls, winnings, modalities } = request.body;
+
+    const winningsList: Winnings[] = isObjectEmpty(winnings)
+      ? []
+      : (winnings as Winnings[]);
 
     const packId = request.params.id;
     const userId = request.user.sub;
@@ -363,7 +395,15 @@ fastify.patch(
     }
     if (winnings !== undefined) {
       fieldsToUpdate.push(`winnings = $${queryIndex++}`);
-      values.push(JSON.stringify(winnings));
+
+      const newWinnings = winningsList
+        .map((item) => ({
+          ...item,
+          winnings: item.winnings.filter((winning) => winning.cards.length > 0),
+        }))
+        .filter((item) => item.winnings.length > 0);
+
+      values.push(JSON.stringify(newWinnings));
     }
     if (modalities !== undefined) {
       fieldsToUpdate.push(`modalities = $${queryIndex++}`);
@@ -398,7 +438,7 @@ fastify.post(
     const packId = request.params.id;
     const userId = request.user.sub;
 
-    let limit: number = 20;
+    let limit: number = 50;
     const userDetails = await query(
       "SELECT p.due_at, COUNT(c.id)::bigint AS cards FROM users p LEFT JOIN cards c ON c.pack_id = $1 WHERE p.id = $2 GROUP BY p.due_at",
       [packId, userId],

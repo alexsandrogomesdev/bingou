@@ -14,7 +14,7 @@ interface CardsProps {
   ball?: number;
   balls: Set<number>;
   cardNumbers: number[];
-  pattern?: Set<number>;
+  pattern?: number[];
 }
 
 const Card = ({ index, id, balls, cardNumbers, pattern }: CardsProps) => {
@@ -52,7 +52,9 @@ const Card = ({ index, id, balls, cardNumbers, pattern }: CardsProps) => {
                     key={`${id}_${number}`}
                     number={number}
                     isMarked={balls.has(number)}
-                    onPattern={pattern && pattern.has(number) ? true : false}
+                    onPattern={
+                      pattern && pattern.includes(number) ? true : false
+                    }
                   />
                 );
               })}

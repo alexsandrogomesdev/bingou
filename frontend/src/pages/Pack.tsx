@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   FileText,
@@ -34,13 +34,12 @@ import type {
 } from "../types/pack.ts";
 
 const Pack = () => {
-  const { setHeaderTitle } = useMainContext();
+  const { setHeaderTitle, setAlert } = useMainContext();
   const [cards, setCards] = useState<Cards[]>([]);
   const [modalities, setModalities] = useState<number[]>([171]);
   const [allModalities, setAllModalities] = useState<AllModalities[]>([]);
-  const [packName, setPackName] = useState<string>("");
-  const [balls, setBalls] = useState<Set<number>>(new Set([171]));
-  const [lastBall, setLastBall] = useState<number>(171);
+  const [balls, setBalls] = useState<Set<number>>(new Set([]));
+  const [lastBall, setLastBall] = useState<number>();
   const [winnings, setWinnings] = useState<Winnings[]>([]);
   const [showWinnings, setShowWinnings] = useState<boolean>(false);
   const [showModalities, setShowModalities] = useState<boolean>(false);
@@ -49,6 +48,8 @@ const Pack = () => {
   const [cardsAdded, setCardsAdded] = useState<boolean>(false);
   const [loader, setLoader] = useState<boolean>(true);
 
+  const prevStateRef = useRef({ winnings, balls, modalities });
+
   const { request } = useFetch();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -56,57 +57,52 @@ const Pack = () => {
   useEffect(() => {
     const getPack = async () => {
       const response: PackType = await request(`/packs/${id}`, "GET");
+      setLoader(false);
       if (response.message === "Unauthorized") {
         navigate("/signin");
         return;
+      } else if (response.message !== "ok") {
+        setAlert({
+          id: Date.now(),
+          type: "error",
+          message: response.message,
+        });
+        return;
       }
-
       setCards(response.result.cards);
-      setPackName(response.result.name);
+      setHeaderTitle(response.result.name);
       setBalls(new Set(response.result.balls.data));
       setWinnings(response.result.winnings);
       setModalities(response.result.modalities.data);
       setAllModalities(response.result.allModalities);
-      setLoader(false);
     };
     getPack();
-  }, [id, request, cardsAdded, navigate]);
+  }, [id, request, cardsAdded, navigate, setHeaderTitle, setAlert]);
 
   useEffect(() => {
-    setHeaderTitle(packName);
-  }, [setHeaderTitle, packName]);
+    const prev = prevStateRef.current;
 
-  useEffect(() => {
-    if (!modalities.includes(171)) {
-      request(
-        `/packs/${id}`,
-        "PATCH",
-        {},
-        {
-          modalities: modalities,
-        },
-      );
-    }
-  }, [id, modalities, request]);
-
-  useEffect(() => {
-    const startTime = Date.now();
     const body: BodyUpdatePack = {};
-    if (!balls.has(171)) {
+
+    if (prev.balls !== balls) {
       body.balls = [...balls];
     }
-    if (!modalities.includes(171)) {
+    if (prev.modalities !== modalities) {
       body.modalities = modalities;
     }
-    body.winnings = winnings;
+    if (prev.winnings !== winnings) {
+      body.winnings = winnings;
+    }
 
-    request(`/packs/${id}`, "PATCH", {}, body);
-    console.log(`Resquest time: ${Date.now() - startTime}ms`);
+    if (Object.keys(body).length > 0) {
+      request(`/packs/${id}`, "PATCH", {}, body);
+    }
+
+    prevStateRef.current = { winnings, balls, modalities };
   }, [request, id, balls, modalities, winnings]);
 
   const handleSelectBall = useCallback(
     (ball: number) => {
-      const startTime = Date.now();
       setLastBall(ball);
 
       const action: string = balls.has(ball) ? "REMOVE" : "ADD";
@@ -135,23 +131,23 @@ const Pack = () => {
               id: modality.id,
               name: modality.name,
             },
-            cards: new Set(),
+            cards: [],
           };
 
           for (const map of modality.map) {
             const mapSet = new Set(map);
 
             for (const card of cards) {
-              const pattern: Set<number> = new Set();
+              const pattern: number[] = [];
 
               for (const i of mapSet) {
                 if (updatedBalls.has(card.numbers.data[i])) {
-                  pattern.add(card.numbers.data[i]);
+                  pattern.push(card.numbers.data[i]);
                 }
               }
 
-              if (mapSet.size === pattern.size && pattern.has(ball)) {
-                cardsOnModality.cards.add({
+              if (mapSet.size === pattern.length && pattern.includes(ball)) {
+                cardsOnModality.cards.push({
                   id: card.id,
                   pattern: pattern,
                   numbers: card.numbers.data,
@@ -159,35 +155,31 @@ const Pack = () => {
               }
             }
           }
-          if (cardsOnModality.cards.size >= 1) {
+          if (cardsOnModality.cards.length > 0) {
             tempWinnings.push(cardsOnModality);
           }
         }
       }
 
-      const updatedWinnings: Winnings[] = [...winnings];
       if (action === "REMOVE") {
         setWinnings((prevWinnings) => {
           return prevWinnings.filter((item) => item.ball !== ball);
         });
-        const index = updatedWinnings.findIndex((item) => item.ball === ball);
-        updatedWinnings.splice(index, 1);
       } else if (action === "ADD" && tempWinnings.length >= 1) {
         setWinnings((prevWinnings) => {
           return [...prevWinnings, { ball: ball, winnings: tempWinnings }];
         });
-        updatedWinnings.push({ ball: ball, winnings: tempWinnings });
         setTimeout(() => {
           setShowWinnings(true);
         }, 1);
       }
-      console.log(`Select ball time: ${Date.now() - startTime}ms`);
+
+      prevStateRef.current = { winnings, balls, modalities };
     },
-    [balls, allModalities, cards, modalities, winnings],
+    [balls, allModalities, cards, modalities, winnings, prevStateRef],
   );
 
   const handleDownloadPdf = async () => {
-    console.log("Iniciando impressão nativa...");
     window.print();
   };
 

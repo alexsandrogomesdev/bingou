@@ -1,16 +1,16 @@
 services:
   backend:
     build:
-      context: ./backend
+      context: ./
       dockerfile: Dockerfile
     container_name: bingou_backend
     restart: always
     env_file:
-      - ./backend/.env
+      - .env
     ports:
       - "1171:1171"
     volumes:
-      - ./backend:/app
+      - .:/app
       - /app/node_modules
     depends_on:
       postgres:
@@ -24,7 +24,7 @@ services:
     restart: always
     command: postgres -p 1172
     env_file:
-      - ./backend/.env
+      - .env
     ports:
       - "1172:1172"
     volumes:

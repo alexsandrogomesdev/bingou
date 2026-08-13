@@ -13,14 +13,14 @@ export interface AllModalities {
 export interface CardWinningObject {
   id: number;
   numbers: number[];
-  pattern: Set<number>;
+  pattern: number[];
 }
 export interface WinningsObject {
   modality: {
     id: number;
     name: string;
   };
-  cards: Set<CardWinningObject>;
+  cards: CardWinningObject[];
 }
 export interface Winnings {
   ball: number;

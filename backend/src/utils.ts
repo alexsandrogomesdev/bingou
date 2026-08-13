@@ -17,3 +17,9 @@ export const getRandomNumber = (min: number, max: number) => {
 
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1)) + minCeiled;
 };
+
+export const isObjectEmpty = (val: unknown) =>
+  val !== null &&
+  typeof val === "object" &&
+  !Array.isArray(val) &&
+  Object.keys(val).length === 0;

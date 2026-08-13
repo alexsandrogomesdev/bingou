@@ -22,6 +22,42 @@ const SignUp = () => {
   const [password, setPassword] = useState<string>("");
   const [signuping, setSignuping] = useState<boolean>(false);
 
+  const maskDocument = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "");
+
+    const newValue = [];
+    for (let c = 0; c < value.length; c++) {
+      if (c === 3 || c === 6) {
+        newValue.push(".");
+        newValue.push(value[c]);
+      } else if (c === 9) {
+        newValue.push("-");
+        newValue.push(value[c]);
+      } else if (c <= 10) {
+        newValue.push(value[c]);
+      }
+    }
+    setDocument(newValue.join(""));
+    return;
+  };
+  const maskPhone = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "");
+
+    const newValue = [];
+    for (let c = 0; c < value.length; c++) {
+      if (c === 2 || c === 3) {
+        newValue.push(" ");
+        newValue.push(value[c]);
+      } else if (c === 7) {
+        newValue.push("-");
+        newValue.push(value[c]);
+      } else if (c <= 10) {
+        newValue.push(value[c]);
+      }
+    }
+    setPhone(newValue.join(""));
+    return;
+  };
   const handleSignUp = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     // setSignuping(true);
@@ -76,7 +112,7 @@ const SignUp = () => {
           <input
             type="text"
             id="document"
-            onChange={(e) => setDocument(e.target.value)}
+            onChange={(e) => maskDocument(e)}
             value={document}
             inputMode="numeric"
             placeholder="123.456.789-10"
@@ -89,7 +125,7 @@ const SignUp = () => {
             type="text"
             id="phone"
             autoComplete="phone"
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => maskPhone(e)}
             value={phone}
             inputMode="numeric"
             placeholder="11 9 9999-9999"

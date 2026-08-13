@@ -40,11 +40,43 @@
 .ul_modalities {
   display: flex;
   flex-flow: column;
+  gap: 16px;
+  overflow-y: auto;
 }
 .li_modality {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  flex-flow: column;
+  padding: 10px;
+  border: solid 1px #e7e7e7;
+  background-color: #f7f7f7;
+  border-radius: 12px;
+}
+.li_modality > div:nth-of-type(1) {
+  display: flex;
+  min-width: 100%;
+  align-items: center;
+}
+.li_modality > div:nth-of-type(1) > p {
+  margin-right: auto;
+}
+.modality_details_show {
+  display: flex;
+  flex-flow: row;
+  overflow-x: auto;
+  min-width: 100%;
+  max-width: 100%;
+  gap: 16px;
+}
+.modality_details_show::-webkit-scrollbar {
+  width: 0;
+}
+.modality_details_hide {
+  display: none;
+}
+.open_close_modality {
+  color: #393939;
+  margin-left: 10px;
 }
 .modality_actived {
   color: #24af60;

@@ -1,4 +1,11 @@
-import { X, ToggleRight, ToggleLeft } from "lucide-react";
+import {
+  X,
+  ToggleRight,
+  ToggleLeft,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
+import { useState } from "react";
 
 // STYLES
 import styles from "./Modalities.module.css";
@@ -6,6 +13,7 @@ import styles from "./Modalities.module.css";
 // HOOKS
 
 // COMPONENTS
+import ModalityExample from "../components/ModalityExample.tsx";
 
 // TYPES
 import type { AllModalities } from "../types/pack";
@@ -31,6 +39,7 @@ const Modalities: React.FC<Props> = ({
       }
     });
   };
+  const [openId, setOpenId] = useState<number>(0);
 
   return (
     <section className={styles.section_modalities}>
@@ -44,19 +53,45 @@ const Modalities: React.FC<Props> = ({
             <li key={modality.id} className={styles.li_modality}>
               <div>
                 <p>{modality.name}</p>
+                <div>
+                  {modalities.includes(modality.id) ? (
+                    <ToggleRight
+                      className={styles.modality_actived}
+                      onClick={() => changeModality(modality.id)}
+                    />
+                  ) : (
+                    <ToggleLeft
+                      className={styles.modality_disabled}
+                      onClick={() => changeModality(modality.id)}
+                    />
+                  )}
+                  {openId === modality.id ? (
+                    <ChevronUp
+                      className={styles.open_close_modality}
+                      onClick={() => setOpenId(0)}
+                    />
+                  ) : (
+                    <ChevronDown
+                      className={styles.open_close_modality}
+                      onClick={() => setOpenId(modality.id)}
+                    />
+                  )}
+                </div>
               </div>
-              <div>
-                {modalities.includes(modality.id) ? (
-                  <ToggleRight
-                    className={styles.modality_actived}
-                    onClick={() => changeModality(modality.id)}
+              <div
+                className={
+                  openId === modality.id
+                    ? styles.modality_details_show
+                    : styles.modality_details_hide
+                }
+              >
+                {modality.map.map((item, index) => (
+                  <ModalityExample
+                    key={`modality_example_${index}`}
+                    modality={modality.id}
+                    map={item}
                   />
-                ) : (
-                  <ToggleLeft
-                    className={styles.modality_disabled}
-                    onClick={() => changeModality(modality.id)}
-                  />
-                )}
+                ))}
               </div>
             </li>
           ))}
