@@ -1,18 +1,10 @@
-const CACHE_NAME = "react-pwa-v1";
-const urlsToCache = ["/", "/index.html", "/static/js/bundle.js"];
+const CACHE_NAME = "bingou-v1";
 
-// Instalação do Service Worker
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)),
-  );
+  self.skipWaiting();
 });
 
-// Interceptação das requisições
 self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    }),
-  );
+  // Apenas passa as requisições normais por enquanto
+  event.respondWith(fetch(event.request));
 });
