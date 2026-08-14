@@ -36,7 +36,7 @@ import type {
 const Pack = () => {
   const { setHeaderTitle, setAlert } = useMainContext();
   const [cards, setCards] = useState<Cards[]>([]);
-  const [modalities, setModalities] = useState<number[]>([171]);
+  const [modalities, setModalities] = useState<number[]>([]);
   const [allModalities, setAllModalities] = useState<AllModalities[]>([]);
   const [balls, setBalls] = useState<Set<number>>(new Set([]));
   const [lastBall, setLastBall] = useState<number>();
@@ -134,40 +134,50 @@ const Pack = () => {
       // CHECK WINNINGS
       const tempWinnings: WinningsObject[] = [];
 
-      for (const modality of allModalities) {
-        if (modalities && modalities.includes(modality.id)) {
-          const cardsOnModality: WinningsObject = {
-            modality: {
-              id: modality.id,
-              name: modality.name,
-            },
-            cards: [],
-          };
+      const modalitiesLength = modalities.length;
+      const cardsLength = cards.length;
 
-          for (const map of modality.map) {
-            const mapSet = new Set(map);
+      for (let a = 0; a < modalitiesLength; a++) {
+        // modality per modality
+        if (modalities[a].on === false) continue; // modality off
+        const cardsOnModality: WinningsObject = {
+          modality: {
+            id: modalities[a].id,
+            name: modalities[a].name,
+          },
+          cards: [],
+        };
 
-            for (const card of cards) {
-              const pattern: number[] = [];
+        const maps = modalities[a].maps;
+        const mapsLength = maps.length;
+        for (let b = 0; b < mapsLength; b++) {
+          // map per map
+          if (maps[b][0] === 0) continue; // map off
+          const map = maps[b];
 
-              for (const i of mapSet) {
-                if (updatedBalls.has(card.numbers.data[i])) {
-                  pattern.push(card.numbers.data[i]);
-                }
-              }
-
-              if (mapSet.size === pattern.length && pattern.includes(ball)) {
-                cardsOnModality.cards.push({
-                  id: card.id,
-                  pattern: pattern,
-                  numbers: card.numbers.data,
-                });
+          for (let c = 0; c < cardsLength; c++) {
+            if (!cards[c].numbers.data.includes(ball)) continue;
+            const card = cards[c];
+            const pattern: number[] = [];
+            const mapLength = map.length;
+            for (let d = 0; d < mapLength; d++) {
+              if (d === 0) continue;
+              if (updatedBalls.has(card.numbers.data[map[d]])) {
+                pattern.push(card.numbers.data[map[d]]);
               }
             }
+            if (mapLength - 1 === pattern.length && pattern.includes(ball)) {
+              cardsOnModality.cards.push({
+                id: card.id,
+                pattern: pattern,
+                numbers: card.numbers.data,
+              });
+            }
           }
-          if (cardsOnModality.cards.length > 0) {
-            tempWinnings.push(cardsOnModality);
-          }
+        }
+
+        if (cardsOnModality.cards.length > 0) {
+          tempWinnings.push(cardsOnModality);
         }
       }
 

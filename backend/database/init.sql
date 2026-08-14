@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS packs (
   id BIGSERIAL PRIMARY KEY,
   user_id BIGINT NOT NULL,
   name VARCHAR(32) NOT NULL,
-  modalities BYTEA NOT NULL,
+  modalities JSONB DEFAULT '[]'::jsonb,
   balls BYTEA DEFAULT '\x'::bytea,
   winnings JSONB DEFAULT '[]'::jsonb,
   starts_at BIGINT DEFAULT 0,

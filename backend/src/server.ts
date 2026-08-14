@@ -25,7 +25,7 @@ const authenticate = async (request: any, reply: any) => {
 };
 
 // GLOBALS
-import { allModalities } from "./allModalities";
+import { type Modalities, allModalities } from "./allModalities";
 import { shuffleArray, getRandomNumber, isObjectEmpty } from "./utils";
 import { createCardNumbers } from "./functions/createCardNumbers";
 
@@ -247,7 +247,7 @@ fastify.post(
     const name = request.body.name;
     let qty = request.body.qty;
 
-    const mods = new Uint8Array([]);
+    const mods = [...allModalities];
     const balls = new Uint8Array();
     const time = Math.floor(Date.now() / 1000);
 
@@ -275,7 +275,15 @@ fastify.post(
 
     const createPack = await query(
       "INSERT INTO packs (user_id, name, modalities, balls, winnings, starts_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
-      [userId, name, mods, balls, JSON.stringify([]), time, time],
+      [
+        userId,
+        name,
+        JSON.stringify(mods),
+        balls,
+        JSON.stringify([]),
+        time,
+        time,
+      ],
     );
     const packId: number = createPack.rows[0].id;
 
@@ -350,9 +358,8 @@ interface PacksPatchBody {
   ball: number;
   balls: number[];
   winnings: Array<object>;
-  modalities: number[];
+  modalities: Modalities[];
 }
-
 interface CardWinningObject {
   id: number;
   numbers: number[];
@@ -407,7 +414,7 @@ fastify.patch(
     }
     if (modalities !== undefined) {
       fieldsToUpdate.push(`modalities = $${queryIndex++}`);
-      values.push(new Uint8Array(modalities));
+      values.push(JSON.stringify(modalities));
     }
 
     if (fieldsToUpdate.length === 0) {
@@ -440,10 +447,12 @@ fastify.post(
 
     let limit: number = 50;
     const userDetails = await query(
-      "SELECT p.due_at, COUNT(c.id)::bigint AS cards FROM users p LEFT JOIN cards c ON c.pack_id = $1 WHERE p.id = $2 GROUP BY p.due_at",
+      "SELECT p.plan, p.due_at, COUNT(c.id)::bigint AS cards FROM users p LEFT JOIN cards c ON c.pack_id = $1 WHERE p.id = $2 GROUP BY p.plan, p.due_at",
       [packId, userId],
     );
+
     if (Number(userDetails.rows[0].due_at) > Math.floor(Date.now() / 1000)) {
+      console.log("Here");
       if (userDetails.rows[0].plan === 1) {
         // BASIC
         limit = 500;
@@ -452,7 +461,7 @@ fastify.post(
         limit = 2000;
       }
     }
-    if (Number(userDetails.rows[0].cards) + qty >= limit) {
+    if (Number(userDetails.rows[0].cards) + qty > limit) {
       return reply.status(400).send({
         message: `Limite máximo de ${limit} excedido.`,
       });

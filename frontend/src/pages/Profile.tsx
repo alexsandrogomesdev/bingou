@@ -9,6 +9,8 @@ import { useFetch } from "../hooks/useFetch.tsx";
 
 // COMPONENTS
 
+import { dateFromUnix } from "../utils/functions.ts";
+
 const Profile = () => {
   const { request } = useFetch();
   const navigate = useNavigate();
@@ -19,6 +21,7 @@ const Profile = () => {
     phone: string;
     email: string;
     plan: number;
+    due_at: number;
   }
   const [profile, setProfile] = useState<User>({
     name: "",
@@ -26,6 +29,7 @@ const Profile = () => {
     phone: "",
     email: "",
     plan: 0,
+    due_at: 0,
   });
 
   interface Response {
@@ -62,6 +66,9 @@ const Profile = () => {
         </div>
         <div>
           <p>Plano:</p> <span>{plans[profile.plan]}</span>
+        </div>
+        <div>
+          <p>Vencimento:</p> <span>{dateFromUnix(profile.due_at)}</span>
         </div>
       </div>
     </section>
