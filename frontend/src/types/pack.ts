@@ -9,7 +9,12 @@ export interface AllModalities {
   name: string;
   map: Array<number[]>;
 }
-
+export interface ModalitiesInterface {
+  id: number;
+  on: boolean;
+  name: string;
+  maps: Array<number[]>;
+}
 export interface CardWinningObject {
   id: number;
   numbers: number[];
@@ -36,9 +41,7 @@ export interface PackType {
       data: number[];
     };
     winnings: Winnings[];
-    modalities: {
-      data: number[];
-    };
+    modalities: ModalitiesInterface[];
     allModalities: [];
   };
 }
@@ -54,6 +57,6 @@ export interface CardsOnModality {
 }
 export interface BodyUpdatePack {
   balls?: number[];
-  modalities?: number[];
+  modalities?: ModalitiesInterface[];
   winnings?: Winnings[];
 }

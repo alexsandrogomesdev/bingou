@@ -18,12 +18,12 @@ import ModalityExample from "../components/ModalityExample.tsx";
 import NewModality from "./NewModality.tsx";
 
 // TYPES
-import type { AllModalities } from "../types/pack";
+import type { AllModalities, ModalitiesInterface } from "../types/pack";
 interface Props {
   setShowModalities: React.Dispatch<React.SetStateAction<boolean>>;
   allModalities: AllModalities[];
-  modalities: number[];
-  setModalities: React.Dispatch<React.SetStateAction<number[]>>;
+  modalities: ModalitiesInterface[];
+  setModalities: React.Dispatch<React.SetStateAction<ModalitiesInterface[]>>;
 }
 
 const Modalities: React.FC<Props> = ({
@@ -41,6 +41,7 @@ const Modalities: React.FC<Props> = ({
       }
     });
   };
+
   const [openId, setOpenId] = useState<number>(0);
   const [showNewModality, setShowNewModality] = useState<boolean>(false);
 

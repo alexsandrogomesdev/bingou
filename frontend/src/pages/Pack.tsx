@@ -26,6 +26,7 @@ import AddCards from "../components/AddCards.tsx";
 // INTERFACES AND TYPES
 import type {
   Cards,
+  ModalitiesInterface,
   AllModalities,
   Winnings,
   PackType,
@@ -36,7 +37,7 @@ import type {
 const Pack = () => {
   const { setHeaderTitle, setAlert } = useMainContext();
   const [cards, setCards] = useState<Cards[]>([]);
-  const [modalities, setModalities] = useState<number[]>([]);
+  const [modalities, setModalities] = useState<ModalitiesInterface[]>([]);
   const [allModalities, setAllModalities] = useState<AllModalities[]>([]);
   const [balls, setBalls] = useState<Set<number>>(new Set([]));
   const [lastBall, setLastBall] = useState<number>();
@@ -73,7 +74,7 @@ const Pack = () => {
       setHeaderTitle(response.result.name);
       setBalls(new Set(response.result.balls.data));
       setWinnings(response.result.winnings);
-      setModalities(response.result.modalities.data);
+      setModalities(response.result.modalities);
       setAllModalities(response.result.allModalities);
     };
     getPack();
