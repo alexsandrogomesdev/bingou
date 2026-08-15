@@ -31,6 +31,7 @@ import type {
   PackType,
   WinningsObject,
   BodyUpdatePack,
+  Goods,
 } from "../types/pack.ts";
 
 const Pack = () => {
@@ -38,6 +39,7 @@ const Pack = () => {
   const [cards, setCards] = useState<Cards[]>([]);
   const [modalities, setModalities] = useState<ModalitiesInterface[]>([]);
   const [balls, setBalls] = useState<Set<number>>(new Set([]));
+  const [ballsToRender, setBallsToRender] = useState<Set<number>>(new Set([]));
   const [lastBall, setLastBall] = useState<number>();
   const [winnings, setWinnings] = useState<Winnings[]>([]);
   const [showWinnings, setShowWinnings] = useState<boolean>(false);
@@ -46,8 +48,12 @@ const Pack = () => {
   const [showAddCards, setShowAddCards] = useState<boolean>(false);
   const [cardsAdded, setCardsAdded] = useState<boolean>(false);
   const [loader, setLoader] = useState<boolean>(true);
+  const [goods, setGoods] = useState<Goods[]>([]);
+  const [cardsWithGoods, setCardsWithGoods] = useState<Set<number>>(
+    new Set([]),
+  );
 
-  const prevStateRef = useRef({ winnings, balls, modalities });
+  const prevStateRef = useRef({ winnings, balls, modalities, goods });
 
   const { request } = useFetch();
   const { id } = useParams();
@@ -71,6 +77,11 @@ const Pack = () => {
       setCards(response.result.cards);
       setHeaderTitle(response.result.name);
       setBalls(new Set(response.result.balls.data));
+      setBallsToRender(new Set(response.result.balls.data));
+      setGoods(response.result.goods);
+      setCardsWithGoods(
+        new Set(response.result.goods.map((item) => item.card)),
+      );
       setWinnings(response.result.winnings);
       setModalities(response.result.modalities);
     };
@@ -88,6 +99,10 @@ const Pack = () => {
     if (prev.modalities !== modalities) {
       body.modalities = modalities;
     }
+    if (prev.goods !== goods) {
+      body.goods = goods;
+      setCardsWithGoods(new Set(goods.map((item) => item.card)));
+    }
     if (prev.winnings !== winnings) {
       body.winnings = winnings;
     }
@@ -96,8 +111,8 @@ const Pack = () => {
       request(`/packs/${id}`, "PATCH", {}, body);
     }
 
-    prevStateRef.current = { winnings, balls, modalities };
-  }, [request, id, balls, modalities, winnings]);
+    prevStateRef.current = { winnings, balls, modalities, goods };
+  }, [request, id, balls, goods, modalities, winnings]);
 
   useEffect(() => {
     if (showWinnings || showBallTable || showModalities) {
@@ -109,11 +124,15 @@ const Pack = () => {
       document.body.style.overflow = "unset";
     };
   }, [showWinnings, showBallTable, showModalities]);
+
   const handleSelectBall = useCallback(
     (ball: number) => {
+      const startTime = Date.now();
+
       setLastBall(ball);
 
       const action: string = balls.has(ball) ? "REMOVE" : "ADD";
+
       setBalls((prevBalls) => {
         if (prevBalls.has(ball)) {
           return new Set([...prevBalls].filter((b) => b !== ball));
@@ -134,6 +153,7 @@ const Pack = () => {
 
       const modalitiesLength = modalities.length;
       const cardsLength = cards.length;
+      const goodBalls: Goods[] = [];
 
       for (let a = 0; a < modalitiesLength; a++) {
         // modality per modality
@@ -154,22 +174,33 @@ const Pack = () => {
           const map = maps[b];
 
           for (let c = 0; c < cardsLength; c++) {
-            if (!cards[c].numbers.data.includes(ball)) continue;
+            // if (!cards[c].numbers.data.includes(ball)) continue; // the card has not the ball
             const card = cards[c];
             const pattern: number[] = [];
             const mapLength = map.length;
-            for (let d = 0; d < mapLength; d++) {
-              if (d === 0) continue;
+            for (let d = 1; d < mapLength; d++) {
               if (updatedBalls.has(card.numbers.data[map[d]])) {
                 pattern.push(card.numbers.data[map[d]]);
               }
             }
             if (mapLength - 1 === pattern.length && pattern.includes(ball)) {
+              // -1 because the first index is the control 0 or 1
               cardsOnModality.cards.push({
                 id: card.id,
                 pattern: pattern,
                 numbers: card.numbers.data,
               });
+            } else if (mapLength - 1 - pattern.length === 1) {
+              // good, miss 1 ball to win
+              for (let e = 1; e < mapLength; e++) {
+                if (!updatedBalls.has(card.numbers.data[map[e]])) {
+                  goodBalls.push({
+                    ball: card.numbers.data[map[e]],
+                    modality: modalities[a].name,
+                    card: cards[c].id,
+                  });
+                }
+              }
             }
           }
         }
@@ -178,6 +209,15 @@ const Pack = () => {
           tempWinnings.push(cardsOnModality);
         }
       }
+
+      setGoods((prevGoods) => {
+        if (prevGoods.length !== goodBalls.length) {
+          return goodBalls;
+        }
+        return prevGoods;
+      });
+
+      // console.log("Good balls: " + goodBalls.map((item) => item.ball));
 
       if (action === "REMOVE") {
         setWinnings((prevWinnings) => {
@@ -192,9 +232,24 @@ const Pack = () => {
         }, 1);
       }
 
-      prevStateRef.current = { winnings, balls, modalities };
+      setTimeout(() => {
+        setBallsToRender(updatedBalls);
+      }, 100);
+
+      prevStateRef.current = { winnings, balls, modalities, goods };
+
+      console.log(`Exec time: ${Date.now() - startTime}ms`);
     },
-    [balls, cards, modalities, winnings, prevStateRef],
+    [
+      balls,
+      cards,
+      modalities,
+      goods,
+      winnings,
+      prevStateRef,
+      setGoods,
+      setBallsToRender,
+    ],
   );
 
   const handleDownloadPdf = async () => {
@@ -254,6 +309,7 @@ const Pack = () => {
               balls={balls}
               handleSelectBall={handleSelectBall}
               setShowBallTable={setShowBallTable}
+              goods={goods}
             />
           )}
           {loader && (
@@ -278,8 +334,9 @@ const Pack = () => {
                 index={index + 1}
                 id={card.id}
                 ball={lastBall}
-                balls={balls}
+                balls={ballsToRender}
                 cardNumbers={card.numbers.data}
+                isGoodCard={cardsWithGoods.has(card.id)}
               />
             ))}
           </div>

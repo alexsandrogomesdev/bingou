@@ -15,9 +15,17 @@ interface CardsProps {
   balls: Set<number>;
   cardNumbers: number[];
   pattern?: number[];
+  isGoodCard?: boolean;
 }
 
-const Card = ({ index, id, balls, cardNumbers, pattern }: CardsProps) => {
+const Card = ({
+  index,
+  id,
+  balls,
+  cardNumbers,
+  pattern,
+  isGoodCard,
+}: CardsProps) => {
   // console.log(`Card: ${id}`);
   const cardNumbersKey = cardNumbers.join(",");
   const columns = useMemo(() => {
@@ -30,7 +38,7 @@ const Card = ({ index, id, balls, cardNumbers, pattern }: CardsProps) => {
 
   return (
     <>
-      <article className={styles.card}>
+      <article className={`${styles.card} ${isGoodCard && styles.good_card}`}>
         <div className={styles.card_header}>
           <p>
             Cartela: #{index} ({id})

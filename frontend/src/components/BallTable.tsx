@@ -4,18 +4,21 @@ import { X } from "lucide-react";
 import styles from "./BallTable.module.css";
 
 // HOOKS
+import type { Goods } from "../types/pack";
 
 // COMPONENTS
 interface Props {
   balls: Set<number>;
   handleSelectBall: (ball: number) => void;
   setShowBallTable: React.Dispatch<React.SetStateAction<boolean>>;
+  goods: Goods[];
 }
-const BallTable: React.FC<Props> = ({
+const BallTable = ({
   balls,
   handleSelectBall,
   setShowBallTable,
-}) => {
+  goods,
+}: Props) => {
   const table_numbers: Array<number[]> = [[], [], [], [], []];
   for (let c = 0; c < 5; c++) {
     const min = 1 + c * 15;
@@ -38,7 +41,7 @@ const BallTable: React.FC<Props> = ({
               {column.map((ball) => (
                 <li
                   key={ball}
-                  className={`${styles.number} ${balls.has(ball) && styles.number_selected}`}
+                  className={`${styles.number} ${balls.has(ball) && styles.number_selected} ${goods.some((item) => item.ball === ball) ? styles.good_ball : ""}`}
                   onClick={() => handleSelectBall(ball)}
                 >
                   <span>{ball}</span>

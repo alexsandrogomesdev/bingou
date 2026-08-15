@@ -40,6 +40,7 @@ export interface PackType {
     balls: {
       data: number[];
     };
+    goods: Goods[];
     winnings: Winnings[];
     modalities: ModalitiesInterface[];
     allModalities: [];
@@ -58,5 +59,12 @@ export interface CardsOnModality {
 export interface BodyUpdatePack {
   balls?: number[];
   modalities?: ModalitiesInterface[];
+  goods?: Goods[];
   winnings?: Winnings[];
+}
+
+export interface Goods {
+  ball: number;
+  modality: string;
+  card: number;
 }

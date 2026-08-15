@@ -9,6 +9,10 @@
   max-width: 146px;
   background-color: #fff;
   max-height: 205px;
+  order: 2;
+}
+.good_card {
+  order: 1;
 }
 .card_header {
   display: flex;
@@ -69,5 +73,11 @@
     height: 60mm !important; /* Altura fixa baixa pra caber 4 por folha */
     margin-bottom: 5mm !important;
     box-sizing: border-box !important;
+  }
+
+  * {
+    /* Força o navegador a imprimir cores e backgrounds exatos */
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }
