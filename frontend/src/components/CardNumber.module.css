@@ -1,18 +1,38 @@
-.number_selected {
+.number_selected,
+.good_ball {
   background-color: #24af60;
   color: #fff !important;
   text-align: center;
   padding: 3px;
-  min-width: 21px;
-  max-width: 21px;
-  min-height: 21px;
-  max-height: 21px;
-  border-radius: 21px;
+  min-width: 26px;
+  max-width: 26px;
+  min-height: 26px;
+  max-height: 26px;
+  border-radius: 26px;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }
 .number_selected_2 {
-  background-color: #1f56ce !important;
+  background-color: #ffd700 !important;
   font-weight: bold;
   animation: zoomInOut 1s ease-in-out infinite;
+}
+.number_selected::before,
+.good_ball::before {
+  content: "";
+  min-width: 7px;
+  max-width: 7px;
+  min-height: 7px;
+  max-height: 7px;
+  background-color: rgba(255, 255, 255, 0.7);
+  top: 2px;
+  left: 2px;
+  position: absolute;
+  z-index: 1;
+  border-radius: 10px;
+  filter: blur(3px);
 }
 @keyframes zoomInOut {
   0% {
@@ -32,4 +52,19 @@
   position: relative;
   top: 1px;
   left: -0.7px;
+}
+.good_ball {
+  background-color: #ff5e0e;
+  animation: good_ball 1s ease-in-out infinite;
+}
+@keyframes good_ball {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.171);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

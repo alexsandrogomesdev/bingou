@@ -184,6 +184,7 @@ const Pack = () => {
               }
             }
             if (mapLength - 1 === pattern.length && pattern.includes(ball)) {
+              // wins
               // -1 because the first index is the control 0 or 1
               cardsOnModality.cards.push({
                 id: card.id,
@@ -210,12 +211,7 @@ const Pack = () => {
         }
       }
 
-      setGoods((prevGoods) => {
-        if (prevGoods.length !== goodBalls.length) {
-          return goodBalls;
-        }
-        return prevGoods;
-      });
+      setGoods(goodBalls);
 
       // console.log("Good balls: " + goodBalls.map((item) => item.ball));
 
@@ -229,6 +225,7 @@ const Pack = () => {
         });
         setTimeout(() => {
           setShowWinnings(true);
+          setShowBallTable(false);
         }, 1);
       }
 
@@ -337,6 +334,13 @@ const Pack = () => {
                 balls={ballsToRender}
                 cardNumbers={card.numbers.data}
                 isGoodCard={cardsWithGoods.has(card.id)}
+                goodBalls={
+                  new Set(
+                    goods
+                      .filter((item) => item.card === card.id)
+                      .map((item) => item.ball),
+                  )
+                }
               />
             ))}
           </div>

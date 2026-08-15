@@ -18,7 +18,7 @@ export interface Modalities {
 export const allModalities: Modalities[] = [
   {
     id: 1,
-    on: false,
+    on: true,
     name: "Cheia",
     maps: [
       [

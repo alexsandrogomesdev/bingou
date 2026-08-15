@@ -1,14 +1,14 @@
 import { useMemo } from "react";
 
 // STYLES
-import styles from "./ModalityExample.module.css";
+import styles from "./ModalityPattern.module.css";
+import { Sparkles, ToggleLeft, ToggleRight } from "lucide-react";
 
 // HOOKS
 
 // COMPONENTS
-import { Sparkles, ToggleLeft, ToggleRight } from "lucide-react";
 
-const ModalityExample = ({
+const ModalityPattern = ({
   modality,
   map,
   index,
@@ -66,4 +66,4 @@ const ModalityExample = ({
   );
 };
 
-export default ModalityExample;
+export default ModalityPattern;

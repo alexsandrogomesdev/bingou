@@ -12,17 +12,25 @@ interface Props {
   number: number;
   isMarked: boolean;
   onPattern: boolean;
+  isGoodBall?: boolean;
 }
-const CardNumber = memo(({ number, isMarked, onPattern }: Props) => {
+const CardNumber = ({ number, isMarked, onPattern, isGoodBall }: Props) => {
   return (
     <li>
       <span
-        className={`${isMarked && styles.number_selected} ${number === 0 && styles.joker} ${onPattern && styles.number_selected_2}`}
+        className={`${isMarked ? styles.number_selected : ""} ${number === 0 ? styles.joker : ""} ${onPattern ? styles.number_selected_2 : ""} ${isGoodBall ? styles.good_ball : ""}`}
       >
         {number === 0 ? <Sparkles /> : number}
       </span>
     </li>
   );
-});
+};
 
-export default CardNumber;
+export default memo(CardNumber, (prevProps, nextProps) => {
+  return (
+    prevProps.isGoodBall !== nextProps.isGoodBall &&
+    prevProps.number !== nextProps.number &&
+    prevProps.isMarked !== nextProps.isMarked &&
+    prevProps.onPattern !== nextProps.onPattern
+  );
+});

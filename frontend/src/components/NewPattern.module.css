@@ -1,59 +1,23 @@
-.section_new_modality {
+.section_new_pattern {
   display: flex;
   flex-flow: column;
   position: fixed;
+  width: 100%;
+  height: 100dvh;
   top: 0;
   left: 0;
-  z-index: 5;
-  min-width: 100%;
-  max-width: 100%;
-  min-height: 100dvh;
-  max-height: 100dvh;
-  background-color: rgba(0, 0, 0, 0.7);
+  padding: 17px;
+  background-color: rgba(7, 7, 7, 0.7);
+  z-index: 3;
 }
-.div_new_modality {
+.div_new_pattern {
   display: flex;
   flex-flow: column;
   background-color: #fff;
-  margin: auto 20px;
   border-radius: 12px;
   padding: 16px;
-}
-.div_new_modality > nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.div_new_modality > nav > p {
-  color: #282930;
-  font-weight: 500;
-}
-.div_new_modality > nav > svg {
-  color: #282930;
-  cursor: pointer;
-}
-
-.form {
-  display: flex;
-  flex-flow: column;
-  margin: 16px 0 0;
-}
-.form > input {
-  min-height: 32px;
-  max-height: 32px;
-  border: solid 1px #e7e7e7;
-  border-radius: 4px;
-  outline: 0;
-  padding: 0 10px;
-  font-size: 16px;
-  color: #282930;
-  font-weight: 500;
-}
-.form > p {
-  font-size: 14px;
-  color: #282930;
-  font-weight: 400;
-  margin: 10px 0 0;
+  overflow: hidden;
+  margin: auto;
 }
 .div_pattern {
   display: flex;

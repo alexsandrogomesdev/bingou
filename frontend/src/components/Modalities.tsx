@@ -14,7 +14,8 @@ import styles from "./Modalities.module.css";
 // HOOKS
 
 // COMPONENTS
-import ModalityExample from "../components/ModalityExample.tsx";
+import NewPattern from "./NewPattern.tsx";
+import ModalityPattern from "./ModalityPattern.tsx";
 import NewModality from "./NewModality.tsx";
 
 // TYPES
@@ -30,6 +31,14 @@ const Modalities: React.FC<Props> = ({
   modalities,
   setModalities,
 }) => {
+  const [showNewPattern, setShowNewPattern] = useState<boolean>(false);
+  const [modalityId, setModalityId] = useState<number>(0);
+  const handleShowNewPattern = (modality: number) => {
+    setModalityId(modality);
+    setShowNewPattern(true);
+    return;
+  };
+
   const changeModality = (modality: number, on: boolean) => {
     const modalitiesTemp: ModalitiesInterface[] = [...modalities];
     for (let a = 0; a < modalitiesTemp.length; a++) {
@@ -65,13 +74,32 @@ const Modalities: React.FC<Props> = ({
 
   return (
     <>
+      {showNewPattern && (
+        <NewPattern
+          modality={modalityId}
+          setShowNewPattern={setShowNewPattern}
+          modalities={modalities}
+          setModalities={setModalities}
+        />
+      )}
+
       {showNewModality && (
-        <NewModality setShowNewModality={setShowNewModality} />
+        <NewModality
+          setShowNewModality={setShowNewModality}
+          setModalities={setModalities}
+        />
       )}
       <section className={styles.section_modalities}>
         <div className={styles.div_modalities}>
           <div className={styles.div_modalities_header}>
             <h3>Modalidades</h3>
+
+            <button
+              className={styles.new_modality}
+              onClick={() => setShowNewModality(true)}
+            >
+              <Plus />
+            </button>
             <X onClick={() => setShowModalities(false)} />
           </div>
           <ul className={styles.ul_modalities}>
@@ -112,7 +140,7 @@ const Modalities: React.FC<Props> = ({
                   }
                 >
                   {modality.maps.map((item, index) => (
-                    <ModalityExample
+                    <ModalityPattern
                       key={`modality_example_${index}`}
                       modality={modality.id}
                       map={item}
@@ -120,16 +148,16 @@ const Modalities: React.FC<Props> = ({
                       changeMap={changeMap}
                     />
                   ))}
+                  <button
+                    className={styles.new_pattern}
+                    onClick={() => handleShowNewPattern(modality.id)}
+                  >
+                    <Plus />
+                  </button>
                 </div>
               </li>
             ))}
           </ul>
-          <button
-            className={styles.add_new_modality}
-            onClick={() => setShowNewModality(true)}
-          >
-            <Plus />
-          </button>
         </div>
       </section>
     </>

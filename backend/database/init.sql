@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS packs (
   name VARCHAR(32) NOT NULL,
   modalities JSONB DEFAULT '[]'::jsonb,
   balls BYTEA DEFAULT '\x'::bytea,
+  goods JSONB DEFAULT '[]'::jsonb
   winnings JSONB DEFAULT '[]'::jsonb,
   starts_at BIGINT DEFAULT 0,
   created_at BIGINT NOT NULL,

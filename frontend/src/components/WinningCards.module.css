@@ -15,7 +15,7 @@
   flex-flow: column;
   background-color: #fff;
   border-radius: 12px;
-  padding: 16px;
+  padding: 8px 0;
   min-height: calc(100dvh - 34px);
   max-height: calc(100dvh - 34px);
   overflow: hidden;
@@ -24,6 +24,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 0 8px;
 }
 .div_winnings_cards > nav > svg {
   margin: 0;
@@ -53,7 +54,7 @@
 .div_winnings_cards > p {
   font-size: 14px;
   color: #282930;
-  margin: 0 0 10px;
+  margin: 0 8px 10px;
 }
 
 .div_winnings {
@@ -66,14 +67,17 @@
 .winnings_per_ball {
   display: flex;
   flex-flow: column;
-  gap: 16px;
+  gap: 0px;
   padding: 5px;
-  border: solid 1px #c7c7c7;
+  border: solid 1px #e7e7e7;
+  background-color: rgb(254, 254, 254);
+  margin: 0 8px;
   border-radius: 8px;
 }
 .winnings_per_ball > p {
   font-size: 16px;
   color: #24af60;
+  margin-bottom: 5px;
 }
 .cards_per_modality {
   display: flex;
@@ -83,7 +87,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  justify-content: space-around;
+  justify-content: space-between;
   margin: 0 auto;
   flex: 1;
   overflow-y: auto;

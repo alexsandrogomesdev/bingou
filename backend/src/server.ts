@@ -274,12 +274,13 @@ fastify.post(
     }
 
     const createPack = await query(
-      "INSERT INTO packs (user_id, name, modalities, balls, winnings, starts_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
+      "INSERT INTO packs (user_id, name, modalities, balls, goods, winnings, starts_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
       [
         userId,
         name,
         JSON.stringify(mods),
         balls,
+        JSON.stringify([]),
         JSON.stringify([]),
         time,
         time,
@@ -328,7 +329,7 @@ fastify.get(
     const packId = request.params.id;
 
     const pack = await query(
-      "SELECT id, name, modalities, balls, winnings FROM packs WHERE id = $1 AND user_id = $2",
+      "SELECT id, name, modalities, balls, goods, winnings FROM packs WHERE id = $1 AND user_id = $2",
       [packId, userId],
     );
     if (pack.rowCount === 0) {
@@ -353,10 +354,16 @@ fastify.get(
   },
 );
 
+interface Goods {
+  ball: number;
+  modality: string;
+  card: number;
+}
 interface PacksPatchBody {
   action: string;
   ball: number;
   balls: number[];
+  goods: Goods[];
   winnings: Array<object>;
   modalities: Modalities[];
 }
@@ -383,7 +390,7 @@ fastify.patch(
     request: FastifyRequest<{ Body: PacksPatchBody; Params: { id: number } }>,
     reply: FastifyReply,
   ) => {
-    const { balls, winnings, modalities } = request.body;
+    const { balls, goods, winnings, modalities } = request.body;
 
     const winningsList: Winnings[] = isObjectEmpty(winnings)
       ? []
@@ -399,6 +406,10 @@ fastify.patch(
     if (balls !== undefined) {
       fieldsToUpdate.push(`balls = $${queryIndex++}`);
       values.push(new Uint8Array(balls));
+    }
+    if (goods !== undefined) {
+      fieldsToUpdate.push(`goods = $${queryIndex++}`);
+      values.push(JSON.stringify(goods));
     }
     if (winnings !== undefined) {
       fieldsToUpdate.push(`winnings = $${queryIndex++}`);

@@ -24,7 +24,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 25px;
+  margin-bottom: 0px;
 }
 .div_modalities_header > h3 {
   font-size: 16px;
@@ -43,8 +43,8 @@
   gap: 16px;
   overflow-y: auto;
   flex: 1;
-  min-height: calc(100dvh - 125px);
-  max-height: calc(100dvh - 125px);
+  min-height: calc(100dvh - 115px);
+  max-height: calc(100dvh - 115px);
 }
 .li_modality {
   display: flex;
@@ -70,6 +70,7 @@
   min-width: 100%;
   max-width: 100%;
   gap: 16px;
+  align-items: center;
 }
 .modality_details_show::-webkit-scrollbar {
   width: 0;
@@ -83,30 +84,40 @@
 }
 .modality_enabled {
   color: #24af60;
-  min-width: 26px;
-  max-width: 26px;
-  min-height: 26px;
-  max-height: 26px;
+  min-width: 28px;
+  max-width: 28px;
+  min-height: 28px;
+  max-height: 28px;
 }
 .modality_disabled {
-  color: #ff5927;
-  min-width: 26px;
-  max-width: 26px;
-  min-height: 26px;
-  max-height: 26px;
+  color: #ff4309;
+  min-width: 28px;
+  max-width: 28px;
+  min-height: 28px;
+  max-height: 28px;
 }
-.add_new_modality {
+.new_modality {
   position: relative;
-  bottom: 50px;
-  margin: 0 0 0 auto;
-  min-width: 44px;
-  max-width: 44px;
-  min-height: 44px;
-  max-height: 44px;
-  border-radius: 44px;
+  margin: 0 21px 0 auto;
+  min-width: 24px;
+  max-width: 24px;
+  min-height: 24px;
+  max-height: 24px;
+  border-radius: 24px;
   border: none;
   color: #fff;
   background-color: #24af60;
+}
+.new_pattern {
+  min-height: 24px;
+  max-height: 24px;
+  min-width: 24px;
+  max-width: 24px;
+  border-radius: 24px;
+  border: none;
+  background-color: #24af60;
+  color: #fff;
+  margin: -22px 10px 0 0;
 }
 
 @media (min-width: 768px) {

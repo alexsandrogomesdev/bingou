@@ -5,11 +5,12 @@
   border: solid 1px #c7c7c7;
   border-radius: 8px;
   /* padding: 5px; */
-  min-width: 146px;
-  max-width: 146px;
+  min-width: 152px;
+  max-width: 152px;
   background-color: #fff;
-  max-height: 205px;
+  max-height: 214px;
   order: 2;
+  padding: 4px;
 }
 .good_card {
   order: 1;
@@ -27,6 +28,7 @@
 .card_letters {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 .card_letters > strong {
   font-size: 16px;
@@ -41,6 +43,7 @@
   align-items: center;
   /* border: solid 1px #c1c1c1; */
   border-radius: 2px;
+  justify-content: space-between;
 }
 .card_column {
   display: flex;
@@ -48,6 +51,8 @@
   min-width: 28px;
   max-width: 28px;
   text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 .card_column > li {
   display: flex;

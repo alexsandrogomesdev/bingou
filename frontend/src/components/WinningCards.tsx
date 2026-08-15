@@ -61,11 +61,12 @@ interface Props2 {
 const WinningsPerBall = ({ item, balls }: Props2) => {
   return (
     <div key={item.ball} className={styles.winnings_per_ball}>
-      <p>Bola: {item.ball}</p>
+      <p>
+        Bola: <strong>{item.ball}</strong>
+      </p>
       {item.winnings.map((win, index) => (
         <div key={`div_item_${index}`} className={styles.cards_per_modality}>
           <p>Modalidade: {win.modality.name}</p>
-          <span>Cartelas</span>
           <div className={styles.cards}>
             {[...win.cards].map((card, index) => (
               <Card

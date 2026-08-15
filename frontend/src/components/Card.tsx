@@ -16,6 +16,7 @@ interface CardsProps {
   cardNumbers: number[];
   pattern?: number[];
   isGoodCard?: boolean;
+  goodBalls?: Set<number>;
 }
 
 const Card = ({
@@ -25,6 +26,7 @@ const Card = ({
   cardNumbers,
   pattern,
   isGoodCard,
+  goodBalls,
 }: CardsProps) => {
   // console.log(`Card: ${id}`);
   const cardNumbersKey = cardNumbers.join(",");
@@ -35,6 +37,8 @@ const Card = ({
     }
     return cols;
   }, [cardNumbersKey]);
+
+  console.log("Card: " + id);
 
   return (
     <>
@@ -62,6 +66,9 @@ const Card = ({
                     isMarked={balls.has(number)}
                     onPattern={
                       pattern && pattern.includes(number) ? true : false
+                    }
+                    isGoodBall={
+                      goodBalls && goodBalls.has(number) ? true : false
                     }
                   />
                 );
