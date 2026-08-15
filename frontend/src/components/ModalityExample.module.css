@@ -1,3 +1,7 @@
+.section_map {
+  display: flex;
+  flex-flow: column;
+}
 .card_body {
   display: flex;
   align-items: center;
@@ -40,4 +44,21 @@
   color: #24af60;
   min-width: 18px;
   max-width: 18px;
+}
+
+.modality_enabled {
+  color: #24af60;
+  min-width: 26px;
+  max-width: 26px;
+  min-height: 26px;
+  max-height: 26px;
+  margin: 0 auto;
+}
+.modality_disabled {
+  color: #ff5927;
+  min-width: 26px;
+  max-width: 26px;
+  min-height: 26px;
+  max-height: 26px;
+  margin: 0 auto;
 }

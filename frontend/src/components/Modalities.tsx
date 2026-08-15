@@ -18,28 +18,46 @@ import ModalityExample from "../components/ModalityExample.tsx";
 import NewModality from "./NewModality.tsx";
 
 // TYPES
-import type { AllModalities, ModalitiesInterface } from "../types/pack";
+import type { ModalitiesInterface } from "../types/pack";
 interface Props {
   setShowModalities: React.Dispatch<React.SetStateAction<boolean>>;
-  allModalities: AllModalities[];
   modalities: ModalitiesInterface[];
   setModalities: React.Dispatch<React.SetStateAction<ModalitiesInterface[]>>;
 }
 
 const Modalities: React.FC<Props> = ({
   setShowModalities,
-  allModalities,
   modalities,
   setModalities,
 }) => {
-  const changeModality = (modality: number) => {
-    setModalities((prevModalities) => {
-      if (prevModalities.includes(modality)) {
-        return prevModalities.filter((m) => m !== modality);
-      } else {
-        return [...prevModalities, modality];
+  const changeModality = (modality: number, on: boolean) => {
+    const modalitiesTemp: ModalitiesInterface[] = [...modalities];
+    for (let a = 0; a < modalitiesTemp.length; a++) {
+      if (modalitiesTemp[a].id === modality) {
+        modalitiesTemp[a].on = on;
+        break;
       }
-    });
+    }
+    setModalities(modalitiesTemp);
+    return;
+  };
+  const changeMap = (modality: number, index: number, on: number) => {
+    const modalitiesTemp: ModalitiesInterface[] = [...modalities];
+    let changed: boolean = false;
+    for (let a = 0; a < modalitiesTemp.length; a++) {
+      if (modalitiesTemp[a].id === modality) {
+        for (let b = 0; b < modalitiesTemp[a].maps.length; b++) {
+          if (b === index) {
+            changed = true;
+            modalitiesTemp[a].maps[b][0] = on;
+            break;
+          }
+        }
+        if (changed === true) break;
+      }
+    }
+    setModalities(modalitiesTemp);
+    return;
   };
 
   const [openId, setOpenId] = useState<number>(0);
@@ -57,20 +75,20 @@ const Modalities: React.FC<Props> = ({
             <X onClick={() => setShowModalities(false)} />
           </div>
           <ul className={styles.ul_modalities}>
-            {allModalities.map((modality) => (
+            {modalities.map((modality) => (
               <li key={modality.id} className={styles.li_modality}>
                 <div>
                   <p>{modality.name}</p>
                   <div>
-                    {modalities.includes(modality.id) ? (
+                    {modality.on ? (
                       <ToggleRight
-                        className={styles.modality_actived}
-                        onClick={() => changeModality(modality.id)}
+                        className={styles.modality_enabled}
+                        onClick={() => changeModality(modality.id, false)}
                       />
                     ) : (
                       <ToggleLeft
                         className={styles.modality_disabled}
-                        onClick={() => changeModality(modality.id)}
+                        onClick={() => changeModality(modality.id, true)}
                       />
                     )}
                     {openId === modality.id ? (
@@ -93,11 +111,13 @@ const Modalities: React.FC<Props> = ({
                       : styles.modality_details_hide
                   }
                 >
-                  {modality.map.map((item, index) => (
+                  {modality.maps.map((item, index) => (
                     <ModalityExample
                       key={`modality_example_${index}`}
                       modality={modality.id}
                       map={item}
+                      index={index}
+                      changeMap={changeMap}
                     />
                   ))}
                 </div>

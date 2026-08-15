@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 // STYLES
 import styles from "./NewModality.module.css";
 import { X } from "lucide-react";

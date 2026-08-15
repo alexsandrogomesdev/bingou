@@ -27,7 +27,6 @@ import AddCards from "../components/AddCards.tsx";
 import type {
   Cards,
   ModalitiesInterface,
-  AllModalities,
   Winnings,
   PackType,
   WinningsObject,
@@ -38,7 +37,6 @@ const Pack = () => {
   const { setHeaderTitle, setAlert } = useMainContext();
   const [cards, setCards] = useState<Cards[]>([]);
   const [modalities, setModalities] = useState<ModalitiesInterface[]>([]);
-  const [allModalities, setAllModalities] = useState<AllModalities[]>([]);
   const [balls, setBalls] = useState<Set<number>>(new Set([]));
   const [lastBall, setLastBall] = useState<number>();
   const [winnings, setWinnings] = useState<Winnings[]>([]);
@@ -75,7 +73,6 @@ const Pack = () => {
       setBalls(new Set(response.result.balls.data));
       setWinnings(response.result.winnings);
       setModalities(response.result.modalities);
-      setAllModalities(response.result.allModalities);
     };
     getPack();
   }, [id, request, cardsAdded, navigate, setHeaderTitle, setAlert]);
@@ -197,7 +194,7 @@ const Pack = () => {
 
       prevStateRef.current = { winnings, balls, modalities };
     },
-    [balls, allModalities, cards, modalities, winnings, prevStateRef],
+    [balls, cards, modalities, winnings, prevStateRef],
   );
 
   const handleDownloadPdf = async () => {
@@ -225,7 +222,6 @@ const Pack = () => {
           setShowModalities={setShowModalities}
           modalities={modalities}
           setModalities={setModalities}
-          allModalities={allModalities}
         />
       )}
       <section className={styles.section_pack}>
