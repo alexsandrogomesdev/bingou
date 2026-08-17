@@ -16,7 +16,7 @@ import { useFetch } from "../hooks/useFetch.tsx";
 import NewPack from "../components/NewPack.tsx";
 
 const Packs = () => {
-  const { setHeaderTitle } = useMainContext();
+  const { setHeaderTitle, setHeaderSubTitle } = useMainContext();
   const { request } = useFetch();
   const navigate = useNavigate();
 
@@ -46,6 +46,9 @@ const Packs = () => {
     getPacks();
   }, []);
 
+  useEffect(() => {
+    setHeaderSubTitle(`${packs.length} maços`);
+  }, [setHeaderSubTitle, packs]);
   useEffect(() => {
     setHeaderTitle("Packs");
   }, [setHeaderTitle]);

@@ -24,6 +24,11 @@
   font-weight: 500;
   margin-left: 5px;
 }
+.card_header > span {
+  font-size: 10px;
+  margin: 0 0 0 auto;
+  color: #515151;
+}
 
 .card_letters {
   display: flex;
@@ -38,12 +43,43 @@
   max-width: 28px;
   text-align: center;
 }
+.card_options {
+  display: none;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 162px;
+  max-height: 162px;
+}
+.card_options > button {
+  min-height: 36px;
+  max-height: 36px;
+  min-width: 36px;
+  max-width: 36px;
+  border-radius: 36px;
+  border: none;
+  background-color: transparent;
+}
+.card_options > button:nth-of-type(1) > svg {
+  color: #282930;
+}
+.card_options > button:nth-of-type(2) > svg {
+  color: #282930;
+}
+
 .card_body {
-  display: flex;
+  display: none;
   align-items: center;
   /* border: solid 1px #c1c1c1; */
   border-radius: 2px;
   justify-content: space-between;
+}
+.show_edit_card {
+  display: flex;
+}
+.show_body {
+  display: flex;
 }
 .card_column {
   display: flex;

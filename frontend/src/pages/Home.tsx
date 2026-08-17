@@ -11,10 +11,11 @@ import { useMainContext } from "../hooks/useMainContext.tsx";
 // COMPONENTS
 
 const Home = () => {
-  const { setHeaderTitle } = useMainContext();
+  const { setHeaderTitle, setHeaderSubTitle } = useMainContext();
 
   useEffect(() => {
     setHeaderTitle("Bingou");
+    setHeaderSubTitle("");
   }, [setHeaderTitle]);
 
   const sectionHowItWorks = useRef<HTMLDivElement>(null);
@@ -44,7 +45,10 @@ const Home = () => {
             <ul>
               <li>
                 <Link to="/packs">
-                  <Play /> Gerar cartelas
+                  <Play />
+                  {localStorage.getItem("userId") !== null
+                    ? "Meus maços"
+                    : "Gerar cartelas"}
                 </Link>
               </li>
               <li>

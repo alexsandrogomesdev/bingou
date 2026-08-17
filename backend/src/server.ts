@@ -508,6 +508,33 @@ fastify.post(
   },
 );
 
+// CARDS
+fastify.delete(
+  "/cards/:id",
+  { preHandler: [authenticate] },
+  async (
+    request: FastifyRequest<{ Params: { id: number } }>,
+    reply: FastifyReply,
+  ) => {
+    const userId = request.user.sub;
+    const id = request.params.id;
+
+    const removeCard = await query(
+      "DELETE FROM cards WHERE id = $1 AND user_id = $2",
+      [id, userId],
+    );
+    if (removeCard.rowCount === 1) {
+      return reply.status(200).send({
+        message: "ok",
+      });
+    } else {
+      return reply.status(404).send({
+        message: "Failed",
+      });
+    }
+  },
+);
+
 const start = async () => {
   try {
     await fastify.register(cors, {

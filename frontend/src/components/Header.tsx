@@ -20,7 +20,12 @@ const Header = () => {
           <p>B</p>
         </Link>
 
-        <h2 className={styles.header_title}>{mainContext.headerTitle}</h2>
+        <div>
+          <h2 className={styles.header_title}>{mainContext.headerTitle}</h2>
+          <span className={styles.header_sub_title}>
+            {mainContext.headerSubTitle}
+          </span>
+        </div>
         {showComponent &&
           (!mainContext.menuOpen ? (
             <Menu

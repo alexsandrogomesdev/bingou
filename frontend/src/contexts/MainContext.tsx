@@ -16,6 +16,8 @@ export type MainContextData = {
   setUserId: React.Dispatch<React.SetStateAction<number | null>>;
   headerTitle: string;
   setHeaderTitle: React.Dispatch<React.SetStateAction<string>>;
+  headerSubTitle: string;
+  setHeaderSubTitle: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const MainContext = createContext<MainContextData>(
@@ -27,6 +29,7 @@ export const MainContextProvider = ({ children }: { children: ReactNode }) => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [userId, setUserId] = useState<number | null>(null);
   const [headerTitle, setHeaderTitle] = useState<string>("Bingou");
+  const [headerSubTitle, setHeaderSubTitle] = useState<string>("");
   const [alert, setAlert] = useState<AlertObject>({
     id: 0,
     type: "",
@@ -45,8 +48,10 @@ export const MainContextProvider = ({ children }: { children: ReactNode }) => {
       setUserId,
       headerTitle,
       setHeaderTitle,
+      headerSubTitle,
+      setHeaderSubTitle,
     }),
-    [contextStatus, menuOpen, alert, userId, headerTitle],
+    [contextStatus, menuOpen, alert, userId, headerTitle, headerSubTitle],
   );
 
   return (

@@ -10,8 +10,10 @@ import { useFetch } from "../hooks/useFetch.tsx";
 // COMPONENTS
 
 import { dateFromUnix } from "../utils/functions.ts";
+import { useMainContext } from "../hooks/useMainContext.tsx";
 
 const Profile = () => {
+  const { setHeaderTitle, setHeaderSubTitle } = useMainContext();
   const { request } = useFetch();
   const navigate = useNavigate();
 
@@ -46,7 +48,13 @@ const Profile = () => {
       setProfile(response.result);
     };
     getProfile();
-  }, []);
+  }, [request, setProfile, navigate]);
+
+  useEffect(() => {
+    setHeaderTitle("Perfil");
+    setHeaderSubTitle("");
+  }, [setHeaderTitle, setHeaderSubTitle]);
+
   const plans: Array<string> = ["Gratuito", "Básico", "Completo"];
 
   return (

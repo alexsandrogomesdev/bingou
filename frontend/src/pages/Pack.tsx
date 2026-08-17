@@ -35,7 +35,7 @@ import type {
 } from "../types/pack.ts";
 
 const Pack = () => {
-  const { setHeaderTitle, setAlert } = useMainContext();
+  const { setHeaderTitle, setHeaderSubTitle, setAlert } = useMainContext();
   const [cards, setCards] = useState<Cards[]>([]);
   const [modalities, setModalities] = useState<ModalitiesInterface[]>([]);
   const [balls, setBalls] = useState<Set<number>>(new Set([]));
@@ -87,6 +87,10 @@ const Pack = () => {
     };
     getPack();
   }, [id, request, cardsAdded, navigate, setHeaderTitle, setAlert]);
+
+  useEffect(() => {
+    setHeaderSubTitle(`${cards.length} cartelas`);
+  }, [cards, setHeaderSubTitle]);
 
   useEffect(() => {
     const prev = prevStateRef.current;
@@ -253,6 +257,38 @@ const Pack = () => {
     window.print();
   };
 
+  const handleRemoveCard = useCallback(
+    async (id: number): Promise<boolean> => {
+      if (!confirm(`A cartela (${id}) será removida`)) return false;
+
+      const removeCard: { message: string } = await request(
+        `/cards/${id}`,
+        "DELETE",
+        {},
+        {},
+      );
+      if (removeCard.message === "ok") {
+        setAlert({
+          id: Date.now(),
+          type: "success",
+          message: "Cartela removida com sucesso!",
+        });
+        setCards((prevCards) => {
+          return prevCards.filter((card) => card.id !== id);
+        });
+        return true;
+      } else {
+        setAlert({
+          id: Date.now(),
+          type: "error",
+          message: "Falha ao remover cartela!",
+        });
+        return false;
+      }
+    },
+    [request, setAlert, setHeaderSubTitle],
+  );
+
   return (
     <>
       {showAddCards && (
@@ -341,6 +377,7 @@ const Pack = () => {
                       .map((item) => item.ball),
                   )
                 }
+                handleRemoveCard={handleRemoveCard}
               />
             ))}
           </div>
