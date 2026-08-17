@@ -263,7 +263,7 @@ fastify.post(
         limit = 500;
       } else if (userDetails.rows[0].plan === 2) {
         // FULL
-        limit = 2000;
+        limit = 10000;
       }
     }
 
@@ -469,7 +469,7 @@ fastify.post(
         limit = 500;
       } else if (userDetails.rows[0].plan === 2) {
         // FULL
-        limit = 2000;
+        limit = 10000;
       }
     }
     if (Number(userDetails.rows[0].cards) + qty > limit) {

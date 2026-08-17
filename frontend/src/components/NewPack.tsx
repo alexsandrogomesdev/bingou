@@ -66,7 +66,7 @@ const NewPack = ({ sectionNewPack, setSectionNewPack }: Props) => {
   };
 
   const canCreate: boolean =
-    packName.length >= 2 && cardsQty >= 1 && cardsQty <= 2000;
+    packName.length >= 2 && cardsQty >= 1 && cardsQty <= 10000;
 
   return (
     <section
