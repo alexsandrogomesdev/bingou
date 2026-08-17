@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Sparkles } from "lucide-react";
+// import { Sparkles } from "lucide-react";
 
 // STYLES
 import styles from "./CardNumber.module.css";
