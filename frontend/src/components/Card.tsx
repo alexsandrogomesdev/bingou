@@ -59,7 +59,7 @@ const Card = ({
         onClick={() => handleEditCard()}
       >
         <div className={styles.card_header}>
-          <p>Cartela: #{index}</p>
+          <p>#{index}</p>
           <span>({id})</span>
         </div>
         <div className={styles.card_letters}>

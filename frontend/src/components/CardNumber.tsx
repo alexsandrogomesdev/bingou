@@ -20,7 +20,7 @@ const CardNumber = ({ number, isMarked, onPattern, isGoodBall }: Props) => {
       <span
         className={`${isMarked ? styles.number_selected : ""} ${number === 0 ? styles.joker : ""} ${onPattern ? styles.number_selected_2 : ""} ${isGoodBall ? styles.good_ball : ""}`}
       >
-        {number === 0 ? <Sparkles /> : number}
+        {number === 0 ? "" : number}
       </span>
     </li>
   );
