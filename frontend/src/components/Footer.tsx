@@ -14,8 +14,9 @@ const Footer = () => {
         <p>
           Desenvolvido por&nbsp;
           <a
-            href="https://www.linkedin.com/in/alexsandrogomesdev"
+            href="https://wa.me/5511995452626"
             target="_blank"
+            rel="noopener noreferrer"
           >
             @alexsandrogomesdev
           </a>
