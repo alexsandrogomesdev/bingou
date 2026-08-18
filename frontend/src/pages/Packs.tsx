@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Plus, ExternalLink } from "lucide-react";
+import { Plus, ExternalLink, Trash2 } from "lucide-react";
 
 // FUNCTIONS
 import * as fts from "../utils/functions.ts";
@@ -16,7 +16,7 @@ import { useFetch } from "../hooks/useFetch.tsx";
 import NewPack from "../components/NewPack.tsx";
 
 const Packs = () => {
-  const { setHeaderTitle, setHeaderSubTitle } = useMainContext();
+  const { setHeaderTitle, setHeaderSubTitle, setAlert } = useMainContext();
   const { request } = useFetch();
   const navigate = useNavigate();
 
@@ -50,9 +50,40 @@ const Packs = () => {
     setHeaderSubTitle(`${packs.length} maços`);
   }, [setHeaderSubTitle, packs]);
   useEffect(() => {
-    setHeaderTitle("Packs");
+    setHeaderTitle("Maços");
   }, [setHeaderTitle]);
 
+  const handleRemovePack = useCallback(
+    async (id: number, name: string): Promise<boolean> => {
+      if (!confirm(`O maço: ${name} será removido`)) return false;
+
+      const removePack: { message: string } = await request(
+        `/packs/${id}`,
+        "DELETE",
+        {},
+        {},
+      );
+      if (removePack.message === "ok") {
+        setAlert({
+          id: Date.now(),
+          type: "success",
+          message: "Maço removido com sucesso!",
+        });
+        setPacks((prevPacks) => {
+          return prevPacks.filter((pack) => pack.id !== id);
+        });
+        return true;
+      } else {
+        setAlert({
+          id: Date.now(),
+          type: "error",
+          message: "Falha ao remover maço!",
+        });
+        return false;
+      }
+    },
+    [request, setAlert],
+  );
   return (
     <>
       <NewPack
@@ -76,9 +107,14 @@ const Packs = () => {
                   <span>{fts.dateFromUnix(pack.created_at)}</span>
                   <p>{pack.cards} Cartelas</p>
                 </div>
-                <Link to={`/pack/${pack.id}`}>
-                  <ExternalLink />
-                </Link>
+                <nav>
+                  <Link to={`/pack/${pack.id}`}>
+                    <ExternalLink />
+                  </Link>
+                  <button onClick={() => handleRemovePack(pack.id, pack.name)}>
+                    <Trash2 />
+                  </button>
+                </nav>
               </li>
             ))}
           </ul>

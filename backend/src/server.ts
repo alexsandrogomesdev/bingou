@@ -485,6 +485,30 @@ fastify.patch(
     });
   },
 );
+fastify.delete(
+  "/packs/:id",
+  { preHandler: [authenticate] },
+  async (
+    request: FastifyRequest<{ Params: { id: number } }>,
+    reply: FastifyReply,
+  ) => {
+    const userId = request.user.sub;
+    const packId = request.params.id;
+    const removePack = await query(
+      "DELETE FROM packs WHERE id = $1 AND user_id = $2",
+      [packId, userId],
+    );
+    if (removePack.rowCount === 1) {
+      return reply.status(200).send({
+        message: "ok",
+      });
+    } else {
+      return reply.status(404).send({
+        message: "Failed",
+      });
+    }
+  },
+);
 
 fastify.post(
   "/pack/:id/addCards",

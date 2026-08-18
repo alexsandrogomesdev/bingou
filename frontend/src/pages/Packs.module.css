@@ -36,10 +36,7 @@
   padding: 10px;
   border: solid 1px oklch(93% 0 0);
 }
-.pack > a {
-  color: #24af60;
-  text-decoration: none;
-}
+
 .pack > div {
   display: flex;
   flex-flow: column;
@@ -53,6 +50,21 @@
 .pack > div > p {
   font-size: 14px;
   color: #424349;
+}
+.pack > nav {
+  display: flex;
+  flex-flow: column;
+  gap: 5px;
+}
+.pack > nav > button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #f76f20;
+}
+.pack > nav > a {
+  color: #24af60;
+  text-decoration: none;
 }
 .button_new_pack {
   display: flex;
