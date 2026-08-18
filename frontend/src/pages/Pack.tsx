@@ -17,7 +17,8 @@ import { useMainContext } from "../hooks/useMainContext.tsx";
 import { useFetch } from "../hooks/useFetch.tsx";
 
 // FUNCTIONS
-import { exportPDF } from "../utils/exportPDF.tsx";
+import { exportPDF } from "../utils/exportPDF.ts";
+import { getCardsToRender } from "../utils/getCardsToRender.ts";
 
 // COMPONENTS
 import Card from "../components/Card.tsx";
@@ -25,6 +26,7 @@ import BallTable from "../components/BallTable.tsx";
 import WinningCards from "../components/WinningCards.tsx";
 import Modalities from "../components/Modalities.tsx";
 import AddCards from "../components/AddCards.tsx";
+import ProgressBar from "../components/ProgressBar.tsx";
 
 // INTERFACES AND TYPES
 import type {
@@ -39,7 +41,10 @@ import type {
 
 const Pack = () => {
   const { setHeaderTitle, setHeaderSubTitle, setAlert } = useMainContext();
+
   const [cards, setCards] = useState<Cards[]>([]);
+  const [cardsToRender, setCardsToRender] = useState<Cards[]>([]);
+
   const [modalities, setModalities] = useState<ModalitiesInterface[]>([]);
   const [balls, setBalls] = useState<Set<number>>(new Set([]));
   const [ballsToRender, setBallsToRender] = useState<Set<number>>(new Set([]));
@@ -78,6 +83,13 @@ const Pack = () => {
         return;
       }
       setCards(response.result.cards);
+
+      const _cardsToRender: Cards[] = await getCardsToRender(
+        response.result.cards,
+        response.result.goods,
+      );
+      setCardsToRender(_cardsToRender);
+
       setHeaderTitle(response.result.name);
       setBalls(new Set(response.result.balls.data));
       setBallsToRender(new Set(response.result.balls.data));
@@ -93,7 +105,12 @@ const Pack = () => {
 
   useEffect(() => {
     setHeaderSubTitle(`${cards.length} cartelas`);
-  }, [cards, setHeaderSubTitle]);
+    const updateCardsToRender = async () => {
+      const _cardsToRender: Cards[] = await getCardsToRender(cards, goods);
+      setCardsToRender(_cardsToRender);
+    };
+    updateCardsToRender();
+  }, [cards, setHeaderSubTitle, setCardsToRender, goods]);
 
   useEffect(() => {
     const prev = prevStateRef.current;
@@ -133,9 +150,7 @@ const Pack = () => {
   }, [showWinnings, showBallTable, showModalities]);
 
   const handleSelectBall = useCallback(
-    (ball: number) => {
-      const startTime = Date.now();
-
+    async (ball: number) => {
       setLastBall(ball);
 
       const action: string = balls.has(ball) ? "REMOVE" : "ADD";
@@ -241,8 +256,6 @@ const Pack = () => {
       }, 100);
 
       prevStateRef.current = { winnings, balls, modalities, goods };
-
-      console.log(`Exec time: ${Date.now() - startTime}ms`);
     },
     [
       balls,
@@ -256,20 +269,16 @@ const Pack = () => {
     ],
   );
 
-  const [gerando, setGerando] = useState(false);
-  const [progresso, setProgresso] = useState<number>(0);
+  const [exportProgress, setExportProgress] = useState<number>(0);
 
   const handleDownloadPdf = async () => {
-    setGerando(true);
-    setProgresso(0);
+    setExportProgress(0);
     try {
-      await exportPDF(cards, (p) => setProgresso(p));
+      await exportPDF(cards, (p) => setExportProgress(p));
     } catch (err) {
       console.error("Erro ao gerar PDF:", err);
     } finally {
-      setGerando(false);
-      console.log(gerando);
-      console.log(progresso);
+      setExportProgress(0);
     }
   };
 
@@ -302,7 +311,7 @@ const Pack = () => {
         return false;
       }
     },
-    [request, setAlert, setHeaderSubTitle],
+    [request, setAlert],
   );
 
   return (
@@ -327,6 +336,9 @@ const Pack = () => {
           modalities={modalities}
           setModalities={setModalities}
         />
+      )}
+      {exportProgress > 0 && (
+        <ProgressBar title="Gerando PDF, Aguarde..." percent={exportProgress} />
       )}
       <section className={styles.section_pack}>
         <div className={styles.div_pack}>
@@ -374,28 +386,31 @@ const Pack = () => {
               </button>
             </div>
           )}
+
           <div
             className={`${styles.cards} ${(showWinnings || showBallTable || showWinnings) && styles.blockScroll}`}
           >
-            {cards.map((card, index) => (
-              <Card
-                key={card.id}
-                index={index + 1}
-                id={card.id}
-                ball={lastBall}
-                balls={ballsToRender}
-                cardNumbers={card.numbers.data}
-                isGoodCard={cardsWithGoods.has(card.id)}
-                goodBalls={
-                  new Set(
-                    goods
-                      .filter((item) => item.card === card.id)
-                      .map((item) => item.ball),
-                  )
-                }
-                handleRemoveCard={handleRemoveCard}
-              />
-            ))}
+            {cardsToRender.map((card, index) => {
+              return (
+                <Card
+                  key={card.id}
+                  index={index + 1}
+                  id={card.id}
+                  ball={lastBall}
+                  balls={ballsToRender}
+                  cardNumbers={card.numbers.data}
+                  isGoodCard={cardsWithGoods.has(card.id)}
+                  goodBalls={
+                    new Set(
+                      goods
+                        .filter((item) => item.card === card.id)
+                        .map((item) => item.ball),
+                    )
+                  }
+                  handleRemoveCard={handleRemoveCard}
+                />
+              );
+            })}
           </div>
         </div>
       </section>

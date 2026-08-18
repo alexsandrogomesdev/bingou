@@ -92,7 +92,7 @@ export const exportPDF = async (
         for (let c = 0; c < header.length; c++) {
           page.drawText(header[c], {
             x: headerX,
-            y: startY - 24,
+            y: startY - 26,
             size: 10,
             lineHeight: 14,
             font: fontBold,
@@ -132,7 +132,7 @@ export const exportPDF = async (
       startY -= 110;
     }
 
-    progress(Math.ceil((a + 1) * factor));
+    progress(Math.ceil(a * factor));
     await new Promise((resolve) => setTimeout(resolve, 0));
   }
 

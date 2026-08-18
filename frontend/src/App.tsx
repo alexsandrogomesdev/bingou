@@ -1,4 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
+import { lazy, Suspense } from "react";
+
 import "./App.css";
 
 // CONTEXT
@@ -13,12 +15,12 @@ import Header from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
 
 // PAGES
-import SignUp from "./pages/SignUp.tsx";
-import SignIn from "./pages/SignIn.tsx";
-import Profile from "./pages/Profile.tsx";
-import Pack from "./pages/Pack.tsx";
-import Packs from "./pages/Packs.tsx";
-import Home from "./pages/Home.tsx";
+const SignUp = lazy(() => import("./pages/SignUp.tsx"));
+const SignIn = lazy(() => import("./pages/SignIn.tsx"));
+const Profile = lazy(() => import("./pages/Profile.tsx"));
+const Pack = lazy(() => import("./pages/Pack.tsx"));
+const Packs = lazy(() => import("./pages/Packs.tsx"));
+const Home = lazy(() => import("./pages/Home.tsx"));
 
 function App() {
   const mainContext = useMainContext();
@@ -34,14 +36,16 @@ function App() {
       <MainMenu />
 
       <main>
-        <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/packs" element={<Packs />}></Route>
-          <Route path="/pack/:id" element={<Pack />}></Route>
-          <Route path="/signin" element={<SignIn />}></Route>
-          <Route path="/signup" element={<SignUp />}></Route>
-        </Routes>
+        <Suspense fallback={<div>Carregando...</div>}>
+          <Routes>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/profile" element={<Profile />}></Route>
+            <Route path="/packs" element={<Packs />}></Route>
+            <Route path="/pack/:id" element={<Pack />}></Route>
+            <Route path="/signin" element={<SignIn />}></Route>
+            <Route path="/signup" element={<SignUp />}></Route>
+          </Routes>
+        </Suspense>
       </main>
 
       {location.pathname === "/" && <Footer />}

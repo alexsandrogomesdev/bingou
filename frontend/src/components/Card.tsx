@@ -31,7 +31,6 @@ const Card = ({
   goodBalls,
   handleRemoveCard,
 }: CardsProps) => {
-  // console.log(`Card: ${id}`);
   const [showEditCard, setShowEditCard] = useState<boolean>(false);
 
   const cardNumbersKey = cardNumbers.join(",");
@@ -43,7 +42,7 @@ const Card = ({
     return cols;
   }, [cardNumbersKey]);
 
-  console.log("Card: " + id);
+  // console.log("Card: " + id);
 
   const handleEditCard = useCallback(() => {
     setShowEditCard((prevShowEditCard) => {
@@ -108,7 +107,10 @@ const Card = ({
 };
 
 export default memo(Card, (prevProps, nextProps) => {
-  if (nextProps.ball && prevProps.cardNumbers.includes(nextProps.ball)) {
+  if (prevProps.ball === nextProps.ball) {
+    return true;
+  }
+  if (nextProps.ball && nextProps.cardNumbers.includes(nextProps.ball)) {
     return false;
   }
   return true;
