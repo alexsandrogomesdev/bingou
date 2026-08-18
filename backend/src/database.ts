@@ -22,10 +22,10 @@ export const query = async <T extends QueryResultRow = any>(
   const res = await pool.query(text, params);
   const duration = Date.now() - start;
 
-  console.log(`Query executed at:`, {
-    duration: `${duration}ms`,
-    rows: res.rowCount,
-  });
+  // console.log(`Query executed at:`, {
+  // duration: `${duration}ms`,
+  // rows: res.rowCount,
+  // });
 
   return res;
 };

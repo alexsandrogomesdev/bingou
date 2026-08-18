@@ -273,6 +273,8 @@ fastify.post(
       });
     }
 
+    const startTime = Date.now();
+
     const createPack = await query(
       "INSERT INTO packs (user_id, name, modalities, balls, goods, winnings, starts_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
       [
@@ -288,6 +290,10 @@ fastify.post(
     );
     const packId: number = createPack.rows[0].id;
 
+    console.log(``);
+    console.log(`Create Pack: ${Date.now() - startTime}ms`);
+    console.log(``);
+
     // GENERATE CARDS
     const cards: Uint8Array[] = [];
 
@@ -298,17 +304,52 @@ fastify.post(
       cards.push(createCardNumbers(base));
     }
 
-    while (cards.length > 0) {
-      for (let c = 0; c < cards.length; c++) {
-        const insert = await query(
-          "INSERT INTO cards (pack_id, user_id, numbers, created_at) VALUES ($1, $2, $3, $4)",
-          [packId, userId, cards[c], time],
-        );
-        if (insert.rowCount && insert.rowCount > 0) {
-          cards.splice(c, 1);
-        }
-      }
-    }
+    const cardsTime = Date.now();
+
+    // const batchLimit = 1000;
+    // for (let a = 0; a < cards.length; a += batchLimit) {
+    // const chunk = cards.slice(a, a + batchLimit);
+    // const values = [];
+    // const valueTuples = [];
+    // let paramIndex = 1;
+    //
+    // for (const cardNumbers of chunk) {
+    // valueTuples.push(
+    // `($${paramIndex}, $${paramIndex + 1}, $${paramIndex + 2}, $${paramIndex + 3})`,
+    // );
+    // values.push(packId, userId, cardNumbers, time);
+    // paramIndex += 4;
+    // }
+    //
+    // const sql = `INSERT INTO cards (pack_id, user_id, numbers, created_at) VALUES ${valueTuples.join(", ")}`;
+    //
+    // await query(sql, values);
+    // }
+
+    const packIds = new Array(cards.length).fill(packId);
+    const userIds = new Array(cards.length).fill(userId);
+    const times = new Array(cards.length).fill(time);
+
+    await query(
+      `INSERT INTO cards (pack_id, user_id, numbers, created_at)SELECT * FROM UNNEST($1::bigint[], $2::bigint[], $3::bytea[], $4::bigint[])`,
+      [packIds, userIds, cards, times],
+    );
+
+    // while (cards.length > 0) {
+    // for (let c = 0; c < cards.length; c++) {
+    // const insert = await query(
+    // "INSERT INTO cards (pack_id, user_id, numbers, created_at) VALUES ($1, $2, $3, $4)",
+    // [packId, userId, cards[c], time],
+    // );
+    // if (insert.rowCount && insert.rowCount > 0) {
+    // cards.splice(c, 1);
+    // }
+    // }
+    // }
+
+    console.log(``);
+    console.log(`Create Cards: ${Date.now() - cardsTime}ms`);
+    console.log(``);
 
     return reply.status(201).send({
       message: "ok",
@@ -490,17 +531,26 @@ fastify.post(
 
     const time = Math.floor(Date.now() / 1000);
 
-    while (cards.length > 0) {
-      for (let c = 0; c < cards.length; c++) {
-        const insert = await query(
-          "INSERT INTO cards (pack_id, user_id, numbers, created_at) VALUES ($1, $2, $3, $4)",
-          [packId, userId, cards[c], time],
-        );
-        if (insert.rowCount && insert.rowCount > 0) {
-          cards.splice(c, 1);
-        }
-      }
-    }
+    // while (cards.length > 0) {
+    // for (let c = 0; c < cards.length; c++) {
+    // const insert = await query(
+    // "INSERT INTO cards (pack_id, user_id, numbers, created_at) VALUES ($1, $2, $3, $4)",
+    // [packId, userId, cards[c], time],
+    // );
+    // if (insert.rowCount && insert.rowCount > 0) {
+    // cards.splice(c, 1);
+    // }
+    // }
+    // }
+
+    const packIds = new Array(cards.length).fill(packId);
+    const userIds = new Array(cards.length).fill(userId);
+    const times = new Array(cards.length).fill(time);
+
+    await query(
+      `INSERT INTO cards (pack_id, user_id, numbers, created_at)SELECT * FROM UNNEST($1::bigint[], $2::bigint[], $3::bytea[], $4::bigint[])`,
+      [packIds, userIds, cards, times],
+    );
 
     return reply.status(201).send({
       message: cards.length !== 0 ? "Falha ao adicionar cartelas." : "ok",

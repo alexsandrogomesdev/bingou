@@ -25,7 +25,7 @@ export const useFetch = () => {
       }
 
       config.credentials = "include";
-      config.signal = AbortSignal.timeout(5000);
+      config.signal = AbortSignal.timeout(10000);
 
       try {
         const response = await fetch(url, config);

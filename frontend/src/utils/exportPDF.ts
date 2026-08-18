@@ -103,13 +103,13 @@ export const exportPDF = async (
         for (let e = 0; e < card.numbers.data.length; e++) {
           const y = startY - 46 - (e % 5) * cellSize;
           const num = card.numbers.data[e];
-          const X = String(num).length === 1 ? 5 : 2;
+          const X = String(num).length === 1 ? 6 : 4;
 
           if (num !== 0) {
             page.drawText(String(num), {
               x: startX + X,
               y: y + 4,
-              size: 10,
+              size: 8,
               font,
             });
           } else {

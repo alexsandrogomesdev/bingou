@@ -105,12 +105,16 @@ const Pack = () => {
 
   useEffect(() => {
     setHeaderSubTitle(`${cards.length} cartelas`);
+  }, [cards, setHeaderSubTitle]);
+
+  useEffect(() => {
     const updateCardsToRender = async () => {
       const _cardsToRender: Cards[] = await getCardsToRender(cards, goods);
       setCardsToRender(_cardsToRender);
     };
+
     updateCardsToRender();
-  }, [cards, setHeaderSubTitle, setCardsToRender, goods]);
+  }, [setCardsToRender, goods, cards, balls]);
 
   useEffect(() => {
     const prev = prevStateRef.current;
@@ -390,27 +394,25 @@ const Pack = () => {
           <div
             className={`${styles.cards} ${(showWinnings || showBallTable || showWinnings) && styles.blockScroll}`}
           >
-            {cardsToRender.map((card, index) => {
-              return (
-                <Card
-                  key={card.id}
-                  index={index + 1}
-                  id={card.id}
-                  ball={lastBall}
-                  balls={ballsToRender}
-                  cardNumbers={card.numbers.data}
-                  isGoodCard={cardsWithGoods.has(card.id)}
-                  goodBalls={
-                    new Set(
-                      goods
-                        .filter((item) => item.card === card.id)
-                        .map((item) => item.ball),
-                    )
-                  }
-                  handleRemoveCard={handleRemoveCard}
-                />
-              );
-            })}
+            {cardsToRender.map((card, index) => (
+              <Card
+                key={card.id}
+                index={index + 1}
+                id={card.id}
+                ball={lastBall}
+                balls={ballsToRender}
+                cardNumbers={card.numbers.data}
+                isGoodCard={cardsWithGoods.has(card.id)}
+                goodBalls={
+                  new Set(
+                    goods
+                      .filter((item) => item.card === card.id)
+                      .map((item) => item.ball),
+                  )
+                }
+                handleRemoveCard={handleRemoveCard}
+              />
+            ))}
           </div>
         </div>
       </section>

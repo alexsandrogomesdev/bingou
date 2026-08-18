@@ -108,7 +108,7 @@ const Card = ({
 
 export default memo(Card, (prevProps, nextProps) => {
   if (prevProps.ball === nextProps.ball) {
-    return true;
+    // return true;
   }
   if (nextProps.ball && nextProps.cardNumbers.includes(nextProps.ball)) {
     return false;

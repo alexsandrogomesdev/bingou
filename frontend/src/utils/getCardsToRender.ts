@@ -6,9 +6,10 @@ export const getCardsToRender = async (
 ): Promise<Cards[]> => {
   const _cardsToRender: Cards[] = [];
 
+  const goodCards: Set<number> = new Set(goods.map((item) => item.card));
   for (let a = 0; a < cards.length; a++) {
     const card = cards[a];
-    if (goods.some((item) => item.card === card.id)) {
+    if (goodCards.has(card.id)) {
       _cardsToRender.push(card);
     }
     if (_cardsToRender.length === 250) break;
@@ -17,7 +18,7 @@ export const getCardsToRender = async (
   for (let a = 0; a < cards.length; a++) {
     if (_cardsToRender.length === 250) break;
     const card = cards[a];
-    if (!goods.some((item) => item.card === card.id)) {
+    if (!goodCards.has(card.id)) {
       _cardsToRender.push(card);
     }
   }
