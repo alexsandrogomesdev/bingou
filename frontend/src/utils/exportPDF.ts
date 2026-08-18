@@ -143,7 +143,7 @@ export const exportPDF = async (
       startY -= 110;
     }
 
-    progress(Math.ceil(a * factor));
+    progress(Math.ceil((a + 1) * factor));
     await new Promise((resolve) => setTimeout(resolve, 0));
   }
 

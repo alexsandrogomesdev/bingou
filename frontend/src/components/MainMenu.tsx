@@ -1,5 +1,6 @@
 import { Boxes, UserRound, Globe, UserKey, House, LogOut } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { memo } from "react";
 
 // STYLES
 import styles from "./MainMenu.module.css";
@@ -111,4 +112,4 @@ const MainMenu = () => {
   );
 };
 
-export default MainMenu;
+export default memo(MainMenu);

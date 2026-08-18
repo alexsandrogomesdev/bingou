@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, memo } from "react";
 
 // STYLES
 import styles from "./NewPattern.module.css";
@@ -86,4 +86,4 @@ const NewPattern = ({
   );
 };
 
-export default NewPattern;
+export default memo(NewPattern);

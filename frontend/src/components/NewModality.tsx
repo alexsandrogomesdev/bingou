@@ -1,5 +1,5 @@
 // STYLES
-import { useMemo, useState } from "react";
+import { useMemo, useState, memo } from "react";
 import styles from "./NewModality.module.css";
 import { Sparkles, X } from "lucide-react";
 
@@ -98,4 +98,4 @@ const NewModality = ({ setShowNewModality, setModalities }: Props) => {
   );
 };
 
-export default NewModality;
+export default memo(NewModality);

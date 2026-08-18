@@ -1,13 +1,6 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  FileText,
-  GamepadDirectional,
-  Gift,
-  Grid3x3,
-  Plus,
-  Loader,
-} from "lucide-react";
+import { GamepadDirectional, Gift, Grid3x3, Plus, Loader } from "lucide-react";
 
 // STYLES
 import styles from "./Pack.module.css";
@@ -17,7 +10,6 @@ import { useMainContext } from "../hooks/useMainContext.tsx";
 import { useFetch } from "../hooks/useFetch.tsx";
 
 // FUNCTIONS
-import { exportPDF } from "../utils/exportPDF.ts";
 import { getCardsToRender } from "../utils/getCardsToRender.ts";
 
 // COMPONENTS
@@ -26,7 +18,7 @@ import BallTable from "../components/BallTable.tsx";
 import WinningCards from "../components/WinningCards.tsx";
 import Modalities from "../components/Modalities.tsx";
 import AddCards from "../components/AddCards.tsx";
-import ProgressBar from "../components/ProgressBar.tsx";
+import ExportButton from "../components/ExportButton.tsx";
 
 // INTERFACES AND TYPES
 import type {
@@ -274,19 +266,6 @@ const Pack = () => {
     ],
   );
 
-  const [exportProgress, setExportProgress] = useState<number>(0);
-
-  const handleDownloadPdf = async () => {
-    setExportProgress(0);
-    try {
-      await exportPDF(cards, (p) => setExportProgress(p), packName);
-    } catch (err) {
-      console.error("Erro ao gerar PDF:", err);
-    } finally {
-      setExportProgress(0);
-    }
-  };
-
   const handleRemoveCard = useCallback(
     async (id: number): Promise<boolean> => {
       if (!confirm(`A cartela (${id}) será removida`)) return false;
@@ -319,6 +298,18 @@ const Pack = () => {
     [request, setAlert],
   );
 
+  const goodsByCard = useMemo(() => {
+    const map = new Map<number, Set<number>>();
+
+    for (const item of goods) {
+      if (!map.has(item.card)) {
+        map.set(item.card, new Set());
+      }
+      map.get(item.card)!.add(item.ball);
+    }
+    return map;
+  }, [goods]);
+
   return (
     <>
       {showAddCards && (
@@ -342,9 +333,6 @@ const Pack = () => {
           setModalities={setModalities}
         />
       )}
-      {exportProgress > 0 && (
-        <ProgressBar title="Gerando PDF, Aguarde..." percent={exportProgress} />
-      )}
       <section className={styles.section_pack}>
         <div className={styles.div_pack}>
           <div className={styles.div_actions}>
@@ -355,13 +343,7 @@ const Pack = () => {
               <GamepadDirectional />
               Modalidades
             </button>
-            <button
-              onClick={handleDownloadPdf}
-              disabled={exportProgress > 0 ? true : false}
-            >
-              <FileText />
-              Exportar
-            </button>
+            <ExportButton cards={cards} packName={packName} />
             <button
               onClick={() => setShowBallTable(true)}
               disabled={showBallTable}
@@ -396,7 +378,7 @@ const Pack = () => {
           )}
 
           <div
-            className={`${styles.cards} ${(showWinnings || showBallTable || showWinnings) && styles.blockScroll}`}
+            className={`${styles.cards} ${(showWinnings || showBallTable || showModalities) && styles.blockScroll}`}
           >
             {cardsToRender.map((card, index) => (
               <Card
@@ -407,13 +389,7 @@ const Pack = () => {
                 balls={ballsToRender}
                 cardNumbers={card.numbers.data}
                 isGoodCard={cardsWithGoods.has(card.id)}
-                goodBalls={
-                  new Set(
-                    goods
-                      .filter((item) => item.card === card.id)
-                      .map((item) => item.ball),
-                  )
-                }
+                goodBalls={goodsByCard.get(card.id) || new Set()}
                 handleRemoveCard={handleRemoveCard}
               />
             ))}

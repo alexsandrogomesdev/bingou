@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { memo } from "react";
 
 // STYLES
 import styles from "./BallTable.module.css";
@@ -55,4 +56,4 @@ const BallTable = ({
   );
 };
 
-export default BallTable;
+export default memo(BallTable);

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 import { X } from "lucide-react";
 
 // STYLES
@@ -62,4 +62,4 @@ const Alert = () => {
   );
 };
 
-export default Alert;
+export default memo(Alert);

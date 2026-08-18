@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { memo } from "react";
 
 // STYLES
 import styles from "./WinningCards.module.css";
@@ -85,4 +86,4 @@ const WinningsPerBall = ({ item, balls }: Props2) => {
   );
 };
 
-export default WinningCards;
+export default memo(WinningCards);

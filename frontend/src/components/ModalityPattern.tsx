@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, memo } from "react";
 
 // STYLES
 import styles from "./ModalityPattern.module.css";
@@ -66,4 +66,4 @@ const ModalityPattern = ({
   );
 };
 
-export default ModalityPattern;
+export default memo(ModalityPattern);

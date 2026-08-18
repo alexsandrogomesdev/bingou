@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { X } from "lucide-react";
@@ -120,4 +120,4 @@ const NewPack = ({ sectionNewPack, setSectionNewPack }: Props) => {
   );
 };
 
-export default NewPack;
+export default memo(NewPack);

@@ -1,6 +1,7 @@
 import styles from "./Header.module.css";
 import { Menu, X } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
+import { memo } from "react";
 
 import { useMainContext } from "../hooks/useMainContext.tsx";
 
@@ -47,4 +48,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default memo(Header);

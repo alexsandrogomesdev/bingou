@@ -1,3 +1,7 @@
+import { useState, memo } from "react";
+
+// STYLES
+import styles from "./Modalities.module.css";
 import {
   X,
   ToggleRight,
@@ -6,10 +10,6 @@ import {
   ChevronUp,
   Plus,
 } from "lucide-react";
-import { useState } from "react";
-
-// STYLES
-import styles from "./Modalities.module.css";
 
 // HOOKS
 
@@ -164,4 +164,4 @@ const Modalities: React.FC<Props> = ({
   );
 };
 
-export default Modalities;
+export default memo(Modalities);

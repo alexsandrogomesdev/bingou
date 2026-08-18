@@ -1,4 +1,5 @@
 import styles from "./Footer.module.css";
+import { memo } from "react";
 
 // HOOKS
 import { useMainContext } from "../hooks/useMainContext";
@@ -24,4 +25,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default memo(Footer);

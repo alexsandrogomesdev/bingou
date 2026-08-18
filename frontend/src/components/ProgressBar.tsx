@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 // STYLES
 import styles from "./ProgressBar.module.css";
 
@@ -24,4 +26,4 @@ const ProgressBar = ({ title, percent }: Props) => {
   );
 };
 
-export default ProgressBar;
+export default memo(ProgressBar);

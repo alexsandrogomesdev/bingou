@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { X, Check } from "lucide-react";
 
 // STYLES
@@ -83,4 +83,4 @@ const AddCards = ({ packId, setShowAddCards, setCardsAdded }: Props) => {
   );
 };
 
-export default AddCards;
+export default memo(AddCards);
