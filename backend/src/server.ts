@@ -608,6 +608,31 @@ fastify.delete(
     }
   },
 );
+fastify.patch(
+  "/cards/:id",
+  { preHandler: [authenticate] },
+  async (
+    request: FastifyRequest<{
+      Body: { numbers: number[] };
+      Params: { id: number };
+    }>,
+    reply: FastifyReply,
+  ) => {
+    const { numbers } = request.body;
+
+    const cardId = request.params.id;
+    const userId = request.user.sub;
+
+    const update = await query(
+      `UPDATE cards SET numbers = $1 WHERE id = $2 AND user_id = $3`,
+      [new Uint8Array(numbers), cardId, userId],
+    );
+
+    return reply.status(200).send({
+      message: update.rowCount && update.rowCount === 1 ? "ok" : "failed",
+    });
+  },
+);
 
 const start = async () => {
   try {

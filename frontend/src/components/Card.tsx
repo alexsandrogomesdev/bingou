@@ -2,12 +2,13 @@ import { useMemo, memo, useState, useCallback } from "react";
 
 // STYLES
 import styles from "./Card.module.css";
+import { Pencil, Trash2 } from "lucide-react";
 
 // HOOKS
 
 // COMPONENTS
 import CardNumber from "./CardNumber.tsx";
-import { Pencil, Trash2 } from "lucide-react";
+import EditCard from "./EditCard.tsx";
 
 interface CardsProps {
   index: number;
@@ -32,17 +33,20 @@ const Card = ({
   handleRemoveCard,
 }: CardsProps) => {
   const [showEditCard, setShowEditCard] = useState<boolean>(false);
+  const [showChangeNumbers, setShowChangeNumbers] = useState<boolean>(false);
 
-  const cardNumbersKey = cardNumbers.join(",");
+  const [cardNumbersKey, setCardNumbersKey] = useState<number[]>([
+    ...cardNumbers,
+  ]);
   const columns = useMemo(() => {
     const cols: number[][] = [[], [], [], [], []];
-    for (let i = 0; i < cardNumbers.length; i++) {
-      cols[Math.floor(i / 5)].push(cardNumbers[i]);
+    for (let i = 0; i < cardNumbersKey.length; i++) {
+      cols[Math.floor(i / 5)].push(cardNumbersKey[i]);
     }
     return cols;
   }, [cardNumbersKey]);
 
-  // console.log("Card: " + id);
+  console.log("Card: " + id);
 
   const handleEditCard = useCallback(() => {
     setShowEditCard((prevShowEditCard) => {
@@ -51,8 +55,22 @@ const Card = ({
     return;
   }, []);
 
+  const handleChangeNumbers = () => {
+    setShowChangeNumbers(true);
+    return;
+  };
+
   return (
     <>
+      {showChangeNumbers && (
+        <EditCard
+          id={id}
+          columns={[...columns]}
+          setShowChangeNumbers={setShowChangeNumbers}
+          setCardNumbersKey={setCardNumbersKey}
+        />
+      )}
+
       <article
         className={`${styles.card} ${isGoodCard && styles.good_card}`}
         onClick={() => handleEditCard()}
@@ -71,7 +89,7 @@ const Card = ({
         <div
           className={`${styles.card_options} ${showEditCard ? styles.show_edit_card : ""}`}
         >
-          <button>
+          <button onClick={handleChangeNumbers}>
             <Pencil />
           </button>
           <button onClick={() => handleRemoveCard?.(id)}>
