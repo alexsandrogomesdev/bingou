@@ -11,6 +11,8 @@ export const dateFromUnix = (unix_time: number, format: number = 2): string => {
     return `${day}/${month}/${year}`;
   } else if (format === 2) {
     return `${day}/${month}/${year} ${hours}:${minutes}`;
+  } else if (format === 3) {
+    return `${hours}:${minutes}_${day}-${month}-${year}`;
   }
 
   return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;

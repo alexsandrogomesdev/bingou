@@ -54,3 +54,11 @@
   z-index: 0;
   transform-style: left;
 }
+
+@media (min-width: 768px) {
+  .div_progress_bar {
+    min-width: 250px;
+    max-width: 250px;
+    margin: auto;
+  }
+}

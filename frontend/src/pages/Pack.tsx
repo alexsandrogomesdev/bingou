@@ -45,10 +45,11 @@ const Pack = () => {
   const [cards, setCards] = useState<Cards[]>([]);
   const [cardsToRender, setCardsToRender] = useState<Cards[]>([]);
 
+  const [packName, setPackName] = useState<string>("");
   const [modalities, setModalities] = useState<ModalitiesInterface[]>([]);
   const [balls, setBalls] = useState<Set<number>>(new Set([]));
   const [ballsToRender, setBallsToRender] = useState<Set<number>>(new Set([]));
-  const [lastBall, setLastBall] = useState<number>();
+  const [lastBall, setLastBall] = useState<number>(0);
   const [winnings, setWinnings] = useState<Winnings[]>([]);
   const [showWinnings, setShowWinnings] = useState<boolean>(false);
   const [showModalities, setShowModalities] = useState<boolean>(false);
@@ -89,7 +90,7 @@ const Pack = () => {
         response.result.goods,
       );
       setCardsToRender(_cardsToRender);
-
+      setPackName(response.result.name);
       setHeaderTitle(response.result.name);
       setBalls(new Set(response.result.balls.data));
       setBallsToRender(new Set(response.result.balls.data));
@@ -278,7 +279,7 @@ const Pack = () => {
   const handleDownloadPdf = async () => {
     setExportProgress(0);
     try {
-      await exportPDF(cards, (p) => setExportProgress(p));
+      await exportPDF(cards, (p) => setExportProgress(p), packName);
     } catch (err) {
       console.error("Erro ao gerar PDF:", err);
     } finally {
@@ -354,7 +355,10 @@ const Pack = () => {
               <GamepadDirectional />
               Modalidades
             </button>
-            <button onClick={handleDownloadPdf}>
+            <button
+              onClick={handleDownloadPdf}
+              disabled={exportProgress > 0 ? true : false}
+            >
               <FileText />
               Exportar
             </button>

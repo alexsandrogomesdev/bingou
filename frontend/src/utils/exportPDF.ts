@@ -2,14 +2,17 @@ import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import download from "downloadjs";
 
 import type { Cards } from "../types/pack";
+import { dateFromUnix } from "./functions";
 
 export const exportPDF = async (
   cards: Cards[],
   progress: (porcentagem: number) => void,
+  packName: string,
 ) => {
   const pdfDoc = await PDFDocument.create();
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const time = dateFromUnix(Math.floor(Date.now() / 1000));
 
   const lines: Cards[][] = [];
   let lineIndex = 0;
@@ -59,6 +62,14 @@ export const exportPDF = async (
       color: rgb(17 / 255, 17 / 255, 17 / 255),
       lineHeight: 16,
       size: 12,
+    });
+    page.drawText(time, {
+      x: startX + 450,
+      y: startY - 5,
+      font: font,
+      color: rgb(17 / 255, 17 / 255, 17 / 255),
+      lineHeight: 16,
+      size: 10,
     });
 
     for (let b = 0; b < cardPage.length; b++) {
@@ -138,5 +149,9 @@ export const exportPDF = async (
 
   const pdfBytes = await pdfDoc.save();
 
-  download(pdfBytes, `cartelas_${Date.now()}.pdf`, "application/pdf");
+  download(
+    pdfBytes,
+    `${packName.replaceAll(" ", "_")}_${Date.now()}.pdf`,
+    "application/pdf",
+  );
 };
