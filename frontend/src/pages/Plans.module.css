@@ -1,0 +1,51 @@
+.section_plans {
+  display: flex;
+  flex-flow: column;
+  position: relative;
+  top: 75px;
+  min-width: 100%;
+  max-width: 100%;
+}
+.div_plans {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  padding: 0 16px;
+}
+.div_plans > h1 {
+  font-size: 16px;
+  color: #282928;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.ul_plans {
+  display: flex;
+  flex-flow: column;
+  gap: 16px;
+}
+.ul_plans li {
+  display: flex;
+  flex-flow: column;
+  gap: 5px;
+  border: solid 1px #e7e7e7;
+  padding: 16px;
+  border-radius: 8px;
+}
+.ul_plans li h2 {
+  font-size: 18px;
+  font-weight: 500;
+  color: #282928;
+}
+.ul_plans li p {
+  font-size: 14px;
+  color: #474747;
+  font-weight: 300;
+}
+.ul_plans li span {
+  color: #282930;
+  font-size: 14px;
+}
+.ul_plans li a {
+  font-weight: 500;
+  color: #24af60;
+}

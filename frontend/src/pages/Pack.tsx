@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef, useMemo } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo, memo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { GamepadDirectional, Gift, Grid3x3, Plus, Loader } from "lucide-react";
 
@@ -400,4 +400,4 @@ const Pack = () => {
   );
 };
 
-export default Pack;
+export default memo(Pack);

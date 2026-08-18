@@ -15,6 +15,7 @@ import Header from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
 
 // PAGES
+const Plans = lazy(() => import("./pages/Plans.tsx"));
 const SignUp = lazy(() => import("./pages/SignUp.tsx"));
 const SignIn = lazy(() => import("./pages/SignIn.tsx"));
 const Profile = lazy(() => import("./pages/Profile.tsx"));
@@ -44,6 +45,7 @@ function App() {
             <Route path="/pack/:id" element={<Pack />}></Route>
             <Route path="/signin" element={<SignIn />}></Route>
             <Route path="/signup" element={<SignUp />}></Route>
+            <Route path="/plans" element={<Plans />}></Route>
           </Routes>
         </Suspense>
       </main>

@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, memo } from "react";
 import { Sparkles, Play, Grid3x3, Check, Printer } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -150,4 +150,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default memo(Home);

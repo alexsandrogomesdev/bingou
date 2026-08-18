@@ -1,4 +1,12 @@
-import { Boxes, UserRound, Globe, UserKey, House, LogOut } from "lucide-react";
+import {
+  Boxes,
+  UserRound,
+  Globe,
+  UserKey,
+  House,
+  LogOut,
+  HandCoins,
+} from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { memo } from "react";
 
@@ -87,6 +95,17 @@ const MainMenu = () => {
             >
               <UserKey />
               <span>Acessar</span>
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/plans"
+              className={({ isActive }) => (isActive ? styles.active : "")}
+              onClick={() => mainContext.setMenuOpen(false)}
+            >
+              <HandCoins />
+              <span>Planos</span>
             </NavLink>
           </li>
 

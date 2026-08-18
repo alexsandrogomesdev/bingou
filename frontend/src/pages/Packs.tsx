@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, ExternalLink, Trash2 } from "lucide-react";
 
@@ -131,4 +131,4 @@ const Packs = () => {
   );
 };
 
-export default Packs;
+export default memo(Packs);

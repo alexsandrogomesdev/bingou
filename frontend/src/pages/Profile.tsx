@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { useNavigate } from "react-router-dom";
 
 // STYLES
@@ -83,4 +83,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default memo(Profile);
