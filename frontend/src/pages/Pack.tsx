@@ -16,6 +16,9 @@ import styles from "./Pack.module.css";
 import { useMainContext } from "../hooks/useMainContext.tsx";
 import { useFetch } from "../hooks/useFetch.tsx";
 
+// FUNCTIONS
+import { exportPDF } from "../utils/exportPDF.tsx";
+
 // COMPONENTS
 import Card from "../components/Card.tsx";
 import BallTable from "../components/BallTable.tsx";
@@ -253,8 +256,21 @@ const Pack = () => {
     ],
   );
 
+  const [gerando, setGerando] = useState(false);
+  const [progresso, setProgresso] = useState<number>(0);
+
   const handleDownloadPdf = async () => {
-    window.print();
+    setGerando(true);
+    setProgresso(0);
+    try {
+      await exportPDF(cards, (p) => setProgresso(p));
+    } catch (err) {
+      console.error("Erro ao gerar PDF:", err);
+    } finally {
+      setGerando(false);
+      console.log(gerando);
+      console.log(progresso);
+    }
   };
 
   const handleRemoveCard = useCallback(

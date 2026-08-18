@@ -1,5 +1,5 @@
 import { memo } from "react";
-// import { Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 // STYLES
 import styles from "./CardNumber.module.css";
@@ -20,7 +20,7 @@ const CardNumber = ({ number, isMarked, onPattern, isGoodBall }: Props) => {
       <span
         className={`${isMarked ? styles.number_selected : ""} ${number === 0 ? styles.joker : ""} ${onPattern ? styles.number_selected_2 : ""} ${isGoodBall ? styles.good_ball : ""}`}
       >
-        {number === 0 ? "" : number}
+        {number === 0 ? <Sparkles /> : number}
       </span>
     </li>
   );

@@ -10,9 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "downloadjs": "^1.4.7",
     "html2pdf.js": "^0.14.0",
     "js-cookie": "^3.0.8",
     "lucide-react": "^1.27.0",
+    "pdf-lib": "^1.17.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1"
@@ -22,6 +24,7 @@
     "@eslint/js": "^10.0.1",
     "@rolldown/plugin-babel": "^0.2.3",
     "@types/babel__core": "^7.20.5",
+    "@types/downloadjs": "^1.4.6",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^24.13.2",
     "@types/react": "^19.2.17",
