@@ -320,7 +320,6 @@ const Pack = () => {
       <section className={styles.section_pack}>
         <div className={styles.div_pack}>
           <div className={styles.div_actions}>
-            {showAddCards ? "s" : "n"}
             <button onClick={() => setShowWinnings(true)}>
               <Gift />
             </button>

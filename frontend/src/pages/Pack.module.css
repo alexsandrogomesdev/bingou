@@ -40,6 +40,7 @@
   padding: 5px;
   color: #fff;
   gap: 5px;
+  touch-action: manipulation;
 }
 .div_actions > button > svg {
   max-width: 16px;
@@ -103,6 +104,7 @@
   overflow: hidden !important;
   overflow-y: hidden !important;
   overflow-x: hidden !important;
+  display: none;
 }
 .loader {
   display: flex;
