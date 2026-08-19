@@ -10,7 +10,6 @@ import { useMainContext } from "../hooks/useMainContext.tsx";
 import { useFetch } from "../hooks/useFetch.tsx";
 
 // FUNCTIONS
-import { getCardsToRender } from "../utils/getCardsToRender.ts";
 
 // COMPONENTS
 import Card from "../components/Card.tsx";
@@ -35,7 +34,6 @@ const Pack = () => {
   const { setHeaderTitle, setHeaderSubTitle, setAlert } = useMainContext();
 
   const [cards, setCards] = useState<Cards[]>([]);
-  const [cardsToRender, setCardsToRender] = useState<Cards[]>([]);
 
   const [packName, setPackName] = useState<string>("");
   const [modalities, setModalities] = useState<ModalitiesInterface[]>([]);
@@ -76,12 +74,6 @@ const Pack = () => {
         return;
       }
       setCards(response.result.cards);
-
-      const _cardsToRender: Cards[] = await getCardsToRender(
-        response.result.cards,
-        response.result.goods,
-      );
-      setCardsToRender(_cardsToRender);
       setPackName(response.result.name);
       setHeaderTitle(response.result.name);
       setBalls(new Set(response.result.balls.data));
@@ -99,15 +91,6 @@ const Pack = () => {
   useEffect(() => {
     setHeaderSubTitle(`${cards.length} cartelas`);
   }, [cards, setHeaderSubTitle]);
-
-  useEffect(() => {
-    const updateCardsToRender = async () => {
-      const _cardsToRender: Cards[] = await getCardsToRender(cards, goods);
-      setCardsToRender(_cardsToRender);
-    };
-
-    updateCardsToRender();
-  }, [setCardsToRender, goods, cards, balls]);
 
   useEffect(() => {
     const prev = prevStateRef.current;
@@ -380,7 +363,7 @@ const Pack = () => {
           <div
             className={`${styles.cards} ${(showWinnings || showBallTable || showModalities) && styles.blockScroll}`}
           >
-            {cardsToRender.map((card, index) => (
+            {cards.map((card, index) => (
               <Card
                 key={card.id}
                 index={index + 1}

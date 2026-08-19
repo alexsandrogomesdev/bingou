@@ -46,7 +46,7 @@ const Card = ({
     return cols;
   }, [cardNumbersKey]);
 
-  console.log("Card: " + id);
+  // console.log("Card: " + id);
 
   const handleEditCard = useCallback(() => {
     setShowEditCard((prevShowEditCard) => {
