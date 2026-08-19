@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { memo } from "react";
+import { memo, useCallback } from "react";
 
 // STYLES
 import styles from "./WinningCards.module.css";
@@ -10,20 +10,24 @@ import styles from "./WinningCards.module.css";
 import Card from "./Card";
 
 // INTERFACES AND TYPES
-import type { Winnings } from "../types/pack";
+import type { Winnings, Cards } from "../types/pack";
 
 interface Props {
   balls: Set<number>;
   winnings: Winnings[];
   setShowWinnings: React.Dispatch<React.SetStateAction<boolean>>;
+  cards: Cards[];
 }
 
-const WinningCards: React.FC<Props> = ({
-  balls,
-  winnings,
-  setShowWinnings,
-}) => {
-  console.log(winnings);
+const WinningCards = ({ balls, winnings, setShowWinnings, cards }: Props) => {
+  const cardsIndex = useCallback(() => {
+    const index: number[] = [];
+    for (let a = 0; a < cards.length; a++) {
+      index.push(cards[a].id);
+    }
+    return index;
+  }, [cards]);
+
   return (
     <section className={styles.section_winning_cards}>
       <div className={styles.div_winnings_cards}>
@@ -47,6 +51,7 @@ const WinningCards: React.FC<Props> = ({
                   key={`winningsPerBall_${index}`}
                   item={item}
                   balls={balls}
+                  cardsIndex={cardsIndex()}
                 />
               ))}
         </div>
@@ -58,8 +63,9 @@ const WinningCards: React.FC<Props> = ({
 interface Props2 {
   item: Winnings;
   balls: Set<number>;
+  cardsIndex: number[];
 }
-const WinningsPerBall = ({ item, balls }: Props2) => {
+const WinningsPerBall = ({ item, balls, cardsIndex }: Props2) => {
   return (
     <div key={item.ball} className={styles.winnings_per_ball}>
       <p>
@@ -69,10 +75,10 @@ const WinningsPerBall = ({ item, balls }: Props2) => {
         <div key={`div_item_${index}`} className={styles.cards_per_modality}>
           <p>Modalidade: {win.modality.name}</p>
           <div className={styles.cards}>
-            {[...win.cards].map((card, index) => (
+            {[...win.cards].map((card) => (
               <Card
                 key={card.id}
-                index={index + 1}
+                index={cardsIndex.findIndex((item) => item === card.id) + 1}
                 id={card.id}
                 balls={balls}
                 cardNumbers={card.numbers}

@@ -307,6 +307,7 @@ const Pack = () => {
           balls={balls}
           winnings={winnings}
           setShowWinnings={setShowWinnings}
+          cards={cards}
         />
       )}
       {showModalities && (
