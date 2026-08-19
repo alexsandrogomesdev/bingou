@@ -55,7 +55,7 @@ export const exportPDF = async (
 
     let startY = height - 16; // top start of each line
     let startX = 30;
-    page.drawText(`Bingou - Cartelas de bingo. Página ${a + 1}/${pageIndex}`, {
+    page.drawText(`Bingou - ${packName} - Página ${a + 1}/${pageIndex}`, {
       x: startX,
       y: startY - 5,
       font: fontBold,
