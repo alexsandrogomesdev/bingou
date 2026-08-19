@@ -3,6 +3,9 @@ import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import cors from "@fastify/cors";
 import bcrypt from "bcryptjs";
 import fastifyCookie from "@fastify/cookie";
+import * as crypto from "crypto";
+import "./queue/emailWorker";
+
 import fastifyJwt from "@fastify/jwt";
 
 declare module "@fastify/jwt" {
@@ -30,7 +33,8 @@ import { shuffleArray, getRandomNumber, isObjectEmpty } from "./utils";
 import { createCardNumbers } from "./functions/createCardNumbers";
 
 // DATABASE
-import { pool, query } from "./database";
+import { pool, query } from "./config/postgres";
+import { emailQueue } from "./queue/emailQueue";
 
 // FASTIFY
 const fastify = Fastify({
@@ -87,7 +91,6 @@ fastify.get(
   },
 );
 
-// POST
 interface CreateUserBody {
   name: string;
   document: string;
@@ -210,6 +213,82 @@ fastify.post(
         message: "ok",
         userId: "",
       });
+  },
+);
+fastify.post(
+  "/recover-password",
+  async (
+    request: FastifyRequest<{ Body: { email: string } }>,
+    reply: FastifyReply,
+  ) => {
+    const email = request.body.email;
+
+    const getUser = await query("SELECT id FROM users WHERE email = $1", [
+      email,
+    ]);
+    if (!getUser.rowCount || !getUser.rows[0].id) {
+      return reply.status(401).send({
+        message: "ok",
+      });
+    }
+    const userId = getUser.rows[0].id;
+
+    const token = crypto.randomBytes(64).toString("base64url");
+
+    const insertToken = await query(
+      "INSERT INTO recovery_tokens (user_id, token, created_at) VALUES ($1, $2, $3)",
+      [userId, token, Math.floor(Date.now() / 1000)],
+    );
+
+    const resetLink = `https://bingou.alexsandrogomes.dev/reset-password?token=${token}`;
+    const html = `<h3>Você solicitou uma recuperação de senha.</h3><br><br><p>Clique no link abaixo para redefinir sua senha: <a href="${resetLink}">${resetLink}</a></p>`;
+    const from = "Bingou";
+    const subject = "Recuperação de Senha";
+    await emailQueue.add(
+      "sendResetPassword",
+      { email, from, subject, html },
+      { attempts: 3, backoff: { type: "exponential", delay: 5000 } },
+    );
+
+    return reply.status(200).send({
+      message: "ok",
+    });
+  },
+);
+fastify.patch(
+  "/change-password",
+  async (
+    request: FastifyRequest<{
+      Body: { token: string; password: string };
+    }>,
+    reply: FastifyReply,
+  ) => {
+    const { token, password } = request.body;
+    const checkToken = await query(
+      "SELECT user_id,token FROM recovery_tokens WHERE token = $1 AND created_at > $2",
+      [token, Math.floor(Date.now() / 1000) - 900],
+    );
+    if (token.length >= 64 && checkToken.rowCount && checkToken.rowCount > 0) {
+      const userId = checkToken.rows[0].user_id;
+      const passwordHash = await bcrypt.hash(password, 10);
+      const changePassword = await query(
+        "UPDATE users SET password = $1 WHERE id = $2",
+        [passwordHash, userId],
+      );
+      if (changePassword.rowCount && changePassword.rowCount > 0) {
+        await query("DELETE FROM recovery_tokens WHERE user_id = $1", [userId]);
+        return reply.status(200).send({
+          message: "ok",
+        });
+      } else {
+        return reply.status(501).send({
+          message: "failed-1",
+        });
+      }
+    }
+    return reply.status(401).send({
+      message: "failed-2",
+    });
   },
 );
 
@@ -649,6 +728,10 @@ const start = async () => {
     });
 
     await fastify.register(fastifyCookie);
+
+    if (!process.env.JWT_SECRET) {
+      throw new Error("Environment variable JWT_SECRET unset");
+    }
 
     await fastify.register(fastifyJwt, {
       secret: process.env.JWT_SECRET,

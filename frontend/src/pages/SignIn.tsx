@@ -9,6 +9,7 @@ import { useMainContext } from "../hooks/useMainContext.tsx";
 import { useFetch } from "../hooks/useFetch.tsx";
 
 // COMPONENTS
+import ForgotPassword from "../components/ForgotPassword.tsx";
 
 const SignIn = () => {
   const mainContext = useMainContext();
@@ -51,40 +52,54 @@ const SignIn = () => {
     }
   };
 
+  const [showForgotPass, setShowForgotPass] = useState<boolean>(false);
+
   return (
-    <section className={styles.section_signin}>
-      <form className={styles.form} onSubmit={handleSignIn}>
-        <h2>Acessar</h2>
+    <>
+      {showForgotPass && (
+        <ForgotPassword setShowForgotPass={setShowForgotPass} />
+      )}
 
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            autoComplete="username"
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+      <section className={styles.section_signin}>
+        <form className={styles.form} onSubmit={handleSignIn}>
+          <h2>Acessar</h2>
 
-        <div>
-          <label htmlFor="password">Senha</label>
-          <input
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" disabled={signing}>
-          {signing ? "Entrando..." : "Entrar"}
-        </button>
-      </form>
-      <p className={styles.sign_up}>
-        Não tenho cadastro, <Link to="/signup">Cadastrar-me</Link>
-      </p>
-    </section>
+          <div>
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              autoComplete="username"
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password">Senha</label>
+            <input
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <span
+              className={styles.forgot_pass}
+              onClick={() => setShowForgotPass(true)}
+            >
+              esqueci minha senha
+            </span>
+          </div>
+          <button type="submit" disabled={signing}>
+            {signing ? "Entrando..." : "Entrar"}
+          </button>
+        </form>
+        <p className={styles.sign_up}>
+          Não tenho cadastro, <Link to="/signup">Cadastrar-me</Link>
+        </p>
+      </section>
+    </>
   );
 };
 

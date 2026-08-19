@@ -59,9 +59,25 @@ CREATE INDEX IF NOT EXISTS idx_cards_user ON cards (user_id);
 CREATE INDEX IF NOT EXISTS idx_cards_pack ON cards (pack_id);
 CREATE INDEX IF NOT EXISTS idx_cards_user_pack ON cards (user_id, pack_id);
 
+
+-- TABLE: recovery tokens
+CREATE TABLE IF NOT EXISTS recovery_tokens (
+  id BIGSERIAL PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  token VARCHAR(256) NOT NULL,
+  created_at BIGINT NOT NULL,
+
+  -- Foreign Keys
+  CONSTRAINT fk_tokens_users FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE 
+);
+
+CREATE INDEX IF NOT EXISTS idx_tokens_user ON recovery_tokens (user_id);
+
+
 GRANT ALL PRIVILEGES ON TABLE users TO postgres;
 GRANT ALL PRIVILEGES ON TABLE packs TO postgres;
 GRANT ALL PRIVILEGES ON TABLE cards TO postgres;
+GRANT ALL PRIVILEGES ON TABLE recovery_tokens TO postgres;
 
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO postgres;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO postgres;

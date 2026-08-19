@@ -1,4 +1,21 @@
 services:
+  redis:
+    image: redis:7-alpine
+    container_name: bingou_redis
+    restart: always
+    command: redis-server --port 1173 --protected-mode no
+    ports:
+      - "1173:1173"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "1173", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - redis_data:/data
+    networks:
+      - bingou_net
+
   backend:
     build:
       context: ./
@@ -14,6 +31,8 @@ services:
       - /app/node_modules
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     networks:
       - bingou_net
@@ -37,8 +56,29 @@ services:
     networks:
       - bingou_net
 
+  worker:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: bingou_worker
+    restart: always
+    command: npm run start:worker
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - bingou_net
+
 volumes:
   pgdata:
+  redis_data:
 
 networks:
   bingou_net:

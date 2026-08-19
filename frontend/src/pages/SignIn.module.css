@@ -28,6 +28,12 @@
   flex-flow: column;
   gap: 5px;
 }
+.forgot_pass {
+  font-size: 12px;
+  margin: 0 0 0 auto;
+  font-weight: 300;
+  color: #ee7f35;
+}
 .form > div > label {
   font-size: 14px;
   color: #454545;
