@@ -7,7 +7,7 @@
   background-color: rgba(7, 7, 7, 0.7);
   width: 100%;
   height: 100vh;
-  z-index: 2;
+  z-index: 3;
 }
 .div_add_cards {
   display: flex;
