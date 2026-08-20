@@ -16,7 +16,31 @@ services:
     networks:
       - bingou_net
 
-  backend:
+  nginx:
+    image: nginx:alpine
+    container_name: bingou_nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - nodejs
+    networks:
+      - bingou_net
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: bingou_tunnel
+    restart: always
+    command: tunnel run
+    env_file:
+      - .env
+    networks:
+      - bingou_net
+
+  nodejs:
     build:
       context: ./
       dockerfile: Dockerfile
@@ -79,6 +103,9 @@ services:
 volumes:
   pgdata:
   redis_data:
+  certbot_etc:
+  certbot_var:
+  webroot_data:
 
 networks:
   bingou_net:
