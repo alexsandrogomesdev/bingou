@@ -27,3 +27,6 @@ dist-ssr
 *.sw?
 # scripts
 src/createComponent.
+
+# ssh keys
+ssh
