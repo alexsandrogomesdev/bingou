@@ -11,24 +11,45 @@ export const createEmailWorker = () => {
     "emailSendQueue",
     async (job) => {
       const { email, from, subject, html } = job.data;
+
+      console.log(
+        `[${new Date().toLocaleString("pr-BR")}] Sending email to: ${email}`,
+      );
+
       await mailer.sendMail({
-        from: `"${from}" contato@alexsandrogomes.dev`,
+        from: `"${from}" ${process.env.SMTP_USER}`,
         to: email,
         subject,
         html,
       });
+
+      console.log(
+        `[${new Date().toLocaleString("pr-BR")}] email sent to: ${email}`,
+      );
     },
     {
       connection,
+      concurrency: 5,
     },
   );
 
+  worker.on("active", (job) => {
+    console.log(
+      `${new Date().toLocaleString("pt-BR")} [Queue] Job ${job.id} is being proccessed...`,
+    );
+  });
+
   worker.on("completed", (job) => {
-    console.log(`E-mail de recuperação enviado para o job ${job.id}`);
+    console.log(
+      `${new Date().toLocaleString("pt-BR")} Job completed ${job.id}`,
+    );
   });
 
   worker.on("failed", (job, err) => {
-    console.log(`Erro ao enviar e-mail do job ${job?.id}: `, err);
+    console.log(
+      `${new Date().toLocaleString("pt-BR")} Job failed ${job?.id}: `,
+      err,
+    );
   });
 
   return worker;
