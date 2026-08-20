@@ -23,3 +23,10 @@ export const isObjectEmpty = (val: unknown) =>
   typeof val === "object" &&
   !Array.isArray(val) &&
   Object.keys(val).length === 0;
+
+export const formatCurrency = (amount: number) =>
+  (amount / 100).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+export const formatToDecimal = (amount: number) => (amount / 100).toFixed(2);

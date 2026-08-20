@@ -73,11 +73,25 @@ CREATE TABLE IF NOT EXISTS recovery_tokens (
 
 CREATE INDEX IF NOT EXISTS idx_tokens_user ON recovery_tokens (user_id);
 
+CREATE TABLE IF NOT EXISTS orders (
+  id BIGSERIAL PRIMARY KEY,
+  user_id BIGINT NOT NULL, 
+  plan SMALLINT NOT NULL, 
+  amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  order_id VARCHAR(64) NOT NULL,
+  status SMALLINT DEFAULT 0, -- 0 pending,  1 paid,  2 canceled
+  paid_at BIGINT DEFAULT NULL,
+  created_at BIGINT NOT NULL,
+  
+  CONSTRAINT fk_orders_users FOREIGN KEY (user_id) REFERENCES users(id)
+);
+CREATE INDEX IF NOT EXISTS idx_orders_payment_id ON orders(order_id);
 
 GRANT ALL PRIVILEGES ON TABLE users TO postgres;
 GRANT ALL PRIVILEGES ON TABLE packs TO postgres;
 GRANT ALL PRIVILEGES ON TABLE cards TO postgres;
 GRANT ALL PRIVILEGES ON TABLE recovery_tokens TO postgres;
+GRANT ALL PRIVILEGES ON TABLE orders TO postgres;
 
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO postgres;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO postgres;

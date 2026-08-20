@@ -29,7 +29,13 @@ const authenticate = async (request: any, reply: any) => {
 
 // GLOBALS
 import { type Modalities, allModalities } from "./allModalities";
-import { shuffleArray, getRandomNumber, isObjectEmpty } from "./utils";
+import {
+  shuffleArray,
+  getRandomNumber,
+  isObjectEmpty,
+  formatCurrency,
+  formatToDecimal,
+} from "./utils";
 import { createCardNumbers } from "./functions/createCardNumbers";
 
 // DATABASE
@@ -51,6 +57,42 @@ const responseStatus: ResponseStatus = {
 };
 
 // ROUTES
+
+// WEBHOOKS
+fastify.post(
+  "/webhook/pagarme",
+  async (request: FastifyRequest, reply: FastifyReply) => {
+    const payload = request.body as any;
+
+    console.log();
+    console.log("Evento recebido do Pagar.me:", payload);
+    console.log();
+
+    if (
+      payload.type === "order.paid" &&
+      payload.data.id &&
+      payload.data.status
+    ) {
+      const orderId = payload.data.id;
+      const status = payload.data.status;
+
+      if (status !== "paid") {
+        return reply.status(200).send({ received: true });
+      }
+
+      const aMonth = 2592000; // seconds
+      const update = await query(
+        "WITH updated_order AS (UPDATE orders SET status = 1, paid_at = $1 WHERE order_id = $2 AND status = 0 RETURNING user_id) UPDATE users SET due_at = GREATEST(COALESCE(due_at, $1)) + $3 WHERE id = (SELECT user_id FROM updated_order)",
+        [Math.floor(Date.now() / 1000), orderId, aMonth],
+      );
+      if (update.rowCount && update.rowCount > 0) {
+        console.log(`Pedido ${orderId} aprovado com sucesso!`);
+      }
+    }
+    return reply.status(200).send({ received: true });
+  },
+);
+
 // MODALITIES
 fastify.get(
   "/modalities",
@@ -59,6 +101,140 @@ fastify.get(
     return reply.status(200).send({
       message: "ok",
       result: allModalities,
+    });
+  },
+);
+
+fastify.get(
+  "/orders/:id/status",
+  { preHandler: [authenticate] },
+  async (
+    request: FastifyRequest<{ Params: { id: string } }>,
+    reply: FastifyReply,
+  ) => {
+    const orderId = request.params.id;
+
+    let status = 0;
+
+    const getOrder = await query(
+      "SELECT status FROM orders WHERE order_id = $1",
+      [orderId],
+    );
+    if (getOrder.rowCount && getOrder.rowCount > 0) {
+      status = getOrder.rows[0].status;
+    }
+
+    return reply.status(200).send({
+      message: "ok",
+      status: status,
+    });
+  },
+);
+fastify.post(
+  "/orders/new",
+  { preHandler: [authenticate] },
+  async (
+    request: FastifyRequest<{ Body: { plan: number } }>,
+    reply: FastifyReply,
+  ) => {
+    const plan = request.body.plan;
+    if (plan !== 1 && plan !== 2) {
+      return reply.status(404).send({
+        message: "planNotFound",
+      });
+    }
+
+    const planPrices = [1990, 2990];
+    const planNames = ["Básico", "Completo"];
+    const amount = planPrices[plan - 1];
+    const userId = request.user.sub;
+
+    const getUser = await query(
+      "SELECT name, email, phone, document FROM users WHERE id = $1",
+      [userId],
+    );
+    if (!getUser.rowCount || getUser.rowCount === 0) {
+      return reply.status(404).send({
+        message: "userNotFound",
+      });
+    }
+
+    const name = getUser.rows[0].name;
+    const email = getUser.rows[0].email;
+    const phone = String(getUser.rows[0].phone).replace(/\D/g, "");
+    const document = String(getUser.rows[0].document).replace(/\D/g, "");
+
+    const config: RequestInit = {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+        authorization: `Basic ${Buffer.from(process.env.SECRET_KEY + ":").toString("base64")}`,
+      },
+    };
+    const payload = {
+      items: [
+        {
+          amount: amount,
+          description: `Plano ${planNames[plan - 1]}`,
+          quantity: 1,
+          code: String(planNames[plan - 1]),
+        },
+      ],
+      customer: {
+        name: name,
+        email: email,
+        document: document,
+        type: document.length > 11 ? "company" : "individual",
+        phones: {
+          mobile_phone: {
+            country_code: "55",
+            area_code: phone.slice(0, 2),
+            number: phone.slice(2),
+          },
+        },
+      },
+      payments: [
+        {
+          payment_method: "pix",
+          pix: {
+            expires_in: 3600, // 1 hora
+          },
+        },
+      ],
+    };
+    config.body = JSON.stringify(payload);
+    config.signal = AbortSignal.timeout(10000);
+
+    const response = await fetch("https://api.pagar.me/core/v5/orders", config);
+    const result = await response.json();
+    console.log();
+    console.log(result);
+    console.log();
+    const orderId = result.id;
+    const pixCode = result.charges[0].last_transaction.qr_code;
+    const saveOrder = await query(
+      "INSERT INTO orders (user_id, plan, amount, order_id, status, created_at) VALUES ($1,$2,$3,$4,$5,$6)",
+      [
+        userId,
+        plan,
+        formatToDecimal(amount),
+        orderId,
+        0,
+        Math.floor(Date.now() / 1000),
+      ],
+    );
+    if (!saveOrder.rowCount || saveOrder.rowCount !== 1) {
+      return reply.status(501).send({
+        message: "failed",
+      });
+    }
+
+    return reply.status(201).send({
+      message: "ok",
+      pixCode: pixCode,
+      orderId: orderId,
+      amount: formatCurrency(amount),
     });
   },
 );
@@ -339,7 +515,7 @@ fastify.post(
     if (Number(userDetails.rows[0].due_at) > Math.floor(Date.now() / 1000)) {
       if (userDetails.rows[0].plan === 1) {
         // BASIC
-        limit = 500;
+        limit = 2000;
       } else if (userDetails.rows[0].plan === 2) {
         // FULL
         limit = 10000;
@@ -610,7 +786,7 @@ fastify.post(
       console.log("Here");
       if (userDetails.rows[0].plan === 1) {
         // BASIC
-        limit = 500;
+        limit = 2000;
       } else if (userDetails.rows[0].plan === 2) {
         // FULL
         limit = 10000;

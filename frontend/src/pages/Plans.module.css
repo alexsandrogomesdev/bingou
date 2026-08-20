@@ -49,3 +49,80 @@
   font-weight: 500;
   color: #24af60;
 }
+
+.show {
+  display: flex;
+}
+.hide {
+  display: none;
+}
+
+.section_get_plan {
+  display: flex;
+  flex-flow: column;
+  position: fixed;
+  min-width: 100%;
+  max-width: 100%;
+  height: 100dvh;
+  top: 0;
+  left: 0;
+  padding: 17px;
+  background-color: rgba(7, 7, 7, 0.7);
+  z-index: 2;
+}
+.div_get_plan {
+  display: flex;
+  flex-flow: column;
+  margin: auto;
+  min-width: calc(100% - 32px);
+  max-width: calc(100% - 32px);
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 17px;
+}
+.div_get_plan > p {
+  font-size: 16px;
+  font-weight: 500;
+  color: #282928;
+  margin: 0 auto 20px;
+}
+.div_get_plan > p > span {
+  font-size: 16px;
+  color: #2439af;
+  font-weight: 600;
+}
+.div_get_plan div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0 auto;
+}
+.div_get_plan button {
+  min-width: 80px;
+  max-width: 80px;
+  min-height: 44px;
+  max-height: 44px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+}
+.div_get_plan button:nth-of-type(1) {
+  background-color: #24af60;
+}
+.div_get_plan button:nth-of-type(2) {
+  background-color: #ec601f;
+}
+.loading {
+  margin: auto;
+  animation: loading 2s linear infinite;
+}
+@keyframes loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
