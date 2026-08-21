@@ -270,7 +270,11 @@
   font-size: 1rem;
   font-weight: 600;
 }
-
+.whatsapp_button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
 @media screen and (min-width: 768px) {
   .div_home {
     min-width: 1100px;

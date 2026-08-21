@@ -832,7 +832,7 @@ fastify.post(
     );
 
     return reply.status(201).send({
-      message: cards.length !== 0 ? "Falha ao adicionar cartelas." : "ok",
+      message: cards.length > 0 ? "ok" : "Falha ao adicionar cartelas.",
     });
   },
 );

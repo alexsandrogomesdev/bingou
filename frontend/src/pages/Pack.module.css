@@ -20,10 +20,9 @@
   flex-flow: row wrap;
   gap: 10px;
   margin: 0 0 0 auto;
-  padding: 17px;
+  padding: 7px 17px;
   width: max-content;
   justify-content: right;
-
   position: fixed;
   z-index: 1;
   background-color: #fff;
@@ -41,6 +40,12 @@
   color: #fff;
   gap: 5px;
   touch-action: manipulation;
+  min-height: 44px;
+  max-height: 44px;
+}
+.div_actions > button:nth-of-type(1),
+.div_actions > button:nth-of-type(2) {
+  padding: 0 10px;
 }
 .div_actions > button > svg {
   max-width: 16px;
@@ -48,36 +53,6 @@
 .div_actions > button:disabled {
   background-color: #d1d1d1;
   color: #a1a1a1;
-}
-.nav_pagination {
-  display: flex;
-  align-items: center;
-  margin: 0 0 0 auto;
-  background-color: #fff;
-  padding: 2px;
-  border-radius: 5px;
-}
-.nav_pagination > button {
-  min-height: 34px;
-  max-height: 34px;
-  min-width: 34px;
-  max-width: 34px;
-  background-color: #24af60;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-}
-.nav_pagination > input {
-  font-size: 16px;
-  color: #282930;
-  margin: 0 auto;
-  min-height: 34px;
-  max-height: 34px;
-  min-width: 34px;
-  max-width: 34px;
-  border: none;
-  text-align: center;
-  outline: 0;
 }
 
 .cards {
@@ -92,10 +67,8 @@
   min-width: 100%;
   max-width: 100%;
   padding-bottom: 25px;
-
   position: relative;
-  top: 70px;
-  /* max-height: calc(); */
+  top: 60px;
 }
 .blockScroll {
   overflow-y: hidden !important;

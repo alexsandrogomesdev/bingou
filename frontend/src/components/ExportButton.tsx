@@ -8,7 +8,7 @@ import { exportPDF } from "../utils/exportPDF";
 // COMPONENTS
 import ProgressBar from "./ProgressBar";
 import type { Cards } from "../types/pack";
-import { FileText } from "lucide-react";
+import { Share2 } from "lucide-react";
 
 const ExportButton = ({
   packName,
@@ -40,8 +40,8 @@ const ExportButton = ({
         onClick={handleDownloadPdf}
         disabled={exportProgress > 0 ? true : false}
       >
-        <FileText />
-        Exportar
+        <Share2 />
+        PDF
       </button>
     </>
   );

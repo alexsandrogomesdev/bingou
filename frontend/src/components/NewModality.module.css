@@ -112,3 +112,10 @@
 .div_buttons > button:nth-of-type(2) {
   color: #24af60;
 }
+
+@media (min-width: 768px) {
+  .div_new_modality {
+    max-width: max-content;
+    margin: auto;
+  }
+}

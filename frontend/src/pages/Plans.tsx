@@ -116,26 +116,16 @@ const Plans = () => {
             <h2>Básico</h2>
             <p>Limite de 2.000 cartelas por maço.</p>
             <span>R$ 19,90/mês no Pix</span>
-            <a
-              // href="https://wa.me/5511995452626"
-              onClick={() => handleGetPlan(1)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Comprar
+            <a onClick={() => handleGetPlan(1)}>
+              {localStorage.getItem("userId") !== null ? "Comprar" : ""}
             </a>
           </li>
           <li>
             <h2>Completo</h2>
             <p>Limite de 10.000 cartelas por maço.</p>
             <span>R$ 29,90/mês no Pix</span>
-            <a
-              // href="https://wa.me/5511995452626"
-              onClick={() => handleGetPlan(2)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Comprar
+            <a onClick={() => handleGetPlan(2)}>
+              {localStorage.getItem("userId") !== null ? "Comprar" : ""}
             </a>
           </li>
         </ul>

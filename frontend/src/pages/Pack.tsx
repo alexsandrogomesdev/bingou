@@ -84,13 +84,18 @@ const Pack = () => {
       );
       setWinnings(response.result.winnings);
       setModalities(response.result.modalities);
+      setHeaderSubTitle(`${response.result.cards.length} cartelas`);
     };
     getPack();
-  }, [id, request, cardsAdded, navigate, setHeaderTitle, setAlert]);
-
-  useEffect(() => {
-    setHeaderSubTitle(`${cards.length} cartelas`);
-  }, [cards, setHeaderSubTitle]);
+  }, [
+    id,
+    request,
+    cardsAdded,
+    navigate,
+    setHeaderTitle,
+    setHeaderSubTitle,
+    setAlert,
+  ]);
 
   useEffect(() => {
     const prev = prevStateRef.current;
@@ -293,6 +298,11 @@ const Pack = () => {
     return map;
   }, [goods]);
 
+  const handleShowAddCards = async () => {
+    setShowAddCards(true);
+    return;
+  };
+
   return (
     <>
       {showAddCards && (
@@ -320,23 +330,24 @@ const Pack = () => {
       <section className={styles.section_pack}>
         <div className={styles.div_pack}>
           <div className={styles.div_actions}>
+            <button onClick={handleShowAddCards}>
+              <Plus />
+            </button>
             <button onClick={() => setShowWinnings(true)}>
               <Gift />
             </button>
             <button onClick={() => setShowModalities(true)}>
               <GamepadDirectional />
-              Modalidades
+              Padrões
             </button>
-            <ExportButton cards={cards} packName={packName} />
             <button
               onClick={() => setShowBallTable(true)}
               disabled={showBallTable}
             >
               <Grid3x3 />
+              Bolas
             </button>
-            <button onClick={() => setShowAddCards(true)}>
-              <Plus />
-            </button>
+            <ExportButton cards={cards} packName={packName} />
           </div>
 
           {balls && id && showBallTable && (

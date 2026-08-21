@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, memo } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Plus, ExternalLink, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Plus, Trash2 } from "lucide-react";
 
 // FUNCTIONS
 import * as fts from "../utils/functions.ts";
@@ -54,7 +54,13 @@ const Packs = () => {
   }, [setHeaderTitle]);
 
   const handleRemovePack = useCallback(
-    async (id: number, name: string): Promise<boolean> => {
+    async (
+      e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+      id: number,
+      name: string,
+    ): Promise<boolean> => {
+      e.stopPropagation();
+
       if (!confirm(`O maço: ${name} será removido`)) return false;
 
       const removePack: { message: string } = await request(
@@ -101,17 +107,20 @@ const Packs = () => {
           )}
           <ul className={styles.packs}>
             {packs.map((pack) => (
-              <li key={pack.id} className={styles.pack}>
+              <li
+                key={pack.id}
+                className={styles.pack}
+                onClick={() => navigate(`/pack/${pack.id}`)}
+              >
                 <div>
                   <b>{pack.name}</b>
                   <span>{fts.dateFromUnix(pack.created_at)}</span>
                   <p>{pack.cards} Cartelas</p>
                 </div>
                 <nav>
-                  <Link to={`/pack/${pack.id}`}>
-                    <ExternalLink />
-                  </Link>
-                  <button onClick={() => handleRemovePack(pack.id, pack.name)}>
+                  <button
+                    onClick={(e) => handleRemovePack(e, pack.id, pack.name)}
+                  >
                     <Trash2 />
                   </button>
                 </nav>
