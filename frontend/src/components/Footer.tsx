@@ -10,6 +10,15 @@ const Footer = () => {
   return (
     <section className={styles.section_footer}>
       <div className={styles.div_footer}>
+        <p className={styles.terms_and_privacy}>
+          <a href="/terms-of-use" target="_blank" rel="noopener noreferrer">
+            Termos de uso
+          </a>{" "}
+          e{" "}
+          <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+            Política de Privacidade
+          </a>
+        </p>
         <p>{mainContext.headerTitle} gerador e marcador de cartelas.</p>
         <p>
           Desenvolvido por&nbsp;
@@ -18,7 +27,7 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            @alexsandrogomesdev
+            @alexsandrogomes.dev
           </a>
         </p>
       </div>

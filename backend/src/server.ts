@@ -115,18 +115,21 @@ fastify.get(
     const orderId = request.params.id;
 
     let status = 0;
+    let plan = 0;
 
     const getOrder = await query(
-      "SELECT status FROM orders WHERE order_id = $1",
+      "SELECT status,plan FROM orders WHERE order_id = $1",
       [orderId],
     );
     if (getOrder.rowCount && getOrder.rowCount > 0) {
       status = getOrder.rows[0].status;
+      plan = getOrder.rows[0].plan;
     }
 
     return reply.status(200).send({
       message: "ok",
       status: status,
+      plan: plan,
     });
   },
 );
@@ -327,7 +330,7 @@ fastify.post(
     const { email, password } = request.body;
 
     const result = await query(
-      "SELECT id,name,email,password FROM users WHERE email = $1 LIMIT 1",
+      "SELECT id,name,email,password,plan FROM users WHERE email = $1 LIMIT 1",
       [email],
     );
 
@@ -342,6 +345,7 @@ fastify.post(
       name: string;
       email: string;
       password: string;
+      plan: number;
     }
     const user: UserSignIn = result.rows[0];
 
@@ -370,6 +374,7 @@ fastify.post(
       .send({
         message: "ok",
         userId: String(user.id),
+        plan: String(user.plan),
       });
   },
 );

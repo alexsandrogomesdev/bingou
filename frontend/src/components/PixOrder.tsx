@@ -35,6 +35,7 @@ const PixOrder = ({ orderId, pixCode, amount }: Props) => {
       interface RequestResponse {
         message: string;
         status: number;
+        plan: number;
       }
       const response: RequestResponse = await request(
         `/orders/${orderId}/status`,
@@ -44,6 +45,9 @@ const PixOrder = ({ orderId, pixCode, amount }: Props) => {
       );
       if (response.message !== "ok") return;
       setStatus(response.status);
+      if (response.status === 1) {
+        localStorage.setItem("plan", String(response.plan));
+      }
     };
 
     const intervalId = setInterval(checkStatus, 3000);

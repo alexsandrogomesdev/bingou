@@ -7,6 +7,7 @@ import styles from "./SignUp.module.css";
 // HOOKS
 import { useMainContext } from "../hooks/useMainContext.tsx";
 import { useFetch } from "../hooks/useFetch.tsx";
+import { Eye, EyeClosed } from "lucide-react";
 
 // COMPONENTS
 
@@ -20,6 +21,7 @@ const SignUp = () => {
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [typePassword, setTypePassword] = useState<string>("password");
   const [signuping, setSignuping] = useState<boolean>(false);
 
   const maskDocument = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -147,14 +149,30 @@ const SignUp = () => {
         <div>
           <label htmlFor="password">Senha</label>
           <input
-            type="password"
+            type={typePassword}
             id="password"
             autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             required
           />
+          {typePassword === "password" ? (
+            <Eye onClick={() => setTypePassword("text")} />
+          ) : (
+            <EyeClosed onClick={() => setTypePassword("password")} />
+          )}
         </div>
+        <p className={styles.terms_and_privacy}>
+          Ao cadastrar-se, você concorda com nossos{" "}
+          <a href="/terms-of-use" target="_blank" rel="noopener noreferrer">
+            Termos de uso
+          </a>{" "}
+          e{" "}
+          <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+            Política de Privacidade
+          </a>
+          .
+        </p>
         <button type="submit" disabled={signuping}>
           {signuping ? "Cadastrando..." : "Cadastrar"}
         </button>

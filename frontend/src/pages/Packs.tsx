@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, memo } from "react";
-import { useNavigate } from "react-router-dom";
-import { Plus, Trash2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { CircleStar, Plus, Trash2 } from "lucide-react";
 
 // FUNCTIONS
 import * as fts from "../utils/functions.ts";
@@ -127,13 +127,28 @@ const Packs = () => {
               </li>
             ))}
           </ul>
-          <button
-            className={styles.button_new_pack}
-            onClick={() => setSectionNewPack(true)}
-          >
-            <Plus />
-            Novo
-          </button>
+          <section className={styles.section_fixed}>
+            <button
+              className={styles.button_new_pack}
+              onClick={() => setSectionNewPack(true)}
+            >
+              <Plus />
+              Novo
+            </button>
+            <article
+              className={`${styles.article_buy_plan} ${localStorage.getItem("userId") !== null && localStorage.getItem("plan") === "0" ? styles.show : styles.hide}`}
+            >
+              <p>
+                Seu plano gratuito permite gerar até 50 cartelas por maço. Para
+                gerar mais obtenha um plano.
+              </p>
+
+              <Link to="/plans">
+                <CircleStar />
+                Obter Plano
+              </Link>
+            </article>
+          </section>
         </div>
       </section>
     </>

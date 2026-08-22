@@ -46,6 +46,7 @@ const Profile = () => {
         return;
       }
       setProfile(response.result);
+      localStorage.setItem("plan", String(response.result.plan));
     };
     getProfile();
   }, [request, setProfile, navigate]);

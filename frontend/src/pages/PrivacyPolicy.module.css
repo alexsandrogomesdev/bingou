@@ -1,0 +1,41 @@
+.section_privacy {
+  display: flex;
+  flex-flow: column;
+  min-width: 100%;
+  max-width: 100%;
+  background-color: #fff;
+}
+.article_privacy {
+  display: flex;
+  flex-flow: column;
+  gap: 25px;
+  padding: 10px;
+  color: #282930;
+}
+.article_privacy h1 {
+  font-size: 22px;
+  margin: 0 auto;
+}
+.article_privacy h2 {
+  font-size: 18px;
+  font-weight: 500;
+}
+.article_privacy p {
+  font-size: 14px;
+  font-weight: 300;
+}
+.article_privacy section {
+  display: flex;
+  flex-flow: column;
+  gap: 5px;
+}
+.article_privacy ul {
+  display: flex;
+  flex-flow: column;
+  gap: 5px;
+  font-weight: 300;
+  font-size: 14px;
+}
+.article_privacy strong {
+  font-weight: 500;
+}

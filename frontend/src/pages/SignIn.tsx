@@ -10,6 +10,7 @@ import { useFetch } from "../hooks/useFetch.tsx";
 
 // COMPONENTS
 import ForgotPassword from "../components/ForgotPassword.tsx";
+import { Eye, EyeClosed } from "lucide-react";
 
 const SignIn = () => {
   const mainContext = useMainContext();
@@ -18,6 +19,7 @@ const SignIn = () => {
 
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
+  const [typePassword, setTypePassword] = useState<string>("password");
   const [signing, setSigning] = useState<boolean>(false);
 
   const handleSignIn = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -27,6 +29,7 @@ const SignIn = () => {
     interface Request {
       message: string;
       userId: string;
+      plan: string;
     }
     const signIn: Request = await request(
       "/user/signin",
@@ -42,6 +45,7 @@ const SignIn = () => {
 
     if (signIn.message === "ok") {
       localStorage.setItem("userId", signIn.userId);
+      localStorage.setItem("plan", signIn.plan);
       navigate("/packs");
     } else {
       mainContext.setAlert({
@@ -78,7 +82,7 @@ const SignIn = () => {
           <div>
             <label htmlFor="password">Senha</label>
             <input
-              type="password"
+              type={typePassword}
               id="password"
               autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
@@ -90,6 +94,11 @@ const SignIn = () => {
             >
               esqueci minha senha
             </span>
+            {typePassword === "password" ? (
+              <Eye onClick={() => setTypePassword("text")} />
+            ) : (
+              <EyeClosed onClick={() => setTypePassword("password")} />
+            )}
           </div>
           <button type="submit" disabled={signing}>
             {signing ? "Entrando..." : "Entrar"}

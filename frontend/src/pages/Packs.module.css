@@ -14,6 +14,7 @@
   color: #282930;
   margin: 0 0 10px 0;
   font-weight: 500;
+  /* margin-top: 60px; */
 }
 .none_packs {
   font-size: 16px;
@@ -66,18 +67,66 @@
   color: #24af60;
   text-decoration: none;
 }
+
+.section_fixed {
+  display: flex;
+  flex-flow: column;
+  position: fixed;
+  gap: 10px;
+  bottom: 0px;
+  min-width: 100%;
+  max-width: 100%;
+}
+.article_buy_plan {
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border-top: solid 1px #e7e7e7;
+}
+.article_buy_plan p {
+  font-size: 14px;
+  color: #f76f20;
+  text-align: center;
+  font-weight: 300;
+}
+.article_buy_plan a {
+  background-color: #2c7ce6;
+  color: #fff;
+  text-align: center;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
+  font-weight: 500;
+  text-decoration: none;
+}
+.article_buy_plan a svg {
+  min-height: 20px;
+  max-height: 20px;
+  min-width: 20px;
+  max-width: 20px;
+}
 .button_new_pack {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+
+  left: calc(100% - 120px);
+  right: 0;
+  bottom: 15px;
+
   gap: 5px;
-  position: fixed;
 
   min-height: 32px;
   max-height: 32px;
-
-  bottom: 35px;
-  right: 17px;
+  max-width: max-content;
+  min-width: max-content;
 
   background-color: #24af60;
   border: none;
@@ -95,16 +144,35 @@
   max-height: 20px;
 }
 
-@media screen and (min-width: 768px) {
+@media (max-width: 768px) {
+  .section_fixed {
+    left: 0;
+  }
+}
+@media (min-width: 768px) {
   .div_packs {
     min-width: 1100px;
     max-width: 1100px;
     margin: 0 auto;
     position: relative;
   }
+
+  .section_fixed {
+    min-width: 800px;
+    max-width: 800px;
+    left: calc(100% / 2 - 400px);
+    /* margin: 0 auto; */
+    border-left: solid 1px #e7e7e7;
+    border-right: solid 1px #e7e7e7;
+  }
+  .article_buy_plan a {
+    min-width: max-content;
+    max-width: max-content;
+    margin: 0 auto;
+  }
   .button_new_pack {
     position: absolute;
-    top: -8px;
+    top: -45px;
     right: 0;
     z-index: 1;
     max-width: max-content;
