@@ -60,7 +60,7 @@ const Packs = () => {
   }, []);
 
   useEffect(() => {
-    setHeaderSubTitle(`${packs.length} maços`);
+    setHeaderSubTitle(`${packs.length} maço${packs.length > 1 ? "s" : ""}`);
   }, [setHeaderSubTitle, packs]);
   useEffect(() => {
     setHeaderTitle("Maços");
