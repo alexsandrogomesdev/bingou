@@ -1,0 +1,23 @@
+.waiting {
+  display: flex;
+  flex-flow: column;
+  min-width: 100%;
+  max-width: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #282930;
+  gap: 10px;
+}
+.waiting svg {
+  min-height: 32px;
+  max-height: 32px;
+  min-width: 32px;
+  max-width: 32px;
+  animation: waiting 1s linear infinite;
+}
+@keyframes waiting {
+  0% {
+    transform: rotate(-360deg);
+  }
+}

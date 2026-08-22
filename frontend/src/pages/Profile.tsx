@@ -11,6 +11,7 @@ import { useFetch } from "../hooks/useFetch.tsx";
 
 import { dateFromUnix } from "../utils/functions.ts";
 import { useMainContext } from "../hooks/useMainContext.tsx";
+import Waiting from "../components/Waiting.tsx";
 
 const Profile = () => {
   const { setHeaderTitle, setHeaderSubTitle } = useMainContext();
@@ -33,6 +34,7 @@ const Profile = () => {
     plan: 0,
     due_at: 0,
   });
+  const [requestIsDone, setRequestIsDone] = useState<boolean>(false);
 
   interface Response {
     message: string;
@@ -46,7 +48,9 @@ const Profile = () => {
         return;
       }
       setProfile(response.result);
+      setRequestIsDone(true);
       localStorage.setItem("plan", String(response.result.plan));
+      localStorage.setItem("due_at", String(response.result.due_at));
     };
     getProfile();
   }, [request, setProfile, navigate]);
@@ -61,24 +65,33 @@ const Profile = () => {
   return (
     <section className={styles.section_profile}>
       <div className={styles.div_profile}>
-        <div>
-          <p>Nome:</p> <span>{profile.name}</span>
-        </div>
-        <div>
-          <p>Documento:</p> <span>{profile.document}</span>
-        </div>
-        <div>
-          <p>Telefone:</p> <span>{profile.phone}</span>
-        </div>
-        <div>
-          <p>Email:</p> <span>{profile.email}</span>
-        </div>
-        <div>
-          <p>Plano:</p> <span>{plans[profile.plan]}</span>
-        </div>
-        <div>
-          <p>Vencimento:</p> <span>{dateFromUnix(profile.due_at)}</span>
-        </div>
+        {!requestIsDone ? (
+          <Waiting text={"Buscando perfil..."} />
+        ) : (
+          <>
+            <h2>Meu Perfil</h2>
+            <ul>
+              <li>
+                <p>Nome:</p> <span>{profile.name}</span>
+              </li>
+              <li>
+                <p>Documento:</p> <span>{profile.document}</span>
+              </li>
+              <li>
+                <p>Telefone:</p> <span>{profile.phone}</span>
+              </li>
+              <li>
+                <p>Email:</p> <span>{profile.email}</span>
+              </li>
+              <li>
+                <p>Plano:</p> <span>{plans[profile.plan]}</span>
+              </li>
+              <li>
+                <p>Vencimento:</p> <span>{dateFromUnix(profile.due_at)}</span>
+              </li>
+            </ul>
+          </>
+        )}
       </div>
     </section>
   );

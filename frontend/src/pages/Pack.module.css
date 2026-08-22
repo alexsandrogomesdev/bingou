@@ -24,12 +24,13 @@
   width: max-content;
   justify-content: right;
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   background-color: #fff;
   min-width: 100%;
   max-width: 100%;
 }
-.div_actions > button {
+.div_actions > button,
+.div_actions > a {
   background-color: #24af60;
   border: none;
   border-radius: 5px;
@@ -54,7 +55,6 @@
   background-color: #d1d1d1;
   color: #a1a1a1;
 }
-
 .cards {
   display: grid;
   grid-template-columns: repeat(2, auto);
@@ -69,7 +69,35 @@
   padding-bottom: 25px;
   position: relative;
   top: 60px;
+  z-index: 0;
 }
+.back {
+  text-decoration: none;
+  margin-right: auto;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 1;
+  color: #fff;
+  min-height: 48px;
+  max-height: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  border-radius: 32px;
+  background-color: #24af60;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+}
+.back svg {
+  min-width: 32px;
+  max-width: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  margin-left: -3px;
+}
+
 .blockScroll {
   overflow-y: hidden !important;
   touch-action: none !important;
@@ -79,29 +107,25 @@
   overflow-x: hidden !important;
   display: none;
 }
-.loader {
+.getting_cards {
   display: flex;
+  flex-flow: column;
   align-items: center;
   min-width: 100%;
   max-width: 100%;
-  min-height: 60dvh;
+  min-height: max-content;
+  margin: 120px auto;
 }
-.loader svg {
-  color: #24af60;
-  min-width: 48px;
-  min-height: 48px;
+.getting_cards svg {
+  color: #282930;
+  min-width: 36px;
+  min-height: 36px;
   margin: auto;
-  animation: Loader 1s ease-in-out infinite;
+  animation: gettingCards 1s linear infinite;
 }
-@keyframes Loader {
+@keyframes gettingCards {
   0% {
-    transform: rotate(90deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  100% {
-    transform: rotate(0deg);
+    transform: rotate(-360deg);
   }
 }
 .div_no_cards {

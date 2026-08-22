@@ -12,7 +12,7 @@
 .packs_title {
   font-size: 18px;
   color: #282930;
-  margin: 0 0 10px 0;
+  margin: 0 auto 10px;
   font-weight: 500;
   /* margin-top: 60px; */
 }
@@ -78,7 +78,7 @@
   max-width: 100%;
 }
 .article_buy_plan {
-  display: flex;
+  display: none;
   flex-flow: column;
   gap: 10px;
   padding: 10px;
@@ -178,4 +178,11 @@
     max-width: max-content;
     cursor: pointer;
   }
+}
+
+.show {
+  display: flex;
+}
+.hide {
+  display: none;
 }

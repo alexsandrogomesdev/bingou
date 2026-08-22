@@ -1,6 +1,12 @@
 import { useEffect, useState, useCallback, useRef, useMemo, memo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { GamepadDirectional, Gift, Grid3x3, Plus, Loader } from "lucide-react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import {
+  GamepadDirectional,
+  Gift,
+  Grid3x3,
+  Plus,
+  ChevronLeft,
+} from "lucide-react";
 
 // STYLES
 import styles from "./Pack.module.css";
@@ -29,6 +35,7 @@ import type {
   BodyUpdatePack,
   Goods,
 } from "../types/pack.ts";
+import Waiting from "../components/Waiting.tsx";
 
 const Pack = () => {
   const { setHeaderTitle, setHeaderSubTitle, setAlert } = useMainContext();
@@ -46,7 +53,7 @@ const Pack = () => {
   const [showBallTable, setShowBallTable] = useState<boolean>(false);
   const [showAddCards, setShowAddCards] = useState<boolean>(false);
   const [cardsAdded, setCardsAdded] = useState<boolean>(false);
-  const [loader, setLoader] = useState<boolean>(true);
+  const [requestIsDone, setRequestIsDone] = useState<boolean>(false);
   const [goods, setGoods] = useState<Goods[]>([]);
   const [cardsWithGoods, setCardsWithGoods] = useState<Set<number>>(
     new Set([]),
@@ -61,11 +68,13 @@ const Pack = () => {
   useEffect(() => {
     const getPack = async () => {
       const response: PackType = await request(`/packs/${id}`, "GET");
-      setLoader(false);
       if (response.message === "Unauthorized") {
         navigate("/signin");
         return;
-      } else if (response.message !== "ok") {
+      }
+      setRequestIsDone(true);
+
+      if (response.message !== "ok") {
         setAlert({
           id: Date.now(),
           type: "error",
@@ -73,6 +82,7 @@ const Pack = () => {
         });
         return;
       }
+
       setCards(response.result.cards);
       setPackName(response.result.name);
       setHeaderTitle(response.result.name);
@@ -330,12 +340,6 @@ const Pack = () => {
       <section className={styles.section_pack}>
         <div className={styles.div_pack}>
           <div className={styles.div_actions}>
-            <button onClick={handleShowAddCards}>
-              <Plus />
-            </button>
-            <button onClick={() => setShowWinnings(true)}>
-              <Gift />
-            </button>
             <button onClick={() => setShowModalities(true)}>
               <GamepadDirectional />
               Padrões
@@ -346,6 +350,12 @@ const Pack = () => {
             >
               <Grid3x3 />
               Bolas
+            </button>
+            <button onClick={() => setShowWinnings(true)}>
+              <Gift />
+            </button>
+            <button onClick={handleShowAddCards}>
+              <Plus />
             </button>
             <ExportButton cards={cards} packName={packName} />
           </div>
@@ -358,37 +368,45 @@ const Pack = () => {
               goods={goods}
             />
           )}
-          {loader && (
-            <div className={styles.loader}>
-              <Loader />
-            </div>
-          )}
-          {!loader && cards.length === 0 && (
-            <div className={styles.div_no_cards}>
-              <p>Não há cartelas neste maço.</p>
-              <button onClick={() => setShowAddCards(true)}>
-                <Plus />
-              </button>
-            </div>
-          )}
 
-          <div
-            className={`${styles.cards} ${(showWinnings || showBallTable || showModalities) && styles.blockScroll}`}
-          >
-            {cards.map((card, index) => (
-              <Card
-                key={card.id}
-                index={index + 1}
-                id={card.id}
-                ball={lastBall}
-                balls={ballsToRender}
-                cardNumbers={card.numbers.data}
-                isGoodCard={cardsWithGoods.has(card.id)}
-                goodBalls={goodsByCard.get(card.id) || new Set()}
-                handleRemoveCard={handleRemoveCard}
-              />
-            ))}
-          </div>
+          {!requestIsDone ? (
+            <Waiting
+              text={"Buscando cartelas do maço..."}
+              style={{ marginTop: 120 }}
+            />
+          ) : (
+            <>
+              {cards.length === 0 ? (
+                <div className={styles.div_no_cards}>
+                  <p>Não há cartelas neste maço.</p>
+                  <button onClick={() => setShowAddCards(true)}>
+                    <Plus />
+                  </button>
+                </div>
+              ) : (
+                <div
+                  className={`${styles.cards} ${(showWinnings || showBallTable || showModalities) && styles.blockScroll}`}
+                >
+                  {cards.map((card, index) => (
+                    <Card
+                      key={card.id}
+                      index={index + 1}
+                      id={card.id}
+                      ball={lastBall}
+                      balls={ballsToRender}
+                      cardNumbers={card.numbers.data}
+                      isGoodCard={cardsWithGoods.has(card.id)}
+                      goodBalls={goodsByCard.get(card.id) || new Set()}
+                      handleRemoveCard={handleRemoveCard}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+          <Link to="/packs" className={styles.back}>
+            <ChevronLeft />
+          </Link>
         </div>
       </section>
     </>

@@ -14,6 +14,7 @@ import { useFetch } from "../hooks/useFetch.tsx";
 
 // COMPONENTS
 import NewPack from "../components/NewPack.tsx";
+import Waiting from "../components/Waiting.tsx";
 
 const Packs = () => {
   const { setHeaderTitle, setHeaderSubTitle, setAlert } = useMainContext();
@@ -30,17 +31,29 @@ const Packs = () => {
   };
   const [packs, setPacks] = useState<Pack[]>([]);
   const [sectionNewPack, setSectionNewPack] = useState<boolean>(false);
+  const [timeStamp] = useState<number>(() => Math.floor(Date.now() / 1000));
+  const [plan, setPlan] = useState<number>(0);
+  const [dueAt, setDueAt] = useState<number>(() =>
+    Math.floor(Date.now() / 1000),
+  );
+  const [requestIsDone, setRequestIsDone] = useState<boolean>(false);
+
   useEffect(() => {
     const getPacks = async () => {
       interface Packs {
         message: string;
         result: [];
+        plan: number;
+        due_at: number;
       }
       const packs = await request<Packs>("/packs", "GET");
       if (packs.message === "Unauthorized" || !packs.result) {
         navigate("/signin");
       } else {
         setPacks(packs.result);
+        setPlan(packs.plan);
+        setDueAt(packs.due_at);
+        setRequestIsDone(true);
       }
     };
     getPacks();
@@ -90,65 +103,77 @@ const Packs = () => {
     },
     [request, setAlert],
   );
+
   return (
     <>
       <NewPack
         sectionNewPack={sectionNewPack}
         setSectionNewPack={setSectionNewPack}
       />
-
       <section className={styles.section_packs}>
         <div className={styles.div_packs}>
-          <h2 className={styles.packs_title}>Meus Maços</h2>
-          {packs.length === 0 && (
-            <p className={styles.none_packs}>
-              Nenhum maço criado, crie um no botão abaixo!
-            </p>
-          )}
-          <ul className={styles.packs}>
-            {packs.map((pack) => (
-              <li
-                key={pack.id}
-                className={styles.pack}
-                onClick={() => navigate(`/pack/${pack.id}`)}
-              >
-                <div>
-                  <b>{pack.name}</b>
-                  <span>{fts.dateFromUnix(pack.created_at)}</span>
-                  <p>{pack.cards} Cartelas</p>
-                </div>
-                <nav>
-                  <button
-                    onClick={(e) => handleRemovePack(e, pack.id, pack.name)}
-                  >
-                    <Trash2 />
-                  </button>
-                </nav>
-              </li>
-            ))}
-          </ul>
-          <section className={styles.section_fixed}>
-            <button
-              className={styles.button_new_pack}
-              onClick={() => setSectionNewPack(true)}
-            >
-              <Plus />
-              Novo
-            </button>
-            <article
-              className={`${styles.article_buy_plan} ${localStorage.getItem("userId") !== null && localStorage.getItem("plan") === "0" ? styles.show : styles.hide}`}
-            >
-              <p>
-                Seu plano gratuito permite gerar até 50 cartelas por maço. Para
-                gerar mais obtenha um plano.
-              </p>
+          {!requestIsDone ? (
+            <Waiting text={"Buscando maços..."} />
+          ) : (
+            <>
+              <h2 className={styles.packs_title}>Meus Maços</h2>
+              {packs.length === 0 ? (
+                <p className={styles.none_packs}>
+                  Nenhum maço criado, crie um no botão abaixo!
+                </p>
+              ) : (
+                <ul className={styles.packs}>
+                  {packs.map((pack) => (
+                    <li
+                      key={pack.id}
+                      className={styles.pack}
+                      onClick={() => navigate(`/pack/${pack.id}`)}
+                    >
+                      <div>
+                        <b>{pack.name}</b>
+                        <span>{fts.dateFromUnix(pack.created_at)}</span>
+                        <p>{pack.cards} Cartelas</p>
+                      </div>
+                      <nav>
+                        <button
+                          onClick={(e) =>
+                            handleRemovePack(e, pack.id, pack.name)
+                          }
+                        >
+                          <Trash2 />
+                        </button>
+                      </nav>
+                    </li>
+                  ))}
+                </ul>
+              )}
 
-              <Link to="/plans">
-                <CircleStar />
-                Obter Plano
-              </Link>
-            </article>
-          </section>
+              <section
+                className={`${styles.section_fixed} ${requestIsDone ? styles.show : styles.hide}`}
+              >
+                <button
+                  className={styles.button_new_pack}
+                  onClick={() => setSectionNewPack(true)}
+                >
+                  <Plus />
+                  Novo
+                </button>
+                <article
+                  className={`${styles.article_buy_plan} ${plan === 0 || dueAt < timeStamp ? styles.show : styles.hide}`}
+                >
+                  <p>
+                    Seu plano gratuito permite gerar até 50 cartelas por maço.
+                    Para gerar mais obtenha um plano.
+                  </p>
+
+                  <Link to="/plans">
+                    <CircleStar />
+                    Obter Plano
+                  </Link>
+                </article>
+              </section>
+            </>
+          )}
         </div>
       </section>
     </>

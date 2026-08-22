@@ -485,9 +485,26 @@ fastify.get(
       [userId],
     );
 
+    const userDetails = await query(
+      "SELECT plan,due_at FROM users WHERE id = $1",
+      [userId],
+    );
+    let plan = 0;
+    let due_at = Math.floor(Date.now() / 1000);
+    if (
+      userDetails.rowCount &&
+      userDetails.rows[0].plan &&
+      userDetails.rows[0].due_at
+    ) {
+      plan = userDetails.rows[0].plan;
+      due_at = userDetails.rows[0].due_at;
+    }
+
     return reply.status(200).send({
       message: "ok",
       result: packs.rowCount && packs.rowCount > 0 ? packs.rows : [],
+      plan: plan,
+      due_at: due_at,
     });
   },
 );

@@ -107,7 +107,7 @@
     max-height: 100dvh;
     top: 0;
     left: 0;
-    z-index: 2;
+    z-index: 3;
     background-color: rgba(0, 0, 0, 0.1);
   }
   .div_balls_table {

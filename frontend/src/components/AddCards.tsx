@@ -65,17 +65,18 @@ const AddCards = ({ packId, setShowAddCards, setCardsAdded }: Props) => {
           className={styles.form_add_cards}
           onSubmit={(e) => handleAddCards(e)}
         >
-          <label htmlFor="">Quantidade cartelas</label>
+          <label htmlFor="qty">Quantidade cartelas</label>
           <div>
+            <button disabled={loading}>
+              <Check />
+            </button>
             <input
+              id="qty"
               type="text"
               inputMode={`numeric`}
               value={qty}
               onChange={(e) => setQty(Number(e.target.value) || 0)}
             />
-            <button disabled={loading}>
-              <Check />
-            </button>
           </div>
         </form>
       </div>

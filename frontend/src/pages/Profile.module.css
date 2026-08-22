@@ -10,16 +10,25 @@
   flex-flow: column;
   gap: 10px;
 }
-.div_profile > div {
+.div_profile h2 {
+  font-size: 18px;
+  color: #282930;
+  margin: 16px auto;
+}
+.div_profile > ul {
   display: flex;
   flex-flow: column;
-  /* gap: 5px; */
+  gap: 10px;
 }
-.div_profile > div > p {
+.div_profile > ul > li {
+  display: flex;
+  flex-flow: column;
+}
+.div_profile > ul p {
   font-size: 14px;
   color: #717171;
 }
-.div_profile > div > span {
+.div_profile > ul span {
   font-size: 14px;
   color: #282930;
 }
