@@ -33,9 +33,7 @@ const Packs = () => {
   const [sectionNewPack, setSectionNewPack] = useState<boolean>(false);
   const [timeStamp] = useState<number>(() => Math.floor(Date.now() / 1000));
   const [plan, setPlan] = useState<number>(0);
-  const [dueAt, setDueAt] = useState<number>(() =>
-    Math.floor(Date.now() / 1000),
-  );
+  const [dueAt, setDueAt] = useState<number>(() => Math.floor(Date.now() / 1000));
   const [requestIsDone, setRequestIsDone] = useState<boolean>(false);
 
   useEffect(() => {
@@ -60,28 +58,17 @@ const Packs = () => {
   }, []);
 
   useEffect(() => {
-    setHeaderSubTitle(`${packs.length} maço${packs.length > 1 ? "s" : ""}`);
-  }, [setHeaderSubTitle, packs]);
-  useEffect(() => {
     setHeaderTitle("Maços");
-  }, [setHeaderTitle]);
+    setHeaderSubTitle(`${packs.length} maço${packs.length > 1 ? "s" : ""}`);
+  }, [setHeaderSubTitle, setHeaderTitle, packs]);
 
   const handleRemovePack = useCallback(
-    async (
-      e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-      id: number,
-      name: string,
-    ): Promise<boolean> => {
+    async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number, name: string): Promise<boolean> => {
       e.stopPropagation();
 
       if (!confirm(`O maço: ${name} será removido`)) return false;
 
-      const removePack: { message: string } = await request(
-        `/packs/${id}`,
-        "DELETE",
-        {},
-        {},
-      );
+      const removePack: { message: string } = await request(`/packs/${id}`, "DELETE", {}, {});
       if (removePack.message === "ok") {
         setAlert({
           id: Date.now(),
@@ -106,10 +93,7 @@ const Packs = () => {
 
   return (
     <>
-      <NewPack
-        sectionNewPack={sectionNewPack}
-        setSectionNewPack={setSectionNewPack}
-      />
+      <NewPack sectionNewPack={sectionNewPack} setSectionNewPack={setSectionNewPack} />
       <section className={styles.section_packs}>
         <div className={styles.div_packs}>
           {!requestIsDone ? (
@@ -118,28 +102,18 @@ const Packs = () => {
             <>
               <h2 className={styles.packs_title}>Meus Maços</h2>
               {packs.length === 0 ? (
-                <p className={styles.none_packs}>
-                  Nenhum maço criado, crie um no botão abaixo!
-                </p>
+                <p className={styles.none_packs}>Nenhum maço criado, crie um no botão abaixo!</p>
               ) : (
                 <ul className={styles.packs}>
                   {packs.map((pack) => (
-                    <li
-                      key={pack.id}
-                      className={styles.pack}
-                      onClick={() => navigate(`/pack/${pack.id}`)}
-                    >
+                    <li key={pack.id} className={styles.pack} onClick={() => navigate(`/pack/${pack.id}`)}>
                       <div>
                         <b>{pack.name}</b>
                         <span>{fts.dateFromUnix(pack.created_at)}</span>
                         <p>{pack.cards} Cartelas</p>
                       </div>
                       <nav>
-                        <button
-                          onClick={(e) =>
-                            handleRemovePack(e, pack.id, pack.name)
-                          }
-                        >
+                        <button onClick={(e) => handleRemovePack(e, pack.id, pack.name)}>
                           <Trash2 />
                         </button>
                       </nav>
@@ -148,23 +122,15 @@ const Packs = () => {
                 </ul>
               )}
 
-              <section
-                className={`${styles.section_fixed} ${requestIsDone ? styles.show : styles.hide}`}
-              >
-                <button
-                  className={styles.button_new_pack}
-                  onClick={() => setSectionNewPack(true)}
-                >
+              <section className={`${styles.section_fixed} ${requestIsDone ? styles.show : styles.hide}`}>
+                <button className={styles.button_new_pack} onClick={() => setSectionNewPack(true)}>
                   <Plus />
                   Novo
                 </button>
                 <article
                   className={`${styles.article_buy_plan} ${plan === 0 || dueAt < timeStamp ? styles.show : styles.hide}`}
                 >
-                  <p>
-                    Seu plano gratuito permite gerar até 50 cartelas por maço.
-                    Para gerar mais obtenha um plano.
-                  </p>
+                  <p>Seu plano gratuito permite gerar até 50 cartelas por maço. Para gerar mais obtenha um plano.</p>
 
                   <Link to="/plans">
                     <CircleStar />

@@ -1,0 +1,233 @@
+.section_randomizer {
+  display: flex;
+  flex-flow: column;
+  padding: 0;
+  position: relative;
+  top: 63px;
+}
+.div_randomizer {
+  display: flex;
+  flex-flow: column;
+}
+.div_actions {
+  display: flex;
+  flex-flow: column;
+  padding: 10px;
+  align-items: center;
+  text-align: right;
+}
+.div_actions svg {
+  margin-left: auto;
+  background-color: #fa9119;
+  color: #fff;
+  border-radius: 5px;
+  padding: 2px;
+  cursor: pointer;
+}
+.div_table_numbers {
+  display: flex;
+  flex-flow: column;
+  padding: 2px;
+  background-color: #24af60;
+  gap: 10px;
+}
+.div_table_numbers ul {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.div_table_numbers ul li {
+  min-width: 22px;
+  max-width: 22px;
+  min-height: 22px;
+  max-height: 22px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.selected_number {
+  color: #24af60 !important;
+  background-color: #fff;
+  border-radius: 18px;
+  position: relative;
+}
+.selected_number::before {
+  content: "";
+  min-width: 3px;
+  max-width: 3px;
+  min-height: 3px;
+  max-height: 3px;
+  background-color: #24af60;
+  top: 3px;
+  left: 3px;
+  position: absolute;
+  z-index: 1;
+  border-radius: 10px;
+  filter: blur(3px);
+}
+
+.drawn_balls {
+  display: flex;
+  flex-flow: column;
+  max-width: max-content;
+  margin: 15px auto;
+  text-align: center;
+}
+.drawn_balls > p {
+  font-size: 24px;
+  font-weight: 500;
+}
+.drawn_balls > span {
+  font-size: 14px;
+  color: #282930;
+}
+
+.ul_drawn_balls {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  gap: 16px;
+  margin: 20px 0;
+  padding: 10px;
+  min-height: 56px;
+  max-height: 56px;
+}
+.ul_drawn_balls::-webkit-scrollbar {
+  width: 0;
+}
+.ball {
+  min-width: 36px;
+  max-width: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  border-radius: 36px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #24af60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  flex-grow: 0;
+  position: relative;
+}
+.ball::before {
+  content: "";
+  min-width: 10px;
+  max-width: 10px;
+  min-height: 10px;
+  max-height: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  top: 5px;
+  left: 5px;
+  position: absolute;
+  z-index: 1;
+  border-radius: 10px;
+  filter: blur(4px);
+}
+.last_ball {
+  animation: lastBall 0.4s linear infinite;
+  background-color: #fa9119;
+  color: #fff !important;
+}
+@keyframes lastBall {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.ball_button {
+  width: 80px;
+  height: 80px;
+  border-radius: 80px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  margin: 0 auto;
+  border: none;
+}
+.ball_button:disabled {
+  cursor: not-allowed;
+}
+.way {
+  display: flex;
+  flex-flow: column;
+  width: 320px;
+  height: 320px;
+}
+.way_animation {
+  animation: round 0.2s linear infinite;
+}
+.button_drawn {
+  width: 80px;
+  height: 160px;
+  position: relative;
+  background-color: #24af60;
+  background-size: 60px 100%;
+  border: none;
+  display: flex;
+  flex-flow: row;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+}
+.button_drawn span {
+  margin: -80px auto 0;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.ball_button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0.2) 75%, #000);
+  pointer-events: none;
+  z-index: 10;
+}
+@keyframes round {
+  0% {
+    transform: translateY(-160px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.button_reset {
+  min-width: max-content;
+  max-width: max-content;
+  padding: 15px;
+  background-color: #fa9119;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  margin: 30px auto 10px;
+}

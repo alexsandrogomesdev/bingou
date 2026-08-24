@@ -15,6 +15,7 @@ import Header from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
 
 // PAGES
+const Randomizer = lazy(() => import("./pages/Randomizer.tsx"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
 const TermsOfUse = lazy(() => import("./pages/TermsOfUse.tsx"));
 const Plans = lazy(() => import("./pages/Plans.tsx"));
@@ -50,6 +51,7 @@ function App() {
             <Route path="/signup" element={<SignUp />}></Route>
             <Route path="/reset-password" element={<ResetPassword />}></Route>
             <Route path="/plans" element={<Plans />}></Route>
+            <Route path="/shuffle" element={<Randomizer />}></Route>
             <Route path="/terms-of-use" element={<TermsOfUse />}></Route>
             <Route path="/privacy-policy" element={<PrivacyPolicy />}></Route>
           </Routes>

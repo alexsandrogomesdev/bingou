@@ -6,6 +6,7 @@ import {
   House,
   LogOut,
   HandCoins,
+  Dices,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { memo } from "react";
@@ -106,6 +107,17 @@ const MainMenu = () => {
             >
               <HandCoins />
               <span>Planos</span>
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/shuffle"
+              className={({ isActive }) => (isActive ? styles.active : "")}
+              onClick={() => mainContext.setMenuOpen(false)}
+            >
+              <Dices />
+              <span>Sorteador</span>
             </NavLink>
           </li>
 
