@@ -14,10 +14,7 @@ export function usePWAInstall() {
   const [isInstallable, setIsInstallable] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log("1. Listener do PWA registrado");
-
     const handleBeforeInstallPrompt = (e: Event) => {
-      console.log("2. EVENTO DISPAROU COM SUCESSO!");
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       setIsInstallable(true);
@@ -35,7 +32,6 @@ export function usePWAInstall() {
 
     await deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    console.log("Outcome: " + outcome);
 
     if (outcome === "accepted") {
       setIsInstallable(false);
