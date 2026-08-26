@@ -9,6 +9,7 @@ import styles from "./Home.module.css";
 import { useMainContext } from "../hooks/useMainContext.tsx";
 
 // COMPONENTS
+import InstallButton from "../components/InstallButton.tsx";
 
 const Home = () => {
   const { setHeaderTitle, setHeaderSubTitle } = useMainContext();
@@ -19,12 +20,12 @@ const Home = () => {
   }, [setHeaderTitle]);
 
   const sectionHowItWorks = useRef<HTMLDivElement>(null);
-  const scrollToHowItWorks = () => {
-    sectionHowItWorks.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
+  // const scrollToHowItWorks = () => {
+  // sectionHowItWorks.current?.scrollIntoView({
+  // behavior: "smooth",
+  // block: "start",
+  // });
+  // };
 
   return (
     <section className={styles.section_home}>
@@ -80,21 +81,19 @@ const Home = () => {
             <h2>em segundos</h2>
 
             <p>
-              Um gerador e marcador de cartelas. Você cria, imprime ou joga pelo
-              celular marcando os numeros conforme eles são sorteados.
+              Um gerador e marcador de cartelas. Você cria, imprime ou joga pelo celular marcando os numeros conforme
+              eles são sorteados.
             </p>
 
             <ul>
               <li>
                 <Link to="/packs">
                   <Play />
-                  {localStorage.getItem("userId") !== null
-                    ? "Meus maços"
-                    : "Gerar cartelas"}
+                  {localStorage.getItem("userId") !== null ? "Meus maços" : "Gerar cartelas"}
                 </Link>
               </li>
               <li>
-                <a onClick={scrollToHowItWorks}>Detalhes</a>
+                <InstallButton />
               </li>
             </ul>
           </div>
@@ -154,10 +153,7 @@ const Home = () => {
                 <Grid3x3 />
               </i>
               <p>Cartelas únicas</p>
-              <span>
-                Gere quantas cartelas quiser, todas diferentes entre si, em um
-                toque.
-              </span>
+              <span>Gere quantas cartelas quiser, todas diferentes entre si, em um toque.</span>
             </li>
 
             <li>
@@ -165,10 +161,7 @@ const Home = () => {
                 <Check />
               </i>
               <p>Marcação pelo celular</p>
-              <span>
-                Toque nos números para marcar e acompanhe as linhas completas na
-                hora.
-              </span>
+              <span>Toque nos números para marcar e acompanhe as linhas completas na hora.</span>
             </li>
 
             <li>
@@ -176,9 +169,7 @@ const Home = () => {
                 <Printer />
               </i>
               <p>Pronto para imprimir</p>
-              <span>
-                Layout limpo para imprimir ou enviar o arquivo em PDF.
-              </span>
+              <span>Layout limpo para imprimir ou enviar o arquivo em PDF.</span>
             </li>
           </ul>
         </div>

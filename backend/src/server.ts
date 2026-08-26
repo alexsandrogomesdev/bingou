@@ -29,13 +29,7 @@ const authenticate = async (request: any, reply: any) => {
 
 // GLOBALS
 import { type Modalities, allModalities } from "./allModalities";
-import {
-  shuffleArray,
-  getRandomNumber,
-  isObjectEmpty,
-  formatCurrency,
-  formatToDecimal,
-} from "./utils";
+import { shuffleArray, getRandomNumber, isObjectEmpty, formatCurrency, formatToDecimal } from "./utils";
 import { createCardNumbers } from "./functions/createCardNumbers";
 
 // DATABASE
@@ -59,68 +53,63 @@ const responseStatus: ResponseStatus = {
 // ROUTES
 
 // WEBHOOKS
-fastify.post(
-  "/webhook/pagarme",
-  async (request: FastifyRequest, reply: FastifyReply) => {
-    const payload = request.body as any;
+fastify.post("/webhook/pagarme", async (request: FastifyRequest, reply: FastifyReply) => {
+  const payload = request.body as any;
 
-    console.log();
-    console.log("Evento recebido do Pagar.me:", payload);
-    console.log();
+  console.log();
+  console.log("Evento recebido do Pagar.me:", payload);
+  console.log();
 
-    if (
-      payload.type === "order.paid" &&
-      payload.data.id &&
-      payload.data.status
-    ) {
-      const orderId = payload.data.id;
-      const status = payload.data.status;
+  if (payload.type === "order.paid" && payload.data.id && payload.data.status) {
+    const orderId = payload.data.id;
+    const status = payload.data.status;
 
-      if (status !== "paid") {
-        return reply.status(200).send({ received: true });
-      }
-
-      const aMonth = 2592000; // seconds
-      const update = await query(
-        "WITH updated_order AS (UPDATE orders SET status = 1, paid_at = $1 WHERE order_id = $2 AND status = 0 RETURNING user_id) UPDATE users SET due_at = GREATEST(COALESCE(due_at, $1)) + $3 WHERE id = (SELECT user_id FROM updated_order)",
-        [Math.floor(Date.now() / 1000), orderId, aMonth],
-      );
-      if (update.rowCount && update.rowCount > 0) {
-        console.log(`Pedido ${orderId} aprovado com sucesso!`);
-      }
+    if (status !== "paid") {
+      return reply.status(200).send({ received: true });
     }
-    return reply.status(200).send({ received: true });
-  },
-);
+
+    const aMonth = 2592000; // seconds
+    const update = await query(
+      `WITH updated_order AS (
+        UPDATE orders 
+        SET status = 1, paid_at = $1 
+        WHERE order_id = $2 AND status = 0 
+        RETURNING user_id, plan
+      ) 
+      UPDATE users 
+      SET 
+        due_at = GREATEST(COALESCE(users.due_at, $1), $1) + $3, 
+        plan = updated_order.plan 
+      FROM updated_order 
+      WHERE users.id = updated_order.user_id`,
+      [Math.floor(Date.now() / 1000), orderId, aMonth],
+    );
+
+    if (update.rowCount && update.rowCount > 0) {
+      console.log(`Pedido ${orderId} aprovado com sucesso!`);
+    }
+  }
+  return reply.status(200).send({ received: true });
+});
 
 // MODALITIES
-fastify.get(
-  "/modalities",
-  { preHandler: [authenticate] },
-  async (request: FastifyRequest, reply: FastifyReply) => {
-    return reply.status(200).send({
-      message: "ok",
-      result: allModalities,
-    });
-  },
-);
+fastify.get("/modalities", { preHandler: [authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
+  return reply.status(200).send({
+    message: "ok",
+    result: allModalities,
+  });
+});
 
 fastify.get(
   "/orders/:id/status",
   { preHandler: [authenticate] },
-  async (
-    request: FastifyRequest<{ Params: { id: string } }>,
-    reply: FastifyReply,
-  ) => {
+  async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
     const orderId = request.params.id;
 
     let status = 0;
     let plan = 0;
 
-    const getOrder = await query(
-      "SELECT status,plan FROM orders WHERE order_id = $1",
-      [orderId],
-    );
+    const getOrder = await query("SELECT status,plan FROM orders WHERE order_id = $1", [orderId]);
     if (getOrder.rowCount && getOrder.rowCount > 0) {
       status = getOrder.rows[0].status;
       plan = getOrder.rows[0].plan;
@@ -136,10 +125,7 @@ fastify.get(
 fastify.post(
   "/orders/new",
   { preHandler: [authenticate] },
-  async (
-    request: FastifyRequest<{ Body: { plan: number } }>,
-    reply: FastifyReply,
-  ) => {
+  async (request: FastifyRequest<{ Body: { plan: number } }>, reply: FastifyReply) => {
     const plan = request.body.plan;
     if (plan !== 1 && plan !== 2) {
       return reply.status(404).send({
@@ -152,10 +138,7 @@ fastify.post(
     const amount = planPrices[plan - 1];
     const userId = request.user.sub;
 
-    const getUser = await query(
-      "SELECT name, email, phone, document FROM users WHERE id = $1",
-      [userId],
-    );
+    const getUser = await query("SELECT name, email, phone, document FROM users WHERE id = $1", [userId]);
     if (!getUser.rowCount || getUser.rowCount === 0) {
       return reply.status(404).send({
         message: "userNotFound",
@@ -218,14 +201,7 @@ fastify.post(
     const pixCode = result.charges[0].last_transaction.qr_code;
     const saveOrder = await query(
       "INSERT INTO orders (user_id, plan, amount, order_id, status, created_at) VALUES ($1,$2,$3,$4,$5,$6)",
-      [
-        userId,
-        plan,
-        formatToDecimal(amount),
-        orderId,
-        0,
-        Math.floor(Date.now() / 1000),
-      ],
+      [userId, plan, formatToDecimal(amount), orderId, 0, Math.floor(Date.now() / 1000)],
     );
     if (!saveOrder.rowCount || saveOrder.rowCount !== 1) {
       return reply.status(501).send({
@@ -243,32 +219,28 @@ fastify.post(
 );
 
 // USER
-fastify.get(
-  "/user",
-  { preHandler: [authenticate] },
-  async (request: FastifyRequest, reply: FastifyReply) => {
-    const id = request.user.sub;
+fastify.get("/user", { preHandler: [authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
+  const id = request.user.sub;
 
-    interface User {
-      name: string;
-      document: string;
-      email: string;
-      phone: string;
-      plan: number;
-      starts_at: number;
-      due_at: number;
-      status: number;
-    }
-    const result = await query<User>(
-      "SELECT name,document,email,phone,plan,starts_at,due_at,status FROM users WHERE id = $1",
-      [id],
-    );
-    return reply.status(responseStatus.code).send({
-      message: responseStatus.text,
-      result: result.rows[0],
-    });
-  },
-);
+  interface User {
+    name: string;
+    document: string;
+    email: string;
+    phone: string;
+    plan: number;
+    starts_at: number;
+    due_at: number;
+    status: number;
+  }
+  const result = await query<User>(
+    "SELECT name,document,email,phone,plan,starts_at,due_at,status FROM users WHERE id = $1",
+    [id],
+  );
+  return reply.status(responseStatus.code).send({
+    message: responseStatus.text,
+    result: result.rows[0],
+  });
+});
 
 interface CreateUserBody {
   name: string;
@@ -277,165 +249,140 @@ interface CreateUserBody {
   email: string;
   password: string;
 }
-fastify.post(
-  "/user/signup",
-  async (
-    request: FastifyRequest<{ Body: CreateUserBody }>,
-    reply: FastifyReply,
-  ) => {
-    const { name, document, phone, email, password } = request.body;
-    const time = Math.floor(Date.now() / 1000);
+fastify.post("/user/signup", async (request: FastifyRequest<{ Body: CreateUserBody }>, reply: FastifyReply) => {
+  const { name, document, phone, email, password } = request.body;
+  const time = Math.floor(Date.now() / 1000);
 
-    const passwordHash = await bcrypt.hash(password, 10);
+  const passwordHash = await bcrypt.hash(password, 10);
 
-    const result = await query(
-      "INSERT INTO users (name, document, email, password, phone, plan, starts_at, due_at, status, created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id",
-      [
-        name,
-        document,
-        email,
-        passwordHash,
-        phone,
-        0,
-        time, // start_at
-        time, // due_at
-        1, // status
-        time, // created_at
-      ],
-    );
+  const result = await query(
+    "INSERT INTO users (name, document, email, password, phone, plan, starts_at, due_at, status, created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id",
+    [
+      name,
+      document,
+      email,
+      passwordHash,
+      phone,
+      0,
+      time, // start_at
+      time, // due_at
+      1, // status
+      time, // created_at
+    ],
+  );
 
-    if (result.rowCount && result.rowCount > 0) {
-      responseStatus.code = 201;
-    } else {
-      responseStatus.text = "failed";
-      responseStatus.code = 401;
-    }
+  if (result.rowCount && result.rowCount > 0) {
+    responseStatus.code = 201;
+  } else {
+    responseStatus.text = "failed";
+    responseStatus.code = 401;
+  }
 
-    return reply.status(responseStatus.code).send({
-      message: responseStatus.text,
-    });
-  },
-);
+  return reply.status(responseStatus.code).send({
+    message: responseStatus.text,
+  });
+});
 
 interface SignInBody {
   email: string;
   password: string;
 }
-fastify.post(
-  "/user/signin",
-  async (
-    request: FastifyRequest<{ Body: SignInBody }>,
-    reply: FastifyReply,
-  ) => {
-    const { email, password } = request.body;
+fastify.post("/user/signin", async (request: FastifyRequest<{ Body: SignInBody }>, reply: FastifyReply) => {
+  const { email, password } = request.body;
 
-    const result = await query(
-      "SELECT id,name,email,password,plan FROM users WHERE email = $1 LIMIT 1",
-      [email],
-    );
+  const result = await query("SELECT id,name,email,password,plan FROM users WHERE email = $1 LIMIT 1", [email]);
 
-    if (!result.rowCount || result.rowCount === 0) {
-      return reply.status(401).send({
-        message: "Email ou senha inválidos",
-      });
-    }
+  if (!result.rowCount || result.rowCount === 0) {
+    return reply.status(401).send({
+      message: "Email ou senha inválidos",
+    });
+  }
 
-    interface UserSignIn {
-      id: number;
-      name: string;
-      email: string;
-      password: string;
-      plan: number;
-    }
-    const user: UserSignIn = result.rows[0];
+  interface UserSignIn {
+    id: number;
+    name: string;
+    email: string;
+    password: string;
+    plan: number;
+  }
+  const user: UserSignIn = result.rows[0];
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return reply.status(401).send({
-        message: "Email ou senha inválidos",
-      });
-    }
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    return reply.status(401).send({
+      message: "Email ou senha inválidos",
+    });
+  }
 
-    // CREATE JWT TOKEN
-    const token = await reply.jwtSign(
-      { name: user.name, email: user.email },
-      { sub: user.id.toString(), expiresIn: "7d" },
-    );
+  // CREATE JWT TOKEN
+  const token = await reply.jwtSign(
+    { name: user.name, email: user.email },
+    { sub: user.id.toString(), expiresIn: "7d" },
+  );
 
-    return reply
-      .setCookie("token", token, {
-        path: "/", // all routes
-        secure: process.env.NODE_ENV === "production", // https
-        httpOnly: true, // XSS attacks protection
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // CSRF attacks protection
-        maxAge: 7 * 24 * 60 * 60, // expire in 7 days
-      })
-      .status(200)
-      .send({
-        message: "ok",
-        userId: String(user.id),
-        plan: String(user.plan),
-      });
-  },
-);
-fastify.post(
-  "/logout",
-  async (request: FastifyRequest, reply: FastifyReply) => {
-    // CREATE JWT TOKEN
-    return reply
-      .clearCookie("token", {
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        httpOnly: true,
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      })
-      .status(200)
-      .send({
-        message: "ok",
-        userId: "",
-      });
-  },
-);
-fastify.post(
-  "/recover-password",
-  async (
-    request: FastifyRequest<{ Body: { email: string } }>,
-    reply: FastifyReply,
-  ) => {
-    const email = request.body.email;
+  return reply
+    .setCookie("token", token, {
+      path: "/", // all routes
+      secure: process.env.NODE_ENV === "production", // https
+      httpOnly: true, // XSS attacks protection
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // CSRF attacks protection
+      maxAge: 7 * 24 * 60 * 60, // expire in 7 days
+    })
+    .status(200)
+    .send({
+      message: "ok",
+      userId: String(user.id),
+      plan: String(user.plan),
+    });
+});
+fastify.post("/logout", async (request: FastifyRequest, reply: FastifyReply) => {
+  // CREATE JWT TOKEN
+  return reply
+    .clearCookie("token", {
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    })
+    .status(200)
+    .send({
+      message: "ok",
+      userId: "",
+    });
+});
+fastify.post("/recover-password", async (request: FastifyRequest<{ Body: { email: string } }>, reply: FastifyReply) => {
+  const email = request.body.email;
 
-    const getUser = await query("SELECT id FROM users WHERE email = $1", [
-      email,
-    ]);
-    if (!getUser.rowCount || !getUser.rows[0].id) {
-      return reply.status(401).send({
-        message: "ok",
-      });
-    }
-    const userId = getUser.rows[0].id;
-
-    const token = crypto.randomBytes(64).toString("base64url");
-
-    const insertToken = await query(
-      "INSERT INTO recovery_tokens (user_id, token, created_at) VALUES ($1, $2, $3)",
-      [userId, token, Math.floor(Date.now() / 1000)],
-    );
-
-    const resetLink = `https://bingou.alexsandrogomes.dev/reset-password?token=${token}`;
-    const html = `<h3>Você solicitou uma recuperação de senha.</h3><br><br><p>Clique no link abaixo para redefinir sua senha: <a href="${resetLink}">${resetLink}</a></p>`;
-    const from = "Bingou";
-    const subject = "Recuperação de Senha";
-    await emailQueue.add(
-      "sendResetPassword",
-      { email, from, subject, html },
-      { attempts: 3, backoff: { type: "exponential", delay: 5000 } },
-    );
-
-    return reply.status(200).send({
+  const getUser = await query("SELECT id FROM users WHERE email = $1", [email]);
+  if (!getUser.rowCount || !getUser.rows[0].id) {
+    return reply.status(401).send({
       message: "ok",
     });
-  },
-);
+  }
+  const userId = getUser.rows[0].id;
+
+  const token = crypto.randomBytes(64).toString("base64url");
+
+  const insertToken = await query("INSERT INTO recovery_tokens (user_id, token, created_at) VALUES ($1, $2, $3)", [
+    userId,
+    token,
+    Math.floor(Date.now() / 1000),
+  ]);
+
+  const resetLink = `https://bingou.alexsandrogomes.dev/reset-password?token=${token}`;
+  const html = `<h3>Você solicitou uma recuperação de senha.</h3><br><br><p>Clique no link abaixo para redefinir sua senha: <a href="${resetLink}">${resetLink}</a></p>`;
+  const from = "Bingou";
+  const subject = "Recuperação de Senha";
+  await emailQueue.add(
+    "sendResetPassword",
+    { email, from, subject, html },
+    { attempts: 3, backoff: { type: "exponential", delay: 5000 } },
+  );
+
+  return reply.status(200).send({
+    message: "ok",
+  });
+});
 fastify.patch(
   "/change-password",
   async (
@@ -445,17 +392,14 @@ fastify.patch(
     reply: FastifyReply,
   ) => {
     const { token, password } = request.body;
-    const checkToken = await query(
-      "SELECT user_id,token FROM recovery_tokens WHERE token = $1 AND created_at > $2",
-      [token, Math.floor(Date.now() / 1000) - 900],
-    );
+    const checkToken = await query("SELECT user_id,token FROM recovery_tokens WHERE token = $1 AND created_at > $2", [
+      token,
+      Math.floor(Date.now() / 1000) - 900,
+    ]);
     if (token.length >= 64 && checkToken.rowCount && checkToken.rowCount > 0) {
       const userId = checkToken.rows[0].user_id;
       const passwordHash = await bcrypt.hash(password, 10);
-      const changePassword = await query(
-        "UPDATE users SET password = $1 WHERE id = $2",
-        [passwordHash, userId],
-      );
+      const changePassword = await query("UPDATE users SET password = $1 WHERE id = $2", [passwordHash, userId]);
       if (changePassword.rowCount && changePassword.rowCount > 0) {
         await query("DELETE FROM recovery_tokens WHERE user_id = $1", [userId]);
         return reply.status(200).send({
@@ -474,40 +418,29 @@ fastify.patch(
 );
 
 // PACKSauthenticate
-fastify.get(
-  "/packs",
-  { preHandler: [authenticate] },
-  async (request: FastifyRequest, reply: FastifyReply) => {
-    const userId = request.user.sub;
+fastify.get("/packs", { preHandler: [authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
+  const userId = request.user.sub;
 
-    const packs = await query(
-      "SELECT p.id, p.name, p.created_at, COUNT(c.id)::bigint AS cards FROM packs p LEFT JOIN cards c ON c.pack_id = p.id WHERE p.user_id = $1 GROUP BY p.id ORDER BY p.created_at DESC",
-      [userId],
-    );
+  const packs = await query(
+    "SELECT p.id, p.name, p.created_at, COUNT(c.id)::bigint AS cards FROM packs p LEFT JOIN cards c ON c.pack_id = p.id WHERE p.user_id = $1 GROUP BY p.id ORDER BY p.created_at DESC",
+    [userId],
+  );
 
-    const userDetails = await query(
-      "SELECT plan,due_at FROM users WHERE id = $1",
-      [userId],
-    );
-    let plan = 0;
-    let due_at = Math.floor(Date.now() / 1000);
-    if (
-      userDetails.rowCount &&
-      userDetails.rows[0].plan &&
-      userDetails.rows[0].due_at
-    ) {
-      plan = userDetails.rows[0].plan;
-      due_at = userDetails.rows[0].due_at;
-    }
+  const userDetails = await query("SELECT plan,due_at FROM users WHERE id = $1", [userId]);
+  let plan = 0;
+  let due_at = Math.floor(Date.now() / 1000);
+  if (userDetails.rowCount && userDetails.rows[0].plan && userDetails.rows[0].due_at) {
+    plan = userDetails.rows[0].plan;
+    due_at = userDetails.rows[0].due_at;
+  }
 
-    return reply.status(200).send({
-      message: "ok",
-      result: packs.rowCount && packs.rowCount > 0 ? packs.rows : [],
-      plan: plan,
-      due_at: due_at,
-    });
-  },
-);
+  return reply.status(200).send({
+    message: "ok",
+    result: packs.rowCount && packs.rowCount > 0 ? packs.rows : [],
+    plan: plan,
+    due_at: due_at,
+  });
+});
 interface NewPackBody {
   name: string;
   qty: number;
@@ -516,10 +449,7 @@ const plans: Array<string> = ["Gratuito", "Basico", "Completo"];
 fastify.post(
   "/packs/new",
   { preHandler: authenticate },
-  async (
-    request: FastifyRequest<{ Body: NewPackBody }>,
-    reply: FastifyReply,
-  ) => {
+  async (request: FastifyRequest<{ Body: NewPackBody }>, reply: FastifyReply) => {
     const userId = request.user.sub;
     const name = request.body.name;
     let qty = request.body.qty;
@@ -530,10 +460,7 @@ fastify.post(
 
     let limit: number = 50;
 
-    const userDetails = await query(
-      "SELECT plan,due_at FROM users WHERE id = $1",
-      [userId],
-    );
+    const userDetails = await query("SELECT plan,due_at FROM users WHERE id = $1", [userId]);
     if (Number(userDetails.rows[0].due_at) > Math.floor(Date.now() / 1000)) {
       if (userDetails.rows[0].plan === 1) {
         // BASIC
@@ -554,16 +481,7 @@ fastify.post(
 
     const createPack = await query(
       "INSERT INTO packs (user_id, name, modalities, balls, goods, winnings, starts_at, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
-      [
-        userId,
-        name,
-        JSON.stringify(mods),
-        balls,
-        JSON.stringify([]),
-        JSON.stringify([]),
-        time,
-        time,
-      ],
+      [userId, name, JSON.stringify(mods), balls, JSON.stringify([]), JSON.stringify([]), time, time],
     );
     const packId: number = createPack.rows[0].id;
 
@@ -639,10 +557,7 @@ fastify.post(
 fastify.get(
   "/packs/:id",
   { preHandler: [authenticate] },
-  async (
-    request: FastifyRequest<{ Params: { id: number } }>,
-    reply: FastifyReply,
-  ) => {
+  async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
     const userId = request.user.sub;
     const packId = request.params.id;
 
@@ -656,10 +571,7 @@ fastify.get(
       });
     }
 
-    const cards = await query(
-      "SELECT id, numbers FROM cards WHERE pack_id = $1 AND user_id = $2",
-      [packId, userId],
-    );
+    const cards = await query("SELECT id, numbers FROM cards WHERE pack_id = $1 AND user_id = $2", [packId, userId]);
 
     return reply.status(200).send({
       message: "ok",
@@ -704,15 +616,10 @@ interface Winnings {
 fastify.patch(
   "/packs/:id",
   { preHandler: [authenticate] },
-  async (
-    request: FastifyRequest<{ Body: PacksPatchBody; Params: { id: number } }>,
-    reply: FastifyReply,
-  ) => {
+  async (request: FastifyRequest<{ Body: PacksPatchBody; Params: { id: number } }>, reply: FastifyReply) => {
     const { balls, goods, winnings, modalities } = request.body;
 
-    const winningsList: Winnings[] = isObjectEmpty(winnings)
-      ? []
-      : (winnings as Winnings[]);
+    const winningsList: Winnings[] = isObjectEmpty(winnings) ? [] : (winnings as Winnings[]);
 
     const packId = request.params.id;
     const userId = request.user.sub;
@@ -765,16 +672,10 @@ fastify.patch(
 fastify.delete(
   "/packs/:id",
   { preHandler: [authenticate] },
-  async (
-    request: FastifyRequest<{ Params: { id: number } }>,
-    reply: FastifyReply,
-  ) => {
+  async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
     const userId = request.user.sub;
     const packId = request.params.id;
-    const removePack = await query(
-      "DELETE FROM packs WHERE id = $1 AND user_id = $2",
-      [packId, userId],
-    );
+    const removePack = await query("DELETE FROM packs WHERE id = $1 AND user_id = $2", [packId, userId]);
     if (removePack.rowCount === 1) {
       return reply.status(200).send({
         message: "ok",
@@ -790,10 +691,7 @@ fastify.delete(
 fastify.post(
   "/pack/:id/addCards",
   { preHandler: [authenticate] },
-  async (
-    request: FastifyRequest<{ Body: { qty: number }; Params: { id: number } }>,
-    reply: FastifyReply,
-  ) => {
+  async (request: FastifyRequest<{ Body: { qty: number }; Params: { id: number } }>, reply: FastifyReply) => {
     const qty = request.body.qty;
     const packId = request.params.id;
     const userId = request.user.sub;
@@ -863,17 +761,11 @@ fastify.post(
 fastify.delete(
   "/cards/:id",
   { preHandler: [authenticate] },
-  async (
-    request: FastifyRequest<{ Params: { id: number } }>,
-    reply: FastifyReply,
-  ) => {
+  async (request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) => {
     const userId = request.user.sub;
     const id = request.params.id;
 
-    const removeCard = await query(
-      "DELETE FROM cards WHERE id = $1 AND user_id = $2",
-      [id, userId],
-    );
+    const removeCard = await query("DELETE FROM cards WHERE id = $1 AND user_id = $2", [id, userId]);
     if (removeCard.rowCount === 1) {
       return reply.status(200).send({
         message: "ok",
@@ -900,10 +792,11 @@ fastify.patch(
     const cardId = request.params.id;
     const userId = request.user.sub;
 
-    const update = await query(
-      `UPDATE cards SET numbers = $1 WHERE id = $2 AND user_id = $3`,
-      [new Uint8Array(numbers), cardId, userId],
-    );
+    const update = await query(`UPDATE cards SET numbers = $1 WHERE id = $2 AND user_id = $3`, [
+      new Uint8Array(numbers),
+      cardId,
+      userId,
+    ]);
 
     return reply.status(200).send({
       message: update.rowCount && update.rowCount === 1 ? "ok" : "failed",
