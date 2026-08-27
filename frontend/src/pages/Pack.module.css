@@ -75,7 +75,7 @@
   text-decoration: none;
   margin-right: auto;
   position: fixed;
-  bottom: calc(20px + env(safe-area-inset-bottom));
+  bottom: calc(10px + env(safe-area-inset-bottom));
   right: 10px;
   z-index: 1;
   color: #fff;
@@ -89,6 +89,8 @@
   flex-flow: column;
   align-items: center;
   justify-content: center;
+  border: none;
+  cursor: pointer;
 }
 .back svg {
   min-width: 32px;

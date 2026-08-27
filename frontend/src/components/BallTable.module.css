@@ -108,19 +108,21 @@
     top: 0;
     left: 0;
     z-index: 3;
-    background-color: rgba(0, 0, 0, 0.1);
+    padding: 17px;
+    background-color: rgba(7, 7, 7, 0.7);
   }
   .div_balls_table {
     display: flex;
     flex-flow: column;
     background-color: #fff;
-    min-height: calc(100dvh - 50px);
-    max-height: calc(100dvh - 50px);
+    min-height: calc(100vh - 50px);
+    max-height: calc(100vh - 50px);
+    min-height: calc(100dvh - 50px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    max-height: calc(100dvh - 50px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    margin: calc(25px + env(safe-area-inset-top)) auto calc(25px + env(safe-area-inset-bottom));
+    min-width: calc(100dvw - 50px);
+    max-width: calc(100dvw - 50px);
     padding: 8px;
-    min-width: calc(100% - 34px);
-    max-width: calc(100% - 34px);
-    max-height: 180px;
-    margin: 25px auto 20px;
     border: solid 1px #e7e7e7;
     border-radius: 12px;
   }

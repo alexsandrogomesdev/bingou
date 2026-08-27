@@ -33,16 +33,23 @@
   align-items: center;
   min-height: 63px;
   max-height: 63px;
-  border-bottom: solid 1px #e7e7e7;
   gap: 10px;
   justify-content: center;
+  background-color: #24af60;
+}
+.logo {
+  min-width: 32px;
+  max-width: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  border-radius: 32px;
 }
 .menu_header > svg {
-  color: #24af60;
+  color: #fff;
 }
 .menu_header > h2 {
   font-size: 18px;
-  color: #282930;
+  color: #fff;
 }
 .menu_ul {
   display: flex;
@@ -98,9 +105,7 @@
     border-radius: 12px;
     overflow: hidden;
     top: 63px;
-    left: calc(
-      (((100vw - 1100px) + (100vw - 1100px)) - ((100vw - 1100px) / 2)) + 23px
-    );
+    left: calc((((100vw - 1100px) + (100vw - 1100px)) - ((100vw - 1100px) / 2)) + 23px);
   }
   .menu_div {
     min-width: 100%;

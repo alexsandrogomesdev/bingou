@@ -49,6 +49,9 @@ main {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+html {
+  overflow-x: hidden !important;
+}
 body {
   overflow-x: hidden;
 }

@@ -1,12 +1,6 @@
 import { useEffect, useState, useCallback, useRef, useMemo, memo } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import {
-  GamepadDirectional,
-  Gift,
-  Grid3x3,
-  Plus,
-  ChevronLeft,
-} from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
+import { GamepadDirectional, Gift, Grid3x3, Plus } from "lucide-react";
 
 // STYLES
 import styles from "./Pack.module.css";
@@ -55,9 +49,7 @@ const Pack = () => {
   const [cardsAdded, setCardsAdded] = useState<boolean>(false);
   const [requestIsDone, setRequestIsDone] = useState<boolean>(false);
   const [goods, setGoods] = useState<Goods[]>([]);
-  const [cardsWithGoods, setCardsWithGoods] = useState<Set<number>>(
-    new Set([]),
-  );
+  const [cardsWithGoods, setCardsWithGoods] = useState<Set<number>>(new Set([]));
 
   const prevStateRef = useRef({ winnings, balls, modalities, goods });
 
@@ -89,23 +81,13 @@ const Pack = () => {
       setBalls(new Set(response.result.balls.data));
       setBallsToRender(new Set(response.result.balls.data));
       setGoods(response.result.goods);
-      setCardsWithGoods(
-        new Set(response.result.goods.map((item) => item.card)),
-      );
+      setCardsWithGoods(new Set(response.result.goods.map((item) => item.card)));
       setWinnings(response.result.winnings);
       setModalities(response.result.modalities);
       setHeaderSubTitle(`${response.result.cards.length} cartelas`);
     };
     getPack();
-  }, [
-    id,
-    request,
-    cardsAdded,
-    navigate,
-    setHeaderTitle,
-    setHeaderSubTitle,
-    setAlert,
-  ]);
+  }, [id, request, cardsAdded, navigate, setHeaderTitle, setHeaderSubTitle, setAlert]);
 
   useEffect(() => {
     const prev = prevStateRef.current;
@@ -252,28 +234,14 @@ const Pack = () => {
 
       prevStateRef.current = { winnings, balls, modalities, goods };
     },
-    [
-      balls,
-      cards,
-      modalities,
-      goods,
-      winnings,
-      prevStateRef,
-      setGoods,
-      setBallsToRender,
-    ],
+    [balls, cards, modalities, goods, winnings, prevStateRef, setGoods, setBallsToRender],
   );
 
   const handleRemoveCard = useCallback(
     async (id: number): Promise<boolean> => {
       if (!confirm(`A cartela (${id}) será removida`)) return false;
 
-      const removeCard: { message: string } = await request(
-        `/cards/${id}`,
-        "DELETE",
-        {},
-        {},
-      );
+      const removeCard: { message: string } = await request(`/cards/${id}`, "DELETE", {}, {});
       if (removeCard.message === "ok") {
         setAlert({
           id: Date.now(),
@@ -316,26 +284,13 @@ const Pack = () => {
   return (
     <>
       {showAddCards && (
-        <AddCards
-          packId={id ? id : ""}
-          setShowAddCards={setShowAddCards}
-          setCardsAdded={setCardsAdded}
-        />
+        <AddCards packId={id ? id : ""} setShowAddCards={setShowAddCards} setCardsAdded={setCardsAdded} />
       )}
       {showWinnings && (
-        <WinningCards
-          balls={balls}
-          winnings={winnings}
-          setShowWinnings={setShowWinnings}
-          cards={cards}
-        />
+        <WinningCards balls={balls} winnings={winnings} setShowWinnings={setShowWinnings} cards={cards} />
       )}
       {showModalities && (
-        <Modalities
-          setShowModalities={setShowModalities}
-          modalities={modalities}
-          setModalities={setModalities}
-        />
+        <Modalities setShowModalities={setShowModalities} modalities={modalities} setModalities={setModalities} />
       )}
       <section className={styles.section_pack}>
         <div className={styles.div_pack}>
@@ -344,18 +299,12 @@ const Pack = () => {
               <GamepadDirectional />
               Padrões
             </button>
-            <button
-              onClick={() => setShowBallTable(true)}
-              disabled={showBallTable}
-            >
+            <button onClick={() => setShowBallTable(true)} disabled={showBallTable}>
               <Grid3x3 />
               Bolas
             </button>
             <button onClick={() => setShowWinnings(true)}>
               <Gift />
-            </button>
-            <button onClick={handleShowAddCards}>
-              <Plus />
             </button>
             <ExportButton cards={cards} packName={packName} />
           </div>
@@ -370,10 +319,7 @@ const Pack = () => {
           )}
 
           {!requestIsDone ? (
-            <Waiting
-              text={"Buscando cartelas do maço..."}
-              style={{ marginTop: 120 }}
-            />
+            <Waiting text={"Buscando cartelas do maço..."} style={{ marginTop: 120 }} />
           ) : (
             <>
               {cards.length === 0 ? (
@@ -385,7 +331,9 @@ const Pack = () => {
                 </div>
               ) : (
                 <div
-                  className={`${styles.cards} ${(showWinnings || showBallTable || showModalities) && styles.blockScroll}`}
+                  className={`${styles.cards} ${
+                    (showWinnings || showBallTable || showModalities) && styles.blockScroll
+                  }`}
                 >
                   {cards.map((card, index) => (
                     <Card
@@ -404,9 +352,9 @@ const Pack = () => {
               )}
             </>
           )}
-          <Link to="/packs" className={styles.back}>
-            <ChevronLeft />
-          </Link>
+          <button className={styles.back} onClick={handleShowAddCards}>
+            <Plus />
+          </button>
         </div>
       </section>
     </>

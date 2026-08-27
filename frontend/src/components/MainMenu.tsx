@@ -1,13 +1,4 @@
-import {
-  Boxes,
-  UserRound,
-  Globe,
-  UserKey,
-  House,
-  LogOut,
-  HandCoins,
-  Dices,
-} from "lucide-react";
+import { Boxes, UserRound, UserKey, House, LogOut, HandCoins, Dices } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { memo } from "react";
 
@@ -35,12 +26,10 @@ const MainMenu = () => {
   };
 
   return (
-    <section
-      className={`${styles.menu_section} ${mainContext.menuOpen ? styles.menu_open : styles.menu_closed}`}
-    >
+    <section className={`${styles.menu_section} ${mainContext.menuOpen ? styles.menu_open : styles.menu_closed}`}>
       <div className={styles.menu_div}>
         <div className={styles.menu_header}>
-          <Globe />
+          <img src="/logo192.png" width={32} height={32} className={styles.logo} />
           <h2>Bingou</h2>
         </div>
 
@@ -55,11 +44,7 @@ const MainMenu = () => {
               <span>Inicio</span>
             </NavLink>
           </li>
-          <li
-            className={
-              localStorage.getItem("userId") === null ? styles.hide : ""
-            }
-          >
+          <li className={localStorage.getItem("userId") === null ? styles.hide : ""}>
             <NavLink
               to="/packs"
               className={({ isActive }) => (isActive ? styles.active : "")}
@@ -69,11 +54,7 @@ const MainMenu = () => {
               <span>Maços</span>
             </NavLink>
           </li>
-          <li
-            className={
-              localStorage.getItem("userId") === null ? styles.hide : ""
-            }
-          >
+          <li className={localStorage.getItem("userId") === null ? styles.hide : ""}>
             <NavLink
               to="/profile"
               className={({ isActive }) => (isActive ? styles.active : "")}
@@ -84,11 +65,7 @@ const MainMenu = () => {
             </NavLink>
           </li>
 
-          <li
-            className={
-              localStorage.getItem("userId") !== null ? styles.hide : ""
-            }
-          >
+          <li className={localStorage.getItem("userId") !== null ? styles.hide : ""}>
             <NavLink
               to="/signin"
               className={({ isActive }) => (isActive ? styles.active : "")}
@@ -121,11 +98,7 @@ const MainMenu = () => {
             </NavLink>
           </li>
 
-          <li
-            className={
-              localStorage.getItem("userId") === null ? styles.hide : ""
-            }
-          >
+          <li className={localStorage.getItem("userId") === null ? styles.hide : ""}>
             <NavLink to="/" onClick={handleLogOut}>
               <LogOut />
               <span>Sair</span>
@@ -135,9 +108,7 @@ const MainMenu = () => {
       </div>
       <div
         className={styles.menu_div_close}
-        onClick={() =>
-          mainContext.setMenuOpen(mainContext.menuOpen ? false : true)
-        }
+        onClick={() => mainContext.setMenuOpen(mainContext.menuOpen ? false : true)}
       ></div>
     </section>
   );

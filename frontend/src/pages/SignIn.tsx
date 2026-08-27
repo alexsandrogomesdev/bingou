@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, memo, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 // STYLES
@@ -21,6 +21,11 @@ const SignIn = () => {
   const [password, setPassword] = useState<string>();
   const [typePassword, setTypePassword] = useState<string>("password");
   const [signing, setSigning] = useState<boolean>(false);
+
+  useEffect(() => {
+    mainContext.setHeaderTitle("Acessar");
+    mainContext.setHeaderSubTitle("");
+  }, [mainContext]);
 
   const handleSignIn = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -60,9 +65,7 @@ const SignIn = () => {
 
   return (
     <>
-      {showForgotPass && (
-        <ForgotPassword setShowForgotPass={setShowForgotPass} />
-      )}
+      {showForgotPass && <ForgotPassword setShowForgotPass={setShowForgotPass} />}
 
       <section className={styles.section_signin}>
         <form className={styles.form} onSubmit={handleSignIn}>
@@ -88,10 +91,7 @@ const SignIn = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <span
-              className={styles.forgot_pass}
-              onClick={() => setShowForgotPass(true)}
-            >
+            <span className={styles.forgot_pass} onClick={() => setShowForgotPass(true)}>
               esqueci minha senha
             </span>
             {typePassword === "password" ? (

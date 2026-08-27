@@ -1,6 +1,8 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
-import { StatusBar } from "@capacitor/status-bar"; // Ajustado para compatibilidade nativa
+import { App as CapacitorApp } from "@capacitor/app";
+import { Capacitor } from "@capacitor/core";
+import { SplashScreen } from "@capacitor/splash-screen";
 
 import "./App.css";
 
@@ -14,6 +16,8 @@ import Alert from "./components/Alert.tsx";
 import MainMenu from "./components/MainMenu.tsx";
 import Header from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
+
+import { sleep } from "./utils/functions.ts";
 
 // PAGES
 const Randomizer = lazy(() => import("./pages/Randomizer.tsx"));
@@ -29,22 +33,40 @@ const Home = lazy(() => import("./pages/Home.tsx"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword.tsx"));
 
 function App() {
-  const mainContext = useMainContext();
-  const hideOnRoutes: Array<string> = [];
-  const location = useLocation();
-  const showComponent = !hideOnRoutes.includes(location.pathname);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const ativarTelaCheiaAbsoluta = async () => {
-      try {
-        // Força a ocultação total da barra através da API principal
-        await StatusBar.hide();
-      } catch (error) {
-        console.log("Ambiente Web / Localhost detectado");
-      }
+    const initApp = async () => {
+      if (localStorage.getItem("userId") !== null) navigate("/packs");
+      await sleep(1500);
+      await SplashScreen.hide();
     };
 
-    ativarTelaCheiaAbsoluta();
+    initApp();
   }, []);
+
+  const mainContext = useMainContext();
+  const hideOnRoutes: Array<string> = [];
+
+  const location = useLocation();
+  const showComponent = !hideOnRoutes.includes(location.pathname);
+
+  useEffect(() => {
+    const listenerPromise = CapacitorApp.addListener("backButton", () => {
+      const rootRoutes = ["/", "/home", "/login"];
+
+      if (rootRoutes.includes(location.pathname) && Capacitor.isNativePlatform()) {
+        CapacitorApp.exitApp();
+      } else {
+        navigate(-1);
+      }
+    });
+
+    return () => {
+      listenerPromise.then((handler) => handler.remove());
+    };
+  }, [location.pathname, navigate]);
+
   return (
     <>
       {mainContext.alert.type !== "" && <Alert />}

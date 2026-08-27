@@ -10,7 +10,7 @@
   border-radius: 12px;
   min-width: calc(100% - 34px);
   max-width: calc(100% - 34px);
-  top: 17px;
+  bottom: calc(17px + env(safe-area-inset-top));
 }
 .alert_error {
   background-color: #ec4848;

@@ -16,8 +16,13 @@
   background-color: #fff;
   border-radius: 12px;
   padding: 16px;
-  min-height: calc(100dvh - 34px);
-  max-height: calc(100dvh - 34px);
+  min-height: calc(100vh - 50px);
+  max-height: calc(100vh - 50px);
+  min-height: calc(100dvh - 50px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  max-height: calc(100dvh - 50px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  margin: calc(25px + env(safe-area-inset-top)) auto calc(25px + env(safe-area-inset-bottom));
+  min-width: calc(100dvw - 50px);
+  max-width: calc(100dvw - 50px);
   overflow: hidden;
 }
 .div_modalities_header {

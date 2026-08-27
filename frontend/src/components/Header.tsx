@@ -17,34 +17,26 @@ const Header = () => {
   return (
     <>
       {hideHeader_ && (
-        <header
-          className={`${styles.header} ${hideMenu_ ? styles.header_fixed : ""}`}
-        >
+        <header className={`${styles.header} ${hideMenu_ ? styles.header_fixed : ""}`}>
           <div className={styles.div_header}>
             <Link to="/">
-              <p>B</p>
+              <img src="/logo192.png" width={32} height={32} className={styles.logo} />
             </Link>
 
             <div>
               <h2 className={styles.header_title}>{mainContext.headerTitle}</h2>
-              <span className={styles.header_sub_title}>
-                {mainContext.headerSubTitle}
-              </span>
+              <span className={styles.header_sub_title}>{mainContext.headerSubTitle}</span>
             </div>
             {hideMenu_ &&
               (!mainContext.menuOpen ? (
                 <Menu
                   className={styles.menu_icon}
-                  onClick={() =>
-                    mainContext.setMenuOpen(mainContext.menuOpen ? false : true)
-                  }
+                  onClick={() => mainContext.setMenuOpen(mainContext.menuOpen ? false : true)}
                 />
               ) : (
                 <X
                   className={styles.menu_icon}
-                  onClick={() =>
-                    mainContext.setMenuOpen(mainContext.menuOpen ? false : true)
-                  }
+                  onClick={() => mainContext.setMenuOpen(mainContext.menuOpen ? false : true)}
                 />
               ))}
           </div>

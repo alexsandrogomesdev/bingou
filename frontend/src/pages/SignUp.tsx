@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, memo, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 // STYLES
@@ -15,6 +15,11 @@ const SignUp = () => {
   const mainContext = useMainContext();
   const { request } = useFetch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    mainContext.setHeaderTitle("Cadastrar");
+    mainContext.setHeaderSubTitle("");
+  }, [mainContext]);
 
   const [name, setName] = useState<string>("");
   const [document, setDocument] = useState<string>("");
