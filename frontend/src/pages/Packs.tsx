@@ -125,7 +125,6 @@ const Packs = () => {
               <section className={`${styles.section_fixed} ${requestIsDone ? styles.show : styles.hide}`}>
                 <button className={styles.button_new_pack} onClick={() => setSectionNewPack(true)}>
                   <Plus />
-                  Novo
                 </button>
                 <article
                   className={`${styles.article_buy_plan} ${plan === 0 || dueAt < timeStamp ? styles.show : styles.hide}`}

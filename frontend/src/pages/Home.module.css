@@ -16,12 +16,7 @@
 .div_1 {
   display: flex;
   flex-flow: column;
-  background-image: radial-gradient(
-    circle at 50% 5%,
-    #c5ffe2 0%,
-    #c5ffe2 17%,
-    transparent 50%
-  );
+  background-image: radial-gradient(circle at 50% 5%, #c5ffe2 0%, #c5ffe2 17%, transparent 50%);
   max-width: 100%;
 }
 
@@ -272,7 +267,7 @@
 }
 .whatsapp_button {
   position: fixed;
-  bottom: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom));
   right: 20px;
 }
 @media screen and (min-width: 768px) {

@@ -16,6 +16,8 @@ body,
 #root {
   background-color: #ffffff;
   min-height: 100dvh;
+
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 button {
@@ -41,4 +43,12 @@ footer {
 }
 svg {
   stroke-width: 1.5;
+}
+
+main {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+body {
+  overflow-x: hidden;
 }

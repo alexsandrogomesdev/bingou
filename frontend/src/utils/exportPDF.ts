@@ -1,14 +1,14 @@
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import download from "downloadjs";
 
+import { Capacitor } from "@capacitor/core";
+import { Filesystem, Directory } from "@capacitor/filesystem";
+import { Share } from "@capacitor/share";
+
 import type { Cards } from "../types/pack";
 import { dateFromUnix } from "./functions";
 
-export const exportPDF = async (
-  cards: Cards[],
-  progress: (porcentagem: number) => void,
-  packName: string,
-) => {
+export const exportPDF = async (cards: Cards[], progress: (porcentagem: number) => void, packName: string) => {
   const pdfDoc = await PDFDocument.create();
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
@@ -149,9 +149,32 @@ export const exportPDF = async (
 
   const pdfBytes = await pdfDoc.save();
 
-  download(
-    pdfBytes,
-    `${packName.replaceAll(" ", "_")}_${Date.now()}.pdf`,
-    "application/pdf",
-  );
+  const fileName = `${packName.replaceAll(" ", "_")}_${Date.now()}.pdf`;
+
+  if (Capacitor.isNativePlatform()) {
+    const base64Data = arrayBufferToBase64(pdfBytes);
+    const savedFile = await Filesystem.writeFile({
+      path: fileName,
+      data: base64Data,
+      directory: Directory.Cache,
+    });
+    await Share.share({
+      title: "Exportar Cartelas",
+      text: `Segue o arquivo ${fileName}`,
+      url: savedFile.uri,
+      dialogTitle: "Salvar ou compartilhar PDF",
+    });
+  } else {
+    // Mantém o comportamento original no Navegador Web
+    download(pdfBytes, fileName, "application/pdf");
+  }
 };
+function arrayBufferToBase64(buffer: Uint8Array): string {
+  let binary = "";
+  const bytes = new Uint8Array(buffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return window.btoa(binary);
+}
