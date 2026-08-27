@@ -14,6 +14,9 @@ const config: CapacitorConfig = {
     android: {
       adjustMarginsForEdgeToEdge: false,
     },
+    AndroidEdgeToEdgeSupport: {
+      disable: true,
+    },
   },
 };
 

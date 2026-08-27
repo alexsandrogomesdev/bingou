@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import { StatusBar } from "@capacitor/status-bar"; // Ajustado para compatibilidade nativa
 
 import "./App.css";
 
@@ -32,7 +33,18 @@ function App() {
   const hideOnRoutes: Array<string> = [];
   const location = useLocation();
   const showComponent = !hideOnRoutes.includes(location.pathname);
+  useEffect(() => {
+    const ativarTelaCheiaAbsoluta = async () => {
+      try {
+        // Força a ocultação total da barra através da API principal
+        await StatusBar.hide();
+      } catch (error) {
+        console.log("Ambiente Web / Localhost detectado");
+      }
+    };
 
+    ativarTelaCheiaAbsoluta();
+  }, []);
   return (
     <>
       {mainContext.alert.type !== "" && <Alert />}
