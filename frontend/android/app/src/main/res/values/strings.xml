@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">bingou</string>
-    <string name="title_activity_main">bingou</string>
-    <string name="package_name">bingou.alexsandrogomes.dev</string>
-    <string name="custom_url_scheme">bingou.alexsandrogomes.dev</string>
-</resources>
