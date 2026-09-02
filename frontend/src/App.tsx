@@ -16,7 +16,7 @@ import Alert from "./components/Alert.tsx";
 import MainMenu from "./components/MainMenu.tsx";
 import Header from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
-
+ 
 import { sleep } from "./utils/functions.ts";
 
 // PAGES
