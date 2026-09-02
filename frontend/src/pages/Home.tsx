@@ -8,7 +8,7 @@ import styles from "./Home.module.css";
 // HOOKS
 import { useMainContext } from "../hooks/useMainContext.tsx";
 
-// COMPONENTS
+// COMPONENTS 
 import InstallButton from "../components/InstallButton.tsx";
 
 const Home = () => {
