@@ -1,4 +1,4 @@
-import { createContext, useState, useMemo, type ReactNode } from "react";
+import { createContext, useState, useMemo, type ReactNode, type Dispatch, type SetStateAction } from "react";
 
 export type AlertObject = {
   id: number;
@@ -7,26 +7,27 @@ export type AlertObject = {
 };
 export type MainContextData = {
   contextStatus: string;
-  setContextStatus: React.Dispatch<React.SetStateAction<string>>;
+  setContextStatus: Dispatch<SetStateAction<string>>;
   menuOpen: boolean;
-  setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setMenuOpen: Dispatch<SetStateAction<boolean>>;
+  getCards: boolean;
+  setGetCards: Dispatch<SetStateAction<boolean>>;
   alert: AlertObject;
-  setAlert: React.Dispatch<React.SetStateAction<AlertObject>>;
+  setAlert: Dispatch<SetStateAction<AlertObject>>;
   userId: number | null;
-  setUserId: React.Dispatch<React.SetStateAction<number | null>>;
+  setUserId: Dispatch<SetStateAction<number | null>>;
   headerTitle: string;
-  setHeaderTitle: React.Dispatch<React.SetStateAction<string>>;
+  setHeaderTitle: Dispatch<SetStateAction<string>>;
   headerSubTitle: string;
-  setHeaderSubTitle: React.Dispatch<React.SetStateAction<string>>;
+  setHeaderSubTitle: Dispatch<SetStateAction<string>>;
 };
 
-export const MainContext = createContext<MainContextData>(
-  {} as MainContextData,
-);
+export const MainContext = createContext<MainContextData>({} as MainContextData);
 
 export const MainContextProvider = ({ children }: { children: ReactNode }) => {
   const [contextStatus, setContextStatus] = useState<string>("Main Context...");
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [getCards, setGetCards] = useState<boolean>(true);
   const [userId, setUserId] = useState<number | null>(null);
   const [headerTitle, setHeaderTitle] = useState<string>("Bingou");
   const [headerSubTitle, setHeaderSubTitle] = useState<string>("");
@@ -42,6 +43,8 @@ export const MainContextProvider = ({ children }: { children: ReactNode }) => {
       setContextStatus,
       menuOpen,
       setMenuOpen,
+      getCards,
+      setGetCards,
       alert,
       setAlert,
       userId,
@@ -51,12 +54,8 @@ export const MainContextProvider = ({ children }: { children: ReactNode }) => {
       headerSubTitle,
       setHeaderSubTitle,
     }),
-    [contextStatus, menuOpen, alert, userId, headerTitle, headerSubTitle],
+    [contextStatus, menuOpen, getCards, alert, userId, headerTitle, headerSubTitle],
   );
 
-  return (
-    <MainContext.Provider value={contextVariables}>
-      {children}
-    </MainContext.Provider>
-  );
+  return <MainContext.Provider value={contextVariables}>{children}</MainContext.Provider>;
 };

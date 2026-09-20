@@ -16,17 +16,10 @@ interface Props {
   setShowChangeNumbers: React.Dispatch<React.SetStateAction<boolean>>;
   setCardNumbersKey: React.Dispatch<React.SetStateAction<number[]>>;
 }
-const EditCard = ({
-  id,
-  columns,
-  setShowChangeNumbers,
-  setCardNumbersKey,
-}: Props) => {
+const EditCard = ({ id, columns, setShowChangeNumbers, setCardNumbersKey }: Props) => {
   const mainContext = useMainContext();
 
-  const [numbers, setNumbers] = useState<number[]>([
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-  ]);
+  const [numbers, setNumbers] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
   const [atualNumber, setAtualNumber] = useState<number>();
   const [showNumbers, setShowNumbers] = useState<boolean>(false);
   const handleChangeNumber = (number: number) => {
@@ -51,8 +44,7 @@ const EditCard = ({
 
     const newNumbers = [];
     for (let a = start; a <= end; a++) {
-      if (!columnsToShow.some((column) => column.includes(a)))
-        newNumbers.push(a);
+      if (!columnsToShow.some((column) => column.includes(a))) newNumbers.push(a);
     }
     setNumbers(newNumbers);
 
@@ -61,9 +53,7 @@ const EditCard = ({
     return;
   };
 
-  const [columnsToShow, setColumnsToShow] = useState<number[][]>(
-    columns.map((column) => [...column]),
-  );
+  const [columnsToShow, setColumnsToShow] = useState<number[][]>(columns.map((column) => [...column]));
 
   const handleChooseNumber = (number: number) => {
     const columnsToEdit = columnsToShow.map((column) => [...column]);
@@ -111,6 +101,7 @@ const EditCard = ({
         type: "success",
         message: "Cartela alterada com sucesso.",
       });
+      mainContext.setGetCards(true);
       setShowChangeNumbers(false);
       setCardNumbersKey(columnsToShow.flat());
     } else {
@@ -137,17 +128,12 @@ const EditCard = ({
           <span>G</span>
           <span>O</span>
         </div>
-        <div
-          className={`${styles.card_body} ${showNumbers ? styles.hide : styles.show}`}
-        >
+        <div className={`${styles.card_body} ${showNumbers ? styles.hide : styles.show}`}>
           {columnsToShow.map((column, index) => (
             <ul key={`${id}_c_${index}`} className={styles.card_column}>
               {column.map((number) => {
                 return (
-                  <li
-                    key={`${id}_${number}`}
-                    onClick={() => handleChangeNumber(number)}
-                  >
+                  <li key={`${id}_${number}`} onClick={() => handleChangeNumber(number)}>
                     {number === 0 ? <Sparkles /> : number}
                   </li>
                 );
@@ -155,9 +141,7 @@ const EditCard = ({
             </ul>
           ))}
         </div>
-        <div
-          className={`${styles.div_numbers} ${showNumbers ? styles.show : styles.hide}`}
-        >
+        <div className={`${styles.div_numbers} ${showNumbers ? styles.show : styles.hide}`}>
           <div>
             <div>
               <span>Número atual</span>
@@ -168,10 +152,7 @@ const EditCard = ({
           </div>
           <div>
             {numbers.map((number) => (
-              <p
-                key={`number_to_change_${number}`}
-                onClick={() => handleChooseNumber(number)}
-              >
+              <p key={`number_to_change_${number}`} onClick={() => handleChooseNumber(number)}>
                 {number}
               </p>
             ))}

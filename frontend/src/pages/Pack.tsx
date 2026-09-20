@@ -32,7 +32,7 @@ import type {
 import Waiting from "../components/Waiting.tsx";
 
 const Pack = () => {
-  const { setHeaderTitle, setHeaderSubTitle, setAlert } = useMainContext();
+  const { setHeaderTitle, setHeaderSubTitle, setAlert, getCards, setGetCards } = useMainContext();
 
   const [cards, setCards] = useState<Cards[]>([]);
 
@@ -59,6 +59,8 @@ const Pack = () => {
 
   useEffect(() => {
     const getPack = async () => {
+      if (!getCards) return;
+
       const response: PackType = await request(`/packs/${id}`, "GET");
       if (response.message === "Unauthorized") {
         navigate("/signin");
@@ -85,9 +87,10 @@ const Pack = () => {
       setWinnings(response.result.winnings);
       setModalities(response.result.modalities);
       setHeaderSubTitle(`${response.result.cards.length} cartelas`);
+      setGetCards(false);
     };
     getPack();
-  }, [id, request, cardsAdded, navigate, setHeaderTitle, setHeaderSubTitle, setAlert]);
+  }, [id, request, cardsAdded, getCards, navigate, setHeaderTitle, setHeaderSubTitle, setAlert]);
 
   useEffect(() => {
     const prev = prevStateRef.current;

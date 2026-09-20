@@ -66,20 +66,14 @@ const Plans = () => {
       orderId: string;
       amount: string;
     }
-    const response: RequestType = await request(
-      "/orders/new",
-      "POST",
-      {},
-      { plan: plan },
-    );
+    const response: RequestType = await request("/orders/new", "POST", {}, { plan: plan });
     setLoading(false);
     setShowGetPlan(false);
     if (response.message !== "ok") {
       mainContext.setAlert({
         id: Date.now(),
         type: "error",
-        message:
-          "Falha ao gerar o pedido, tente novamente ou contate o suporte!",
+        message: "Falha ao gerar o pedido, tente novamente ou contate o suporte!",
       });
     } else {
       setShowPixOrder(true);
@@ -91,20 +85,11 @@ const Plans = () => {
 
   return (
     <section className={styles.section_plans}>
-      {showPixOrder && (
-        <PixOrder orderId={orderId} pixCode={pixCode} amount={amount} />
-      )}
+      {showPixOrder && <PixOrder orderId={orderId} pixCode={pixCode} amount={amount} />}
       {showGetPlan && (
-        <GetPlan
-          plan={plan}
-          setShowGetPlan={setShowGetPlan}
-          generateOrder={generateOrder}
-          loading={loading}
-        />
+        <GetPlan plan={plan} setShowGetPlan={setShowGetPlan} generateOrder={generateOrder} loading={loading} />
       )}
-      <div
-        className={`${styles.div_plans} ${showPixOrder ? styles.hide : styles.show}`}
-      >
+      <div className={`${styles.div_plans} ${showPixOrder ? styles.hide : styles.show}`}>
         <h1>Planos de assinatura</h1>
         <ul className={styles.ul_plans}>
           <li>
@@ -116,17 +101,13 @@ const Plans = () => {
             <h2>Básico</h2>
             <p>Limite de 2.000 cartelas por maço.</p>
             <span>R$ 19,90/mês no Pix</span>
-            <a onClick={() => handleGetPlan(1)}>
-              {localStorage.getItem("userId") !== null ? "Comprar" : ""}
-            </a>
+            <a onClick={() => handleGetPlan(1)}>{localStorage.getItem("userId") !== null ? "Comprar" : ""}</a>
           </li>
           <li>
             <h2>Completo</h2>
             <p>Limite de 10.000 cartelas por maço.</p>
             <span>R$ 29,90/mês no Pix</span>
-            <a onClick={() => handleGetPlan(2)}>
-              {localStorage.getItem("userId") !== null ? "Comprar" : ""}
-            </a>
+            <a onClick={() => handleGetPlan(2)}>{localStorage.getItem("userId") !== null ? "Comprar" : ""}</a>
           </li>
         </ul>
       </div>

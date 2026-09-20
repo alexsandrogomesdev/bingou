@@ -10,13 +10,11 @@ import ProgressBar from "./ProgressBar";
 import type { Cards } from "../types/pack";
 import { Share2 } from "lucide-react";
 
-const ExportButton = ({
-  packName,
-  cards,
-}: {
+interface Props {
   packName: string;
   cards: Cards[];
-}) => {
+}
+const ExportButton = ({ packName, cards }: Props) => {
   const [exportProgress, setExportProgress] = useState<number>(0);
 
   const handleDownloadPdf = async () => {
@@ -32,14 +30,9 @@ const ExportButton = ({
 
   return (
     <>
-      {exportProgress > 0 && (
-        <ProgressBar title="Gerando PDF, Aguarde..." percent={exportProgress} />
-      )}
+      {exportProgress > 0 && <ProgressBar title="Gerando PDF, Aguarde..." percent={exportProgress} />}
 
-      <button
-        onClick={handleDownloadPdf}
-        disabled={exportProgress > 0 ? true : false}
-      >
+      <button onClick={handleDownloadPdf} disabled={exportProgress > 0 ? true : false}>
         <Share2 />
         PDF
       </button>
