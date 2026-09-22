@@ -20,6 +20,18 @@ body,
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+.capacitor-nav-bar-background {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  min-height: env(safe-area-inset-bottom, 24px);
+  max-height: env(safe-area-inset-bottom, 24px);
+  background-color: #ffffff;
+  z-index: 999999;
+  pointer-events: none;
+}
+
 button {
   transition: opacity 0.2s;
 }

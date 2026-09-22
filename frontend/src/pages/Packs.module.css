@@ -78,6 +78,9 @@
   min-width: 100%;
   max-width: 100%;
 }
+.section_fixed_with_ads {
+  bottom: calc(env(safe-area-inset-bottom) + 60px) !important;
+}
 .article_buy_plan {
   display: none;
   flex-flow: column;

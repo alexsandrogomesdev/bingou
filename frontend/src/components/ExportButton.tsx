@@ -9,6 +9,8 @@ import { exportPDF } from "../utils/exportPDF";
 import ProgressBar from "./ProgressBar";
 import type { Cards } from "../types/pack";
 import { Share2 } from "lucide-react";
+import { useMainContext } from "../hooks/useMainContext";
+import { admobService } from "../utils/admobService";
 
 interface Props {
   packName: string;
@@ -16,8 +18,9 @@ interface Props {
 }
 const ExportButton = ({ packName, cards }: Props) => {
   const [exportProgress, setExportProgress] = useState<number>(0);
+  const { showAds } = useMainContext();
 
-  const handleDownloadPdf = async () => {
+  const downloadPdf = async () => {
     setExportProgress(0);
     try {
       await exportPDF(cards, (p) => setExportProgress(p), packName);
@@ -25,6 +28,16 @@ const ExportButton = ({ packName, cards }: Props) => {
       console.error("Erro ao gerar PDF:", err);
     } finally {
       setExportProgress(0);
+    }
+  };
+
+  const handleDownloadPdf = async () => {
+    if (showAds) {
+      await admobService.showInterstitial(() => {
+        downloadPdf();
+      });
+    } else {
+      downloadPdf();
     }
   };
 

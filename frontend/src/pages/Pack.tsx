@@ -32,7 +32,7 @@ import type {
 import Waiting from "../components/Waiting.tsx";
 
 const Pack = () => {
-  const { setHeaderTitle, setHeaderSubTitle, setAlert, getCards, setGetCards } = useMainContext();
+  const { headerTitle, setHeaderTitle, setHeaderSubTitle, setAlert, getCards, setGetCards } = useMainContext();
 
   const [cards, setCards] = useState<Cards[]>([]);
 
@@ -58,8 +58,9 @@ const Pack = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const getPack = async () => {
-      if (!getCards) return;
+      if (!getCards && headerTitle !== "Sorteador") return;
 
       const response: PackType = await request(`/packs/${id}`, "GET");
       if (response.message === "Unauthorized") {
@@ -355,7 +356,7 @@ const Pack = () => {
               )}
             </>
           )}
-          <button className={styles.back} onClick={handleShowAddCards}>
+          <button className={`${styles.add_cards}`} onClick={handleShowAddCards}>
             <Plus />
           </button>
         </div>

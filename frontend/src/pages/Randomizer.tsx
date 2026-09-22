@@ -8,15 +8,17 @@ import { useMainContext } from "../hooks/useMainContext.tsx";
 
 import { sleep, shuffleArray } from "../utils/functions.ts";
 import { Play, RotateCcw } from "lucide-react";
+import { admobService } from "../utils/admobService";
 
 // COMPONENTS
 
 const Randomizer = () => {
-  const { setHeaderTitle, setHeaderSubTitle, setAlert } = useMainContext();
+  const { setHeaderTitle, setHeaderSubTitle, setAlert, showAds } = useMainContext();
 
   useEffect(() => {
     setHeaderTitle("Sorteador");
     setHeaderSubTitle("");
+    window.scrollTo(0, 0);
   }, [setHeaderSubTitle, setHeaderTitle]);
 
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
@@ -33,7 +35,6 @@ const Randomizer = () => {
     if (!raw) return [];
 
     const parsed = JSON.parse(raw);
-    console.log();
     return Array.isArray(parsed) && parsed.every((x) => typeof x === "number") ? parsed : [];
   });
   const [remainingBalls, setRemainingBalls] = useState<number[]>(() => {
@@ -49,7 +50,6 @@ const Randomizer = () => {
     localStorage.setItem("lastBall", lastBall.toString());
   }, [lastBall]);
   useEffect(() => {
-    console.log("drawn balls: " + drawnBalls);
     localStorage.setItem("drawnBalls", JSON.stringify(drawnBalls));
   }, [drawnBalls]);
   useEffect(() => {
@@ -85,11 +85,24 @@ const Randomizer = () => {
     setButtonDisabled(false);
     return;
   };
-  const handleReset = () => {
-    if (!confirm("O Sorteador será reiniciado. Todas as bolas sorteadas serão perdidas.")) return;
+
+  const resetBalls = async () => {
     setLastBall(0);
     setDrawnBalls([]);
     setRemainingBalls(Array.from({ length: 75 }, (_, i) => i + 1).sort(() => Math.random() - 0.5));
+    return;
+  };
+  const handleReset = async () => {
+    if (!confirm("O Sorteador será reiniciado. Todas as bolas sorteadas serão perdidas.")) return;
+
+    if (showAds) {
+      await admobService.showInterstitial(() => {
+        resetBalls();
+      });
+    } else {
+      resetBalls();
+    }
+
     return;
   };
 
@@ -111,7 +124,9 @@ const Randomizer = () => {
               {column.map((ball) => (
                 <li
                   key={`column_number_${index}_${ball}`}
-                  className={`${!remainingBalls.includes(ball) ? styles.selected_number : ""} ${ball === lastBall && !buttonDisabled ? styles.last_ball : ""}`}
+                  className={`${!remainingBalls.includes(ball) ? styles.selected_number : ""} ${
+                    ball === lastBall && !buttonDisabled ? styles.last_ball : ""
+                  }`}
                 >
                   {ball}
                 </li>

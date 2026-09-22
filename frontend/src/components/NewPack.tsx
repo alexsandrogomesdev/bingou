@@ -65,22 +65,16 @@ const NewPack = ({ sectionNewPack, setSectionNewPack }: Props) => {
     }
   };
 
-  const canCreate: boolean =
-    packName.length >= 2 && cardsQty >= 1 && cardsQty <= 10000;
+  const canCreate: boolean = packName.length >= 2 && cardsQty >= 1 && cardsQty <= 10000;
 
   return (
-    <section
-      className={`${styles.section_new_pack} ${sectionNewPack ? styles.new_pack_show : styles.new_pack_hide}`}
-    >
+    <section className={`${styles.section_new_pack} ${sectionNewPack ? styles.new_pack_show : styles.new_pack_hide}`}>
       <div className={styles.div_new_pack}>
         <nav>
           <h3>Novo Pack</h3>
           <X onClick={() => setSectionNewPack(false)} />
         </nav>
-        <form
-          className={styles.form_create_pack}
-          onSubmit={(e) => handleCreatePack(e)}
-        >
+        <form className={styles.form_create_pack} onSubmit={(e) => handleCreatePack(e)}>
           <label>
             <span>Nome do pacote</span>
             <input
@@ -108,9 +102,7 @@ const NewPack = ({ sectionNewPack, setSectionNewPack }: Props) => {
           <button
             type="submit"
             disabled={canCreate ? false : true}
-            className={
-              canCreate ? styles.submit_enabled : styles.submit_disabled
-            }
+            className={canCreate ? styles.submit_enabled : styles.submit_disabled}
           >
             {creating ? "Criando..." : "Criar Pacote"}
           </button>

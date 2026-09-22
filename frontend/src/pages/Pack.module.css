@@ -71,7 +71,10 @@
   top: 60px;
   z-index: 0;
 }
-.back {
+.cards_with_ads {
+  padding-bottom: 100px !important;
+}
+.add_cards {
   text-decoration: none;
   margin-right: auto;
   position: fixed;
@@ -92,7 +95,10 @@
   border: none;
   cursor: pointer;
 }
-.back svg {
+.add_cards_with_ads {
+  bottom: calc(env(safe-area-inset-bottom) + 75px) !important;
+}
+.add_cards svg {
   min-width: 32px;
   max-width: 32px;
   min-height: 32px;

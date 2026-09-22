@@ -17,7 +17,7 @@ import NewPack from "../components/NewPack.tsx";
 import Waiting from "../components/Waiting.tsx";
 
 const Packs = () => {
-  const { setHeaderTitle, setHeaderSubTitle, setAlert } = useMainContext();
+  const { setHeaderTitle, setHeaderSubTitle, setAlert, setGetCards, setShowAds } = useMainContext();
   const { request } = useFetch();
   const navigate = useNavigate();
 
@@ -52,6 +52,13 @@ const Packs = () => {
         setPlan(packs.plan);
         setDueAt(packs.due_at);
         setRequestIsDone(true);
+
+        if (packs.plan === 0 || packs.due_at < Math.floor(Date.now() / 1000)) {
+          // user don't have a plan
+          setShowAds(true);
+        } else {
+          setShowAds(false);
+        }
       }
     };
     getPacks();
@@ -91,6 +98,12 @@ const Packs = () => {
     [request, setAlert],
   );
 
+  const goTo = (pack: number) => {
+    setGetCards(true);
+    navigate(`/pack/${pack}`);
+    return;
+  };
+
   return (
     <>
       <NewPack sectionNewPack={sectionNewPack} setSectionNewPack={setSectionNewPack} />
@@ -104,9 +117,9 @@ const Packs = () => {
               {packs.length === 0 ? (
                 <p className={styles.none_packs}>Nenhum maço criado, crie um no botão abaixo!</p>
               ) : (
-                <ul className={styles.packs}>
+                <ul className={`${styles.packs}`}>
                   {packs.map((pack) => (
-                    <li key={pack.id} className={styles.pack} onClick={() => navigate(`/pack/${pack.id}`)}>
+                    <li key={pack.id} className={styles.pack} onClick={() => goTo(pack.id)}>
                       <div>
                         <b>{pack.name}</b>
                         <span>{fts.dateFromUnix(pack.created_at)}</span>
@@ -127,7 +140,9 @@ const Packs = () => {
                   <Plus />
                 </button>
                 <article
-                  className={`${styles.article_buy_plan} ${plan === 0 || dueAt < timeStamp ? styles.show : styles.hide}`}
+                  className={`${styles.article_buy_plan} ${
+                    plan === 0 || dueAt < timeStamp ? styles.show : styles.hide
+                  }`}
                 >
                   <p>Seu plano gratuito permite gerar até 50 cartelas por maço. Para gerar mais obtenha um plano.</p>
 

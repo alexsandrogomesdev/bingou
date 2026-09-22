@@ -8,6 +8,7 @@ import { useMainContext } from "../hooks/useMainContext.tsx";
 import { useFetch } from "../hooks/useFetch.tsx";
 import PixOrder from "../components/PixOrder.tsx";
 import { Loader } from "lucide-react";
+import BannerComponent from "../components/BannerComponent.tsx";
 
 // COMPONENTS
 
@@ -43,6 +44,7 @@ const Plans = () => {
   useEffect(() => {
     mainContext.setHeaderTitle("Planos");
     mainContext.setHeaderSubTitle("");
+    window.scrollTo(0, 0);
   }, []);
 
   const { request } = useFetch();
@@ -95,21 +97,26 @@ const Plans = () => {
           <li>
             <h2>Inicial</h2>
             <p>Limite de 50 cartelas por maço.</p>
+            <p>Com anúncios</p>
             <span>Grátis</span>
           </li>
           <li>
             <h2>Básico</h2>
             <p>Limite de 2.000 cartelas por maço.</p>
+            <p>Sem anúncios.</p>
             <span>R$ 19,90/mês no Pix</span>
             <a onClick={() => handleGetPlan(1)}>{localStorage.getItem("userId") !== null ? "Comprar" : ""}</a>
           </li>
           <li>
             <h2>Completo</h2>
             <p>Limite de 10.000 cartelas por maço.</p>
+            <span>Sem anúncios</span>
             <span>R$ 29,90/mês no Pix</span>
             <a onClick={() => handleGetPlan(2)}>{localStorage.getItem("userId") !== null ? "Comprar" : ""}</a>
           </li>
         </ul>
+
+        {mainContext.showAds && <BannerComponent />}
       </div>
     </section>
   );

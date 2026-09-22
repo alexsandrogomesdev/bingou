@@ -3,6 +3,9 @@ import { lazy, Suspense, useEffect } from "react";
 import { App as CapacitorApp } from "@capacitor/app";
 import { Capacitor } from "@capacitor/core";
 import { SplashScreen } from "@capacitor/splash-screen";
+import { AdMob } from "@capacitor-community/admob";
+import { admobService } from "./utils/admobService";
+import { NavigationBar, Style } from "@capawesome/capacitor-navigation-bar";
 
 import "./App.css";
 
@@ -36,12 +39,32 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const initApp = async () => {
-      if (localStorage.getItem("userId") !== null) navigate("/packs");
-      await sleep(1500);
-      await SplashScreen.hide();
+    const initAdMob = async () => {
+      try {
+        await AdMob.initialize();
+        admobService.loadInterstitial();
+      } catch (e) {
+        console.error("Failed to start AdMob:", e);
+      }
     };
 
+    initAdMob();
+  }, []);
+
+  useEffect(() => {
+    const initApp = async () => {
+      if (localStorage.getItem("userId") !== null) navigate("/packs");
+      await sleep(1000);
+      await SplashScreen.hide();
+
+      try {
+        await NavigationBar.setColor({ color: "#24af60" });
+        await NavigationBar.setStyle({ style: Style.Light });
+      } catch (e) {
+        console.error("Navigation bar not supported on this device or platform", e);
+      }
+    };
+    //
     initApp();
   }, []);
 

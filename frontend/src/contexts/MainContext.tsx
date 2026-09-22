@@ -10,6 +10,8 @@ export type MainContextData = {
   setContextStatus: Dispatch<SetStateAction<string>>;
   menuOpen: boolean;
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
+  showAds: boolean;
+  setShowAds: Dispatch<SetStateAction<boolean>>;
   getCards: boolean;
   setGetCards: Dispatch<SetStateAction<boolean>>;
   alert: AlertObject;
@@ -27,6 +29,7 @@ export const MainContext = createContext<MainContextData>({} as MainContextData)
 export const MainContextProvider = ({ children }: { children: ReactNode }) => {
   const [contextStatus, setContextStatus] = useState<string>("Main Context...");
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [showAds, setShowAds] = useState<boolean>(true);
   const [getCards, setGetCards] = useState<boolean>(true);
   const [userId, setUserId] = useState<number | null>(null);
   const [headerTitle, setHeaderTitle] = useState<string>("Bingou");
@@ -43,6 +46,8 @@ export const MainContextProvider = ({ children }: { children: ReactNode }) => {
       setContextStatus,
       menuOpen,
       setMenuOpen,
+      showAds,
+      setShowAds,
       getCards,
       setGetCards,
       alert,
@@ -54,7 +59,7 @@ export const MainContextProvider = ({ children }: { children: ReactNode }) => {
       headerSubTitle,
       setHeaderSubTitle,
     }),
-    [contextStatus, menuOpen, getCards, alert, userId, headerTitle, headerSubTitle],
+    [contextStatus, menuOpen, showAds, getCards, alert, userId, headerTitle, headerSubTitle],
   );
 
   return <MainContext.Provider value={contextVariables}>{children}</MainContext.Provider>;

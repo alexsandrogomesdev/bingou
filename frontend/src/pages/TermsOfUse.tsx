@@ -11,7 +11,7 @@ const TermsOfUse = () => {
       <article className={styles.article_terms}>
         <h1>Termos de Uso - Bingou</h1>
         <p>
-          <strong>Última atualização:</strong> 24 de agosto de 2026
+          <strong>Última atualização:</strong> 21 de setembro de 2026
         </p>
 
         <p>
@@ -50,13 +50,13 @@ const TermsOfUse = () => {
           <p>O serviço é oferecido sob o modelo de assinatura com as seguintes especificações:</p>
           <ul>
             <li>
-              <strong>Plano Gratuito:</strong> Limite de até 50 cartelas por maço.
+              <strong>Plano Gratuito:</strong> Limite de até 50 cartelas por maço. Com anúncios.
             </li>
             <li>
-              <strong>Plano Básico (R$ 19,90/mês):</strong> Limite de até 2.000 cartelas por maço.
+              <strong>Plano Básico (R$ 19,90/mês):</strong> Limite de até 2.000 cartelas por maço. Sem anúncios.
             </li>
             <li>
-              <strong>Plano Completo (R$ 29,90/mês):</strong> Limite de até 10.000 cartelas por maço.
+              <strong>Plano Completo (R$ 29,90/mês):</strong> Limite de até 10.000 cartelas por maço. Sem anúncios.
             </li>
           </ul>
           <p>
