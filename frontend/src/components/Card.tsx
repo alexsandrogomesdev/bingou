@@ -22,22 +22,11 @@ interface CardsProps {
   handleRemoveCard?: (id: number) => void;
 }
 
-const Card = ({
-  index,
-  id,
-  balls,
-  cardNumbers,
-  pattern,
-  isGoodCard,
-  goodBalls,
-  handleRemoveCard,
-}: CardsProps) => {
+const Card = ({ index, id, balls, cardNumbers, pattern, isGoodCard, goodBalls, handleRemoveCard }: CardsProps) => {
   const [showEditCard, setShowEditCard] = useState<boolean>(false);
   const [showChangeNumbers, setShowChangeNumbers] = useState<boolean>(false);
 
-  const [cardNumbersKey, setCardNumbersKey] = useState<number[]>([
-    ...cardNumbers,
-  ]);
+  const [cardNumbersKey, setCardNumbersKey] = useState<number[]>([...cardNumbers]);
   const columns = useMemo(() => {
     const cols: number[][] = [[], [], [], [], []];
     for (let i = 0; i < cardNumbersKey.length; i++) {
@@ -61,7 +50,7 @@ const Card = ({
   };
 
   return (
-    <>
+    <section className={styles.section}>
       {showChangeNumbers && (
         <EditCard
           id={id}
@@ -71,10 +60,7 @@ const Card = ({
         />
       )}
 
-      <article
-        className={`${styles.card} ${isGoodCard && styles.good_card}`}
-        onClick={() => handleEditCard()}
-      >
+      <article className={`${styles.card} ${isGoodCard && styles.good_card}`} onClick={() => handleEditCard()}>
         <div className={styles.card_header}>
           <p>#{index}</p>
           <span>({id})</span>
@@ -86,9 +72,7 @@ const Card = ({
           <strong>G</strong>
           <strong>O</strong>
         </div>
-        <div
-          className={`${styles.card_options} ${showEditCard ? styles.show_edit_card : ""}`}
-        >
+        <div className={`${styles.card_options} ${showEditCard ? styles.show_edit_card : ""}`}>
           <button onClick={handleChangeNumbers}>
             <Pencil />
           </button>
@@ -96,9 +80,7 @@ const Card = ({
             <Trash2 />
           </button>
         </div>
-        <div
-          className={`${styles.card_body} ${!showEditCard ? styles.show_body : ""}`}
-        >
+        <div className={`${styles.card_body} ${!showEditCard ? styles.show_body : ""}`}>
           {columns.map((column, index) => (
             <ul key={`${id}_c_${index}`} className={styles.card_column}>
               {column.map((number) => {
@@ -107,12 +89,8 @@ const Card = ({
                     key={`${id}_${number}`}
                     number={number}
                     isMarked={balls.has(number)}
-                    onPattern={
-                      pattern && pattern.includes(number) ? true : false
-                    }
-                    isGoodBall={
-                      goodBalls && goodBalls.has(number) ? true : false
-                    }
+                    onPattern={pattern && pattern.includes(number) ? true : false}
+                    isGoodBall={goodBalls && goodBalls.has(number) ? true : false}
                   />
                 );
               })}
@@ -120,7 +98,7 @@ const Card = ({
           ))}
         </div>
       </article>
-    </>
+    </section>
   );
 };
 

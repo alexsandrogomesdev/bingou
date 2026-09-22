@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "dev.alexsandrogomes.bingou",
+  appId: "dev.alexsandrogomes.bingouapp",
   appName: "Bingou",
   webDir: "dist",
   server: {
@@ -25,8 +25,8 @@ const config: CapacitorConfig = {
       style: "LIGHT",
     },
     NavigationBar: {
-      color: "#24af60",
-      lightButtons: true,
+      color: "#ffffff",
+      darkButtons: true,
       // dividerColor: '#d9d9d9' // Cor da linha divisória (opcional)
     },
   },

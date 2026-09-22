@@ -28,7 +28,7 @@ body,
   min-height: env(safe-area-inset-bottom, 24px);
   max-height: env(safe-area-inset-bottom, 24px);
   background-color: #ffffff;
-  z-index: 999999;
+  /* z-index: 999999; */
   pointer-events: none;
 }
 
