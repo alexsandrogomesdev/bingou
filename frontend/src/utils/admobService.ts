@@ -1,10 +1,13 @@
 import { AdMob, InterstitialAdPluginEvents, BannerAdPosition } from "@capacitor-community/admob";
+import { Capacitor } from "@capacitor/core";
 
 class AdMobService {
   private isLoaded = false;
   private pendingCallback: (() => void) | null = null;
 
   constructor() {
+    if (!Capacitor.isNativePlatform()) return;
+
     AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
       console.log("Anúncio intersticial fechado pelo usuário.");
 
@@ -20,6 +23,8 @@ class AdMobService {
   }
 
   async loadInterstitial() {
+    if (!Capacitor.isNativePlatform()) return;
+
     try {
       this.isLoaded = false;
       await AdMob.prepareInterstitial({
@@ -34,6 +39,8 @@ class AdMobService {
   }
 
   private async restoreBanner() {
+    if (!Capacitor.isNativePlatform()) return;
+
     try {
       setTimeout(async () => {
         await AdMob.showBanner({
@@ -49,6 +56,11 @@ class AdMobService {
   }
 
   async showInterstitial(onFinished: () => void) {
+    if (!Capacitor.isNativePlatform()) {
+      onFinished();
+      return;
+    }
+
     try {
       if (this.isLoaded) {
         this.pendingCallback = onFinished;
