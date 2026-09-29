@@ -1,5 +1,5 @@
-import { Capacitor } from "@capacitor/core";
 import { AdMob, InterstitialAdPluginEvents, BannerAdPosition } from "@capacitor-community/admob";
+import { Capacitor } from "@capacitor/core";
 
 class AdMobService {
   private isLoaded = false;
