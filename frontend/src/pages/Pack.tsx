@@ -61,7 +61,7 @@ const Pack = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     const getPack = async () => {
-      if (!getCards && headerTitle !== "Sorteador") return;
+      if (!getCards && !cardsAdded && headerTitle !== "Sorteador") return;
 
       const response: PackType = await request(`/packs/${id}`, "GET");
       if (response.message === "Unauthorized") {
@@ -91,9 +91,21 @@ const Pack = () => {
       setModalities(response.result.modalities);
       setHeaderSubTitle(`${response.result.cards.length} cartelas`);
       setGetCards(false);
+      setCardsAdded(false);
     };
     getPack();
-  }, [id, request, cardsAdded, getCards, navigate, setHeaderTitle, setHeaderSubTitle, setAlert]);
+  }, [
+    id,
+    request,
+    cardsAdded,
+    getCards,
+    navigate,
+    headerTitle,
+    setGetCards,
+    setHeaderTitle,
+    setHeaderSubTitle,
+    setAlert,
+  ]);
 
   useEffect(() => {
     const prev = prevStateRef.current;

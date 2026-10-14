@@ -61,10 +61,7 @@ const AddCards = ({ packId, setShowAddCards, setCardsAdded }: Props) => {
           <p>Adicionar novas cartelas</p>
           <X onClick={() => setShowAddCards(false)} />
         </nav>
-        <form
-          className={styles.form_add_cards}
-          onSubmit={(e) => handleAddCards(e)}
-        >
+        <form className={styles.form_add_cards} onSubmit={(e) => handleAddCards(e)}>
           <label htmlFor="qty">Quantidade cartelas</label>
           <div>
             <button disabled={loading}>
