@@ -1,5 +1,9 @@
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import { PDFDocument, rgb /* StandardFonts */ } from "pdf-lib";
 import download from "downloadjs";
+
+import fontkit from "@pdf-lib/fontkit";
+import robotoRegular from "../../assets/Roboto-Regular.ttf";
+import robotoBold from "../../assets/Roboto-Bold.ttf";
 
 import { Capacitor } from "@capacitor/core";
 import { Filesystem, Directory } from "@capacitor/filesystem";
@@ -8,11 +12,22 @@ import { Share } from "@capacitor/share";
 import type { Cards } from "../types/pack";
 import { dateFromUnix } from "./functions";
 
-export const exportPDF = async (cards: Cards[], progress: (porcentagem: number) => void, packName: string) => {
+export const exportPDF = async (
+  cards: Cards[],
+  progress: (porcentagem: number) => void,
+  packName: string,
+  packId: string,
+) => {
   const pdfDoc = await PDFDocument.create();
-  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  // const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  // const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const time = dateFromUnix(Math.floor(Date.now() / 1000));
+
+  pdfDoc.registerFontkit(fontkit);
+  const fontBytes = await fetch(robotoRegular).then((res) => res.arrayBuffer());
+  const font = await pdfDoc.embedFont(fontBytes);
+  const fontBytes2 = await fetch(robotoBold).then((res) => res.arrayBuffer());
+  const fontBold = await pdfDoc.embedFont(fontBytes2);
 
   const lines: Cards[][] = [];
   let lineIndex = 0;
@@ -55,7 +70,7 @@ export const exportPDF = async (cards: Cards[], progress: (porcentagem: number) 
 
     let startY = height - 16; // top start of each line
     let startX = 30;
-    page.drawText(`Bingou - ${packName} - Página ${a + 1}/${pageIndex}`, {
+    page.drawText(`Bingou - ${packName}(${packId}) - Página ${a + 1}/${pageIndex}`, {
       x: startX,
       y: startY - 5,
       font: fontBold,

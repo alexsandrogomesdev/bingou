@@ -36,6 +36,7 @@ const Pack = () => {
 
   const [cards, setCards] = useState<Cards[]>([]);
 
+  const [packId, setPackId] = useState<string>("");
   const [packName, setPackName] = useState<string>("");
   const [modalities, setModalities] = useState<ModalitiesInterface[]>([]);
   const [balls, setBalls] = useState<Set<number>>(new Set([]));
@@ -79,6 +80,7 @@ const Pack = () => {
       }
 
       setCards(response.result.cards);
+      setPackId(response.result.id);
       setPackName(response.result.name);
       setHeaderTitle(response.result.name);
       setBalls(new Set(response.result.balls.data));
@@ -310,7 +312,7 @@ const Pack = () => {
             <button onClick={() => setShowWinnings(true)}>
               <Gift />
             </button>
-            <ExportButton cards={cards} packName={packName} />
+            <ExportButton cards={cards} packName={packName} packId={packId} />
           </div>
 
           {balls && id && showBallTable && (

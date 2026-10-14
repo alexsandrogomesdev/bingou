@@ -13,17 +13,18 @@ import { useMainContext } from "../hooks/useMainContext";
 import { admobService } from "../utils/admobService";
 
 interface Props {
+  packId: string;
   packName: string;
   cards: Cards[];
 }
-const ExportButton = ({ packName, cards }: Props) => {
+const ExportButton = ({ packId, packName, cards }: Props) => {
   const [exportProgress, setExportProgress] = useState<number>(0);
   const { showAds } = useMainContext();
 
   const downloadPdf = async () => {
     setExportProgress(0);
     try {
-      await exportPDF(cards, (p) => setExportProgress(p), packName);
+      await exportPDF(cards, (p) => setExportProgress(p), packName, packId);
     } catch (err) {
       console.error("Erro ao gerar PDF:", err);
     } finally {

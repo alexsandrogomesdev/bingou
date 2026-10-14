@@ -35,6 +35,7 @@ export interface Winnings {
 export interface PackType {
   message: string;
   result: {
+    id: string;
     cards: Cards[];
     name: string;
     balls: {
