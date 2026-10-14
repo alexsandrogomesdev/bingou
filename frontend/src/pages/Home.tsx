@@ -8,7 +8,7 @@ import styles from "./Home.module.css";
 // HOOKS
 import { useMainContext } from "../hooks/useMainContext.tsx";
 
-// COMPONENTS 
+// COMPONENTS
 import InstallButton from "../components/InstallButton.tsx";
 
 const Home = () => {
@@ -77,19 +77,19 @@ const Home = () => {
             <span>
               <Sparkles /> Bingo
             </span>
-            <h1>Cartelas de bingo</h1>
+            <h1>Gere cartelas</h1>
             <h2>em segundos</h2>
 
             <p>
-              Um gerador e marcador de cartelas. Você cria, imprime ou joga pelo celular marcando os numeros conforme
-              eles são sorteados.
+              Um gerador e marcador de cartelas digitais. Você gera, imprime ou joga pelo próprio celular marcando os
+              numeros na tábua e o sistema marca automaticamente em suas cartelas geradas.
             </p>
 
             <ul>
               <li>
                 <Link to="/packs">
                   <Play />
-                  {localStorage.getItem("userId") !== null ? "Meus maços" : "Gerar cartelas"}
+                  {localStorage.getItem("userId") !== null ? "Meus maços" : "Minhas Cartelas"}
                 </Link>
               </li>
               <li>
@@ -107,41 +107,41 @@ const Home = () => {
             </ul>
             <div>
               <ul>
-                <li>7</li>
-                <li>12</li>
+                <li>10</li>
+                <li>11</li>
                 <li className={styles.number_selected}>3</li>
-                <li>15</li>
-                <li>9</li>
+                <li>4</li>
+                <li>8</li>
               </ul>
               <ul>
-                <li className={styles.number_selected}>22</li>
-                <li className={styles.number_selected}>28</li>
-                <li className={styles.number_selected}>19</li>
-                <li className={styles.number_selected}>24</li>
+                <li className={styles.number_selected}>16</li>
                 <li className={styles.number_selected}>30</li>
+                <li className={styles.number_selected}>18</li>
+                <li className={styles.number_selected}>22</li>
+                <li className={styles.number_selected}>27</li>
               </ul>
               <ul>
-                <li>35</li>
-                <li>41</li>
+                <li>44</li>
+                <li>38</li>
                 <li className={styles.joker}>
                   <Sparkles />
                 </li>
-                <li className={styles.number_selected}>39</li>
-                <li>44</li>
+                <li className={styles.number_selected}>37</li>
+                <li>31</li>
               </ul>
               <ul>
-                <li>48</li>
-                <li>55</li>
-                <li>52</li>
-                <li>58</li>
-                <li className={styles.number_selected}>50</li>
+                <li>49</li>
+                <li>54</li>
+                <li>56</li>
+                <li>50</li>
+                <li className={styles.number_selected}>51</li>
               </ul>
               <ul>
                 <li className={styles.number_selected}>71</li>
-                <li>70</li>
-                <li>66</li>
-                <li>62</li>
-                <li>68</li>
+                <li>72</li>
+                <li>63</li>
+                <li>64</li>
+                <li>75</li>
               </ul>
             </div>
           </div>
@@ -152,31 +152,31 @@ const Home = () => {
               <i>
                 <Grid3x3 />
               </i>
-              <p>Cartelas únicas</p>
-              <span>Gere quantas cartelas quiser, todas diferentes entre si, em um toque.</span>
+              <p>Unicidade total</p>
+              <span>Gere quantas cartelas quiser, todas diferentes uma da outra, em um toque.</span>
             </li>
 
             <li>
               <i>
                 <Check />
               </i>
-              <p>Marcação pelo celular</p>
-              <span>Toque nos números para marcar e acompanhe as linhas completas na hora.</span>
+              <p>Marque pelo celular</p>
+              <span>Marque os números na tábua e acompanhe a marcação das cartelas automaticamente.</span>
             </li>
 
             <li>
               <i>
                 <Printer />
               </i>
-              <p>Pronto para imprimir</p>
-              <span>Layout limpo para imprimir ou enviar o arquivo em PDF.</span>
+              <p>Imprima em um toque</p>
+              <span>Layout limpo e minimalista para imprimir ou enviar o PDF com as cartelas.</span>
             </li>
           </ul>
         </div>
         <div className={styles.div_3}>
-          <h3>Pronto para a próxima rodada?</h3>
-          <p>Gere suas cartelas agora e comece a marcar em poucos segundos.</p>
-          <Link to="/packs">Criar cartelas</Link>
+          <h3>Quer começar a gerar cartelas?</h3>
+          <p>Gere cartelas agora mesmo e comece a marcar em poucos segundos.</p>
+          <Link to="/packs">Gerar cartelas</Link>
         </div>
       </div>
     </section>
