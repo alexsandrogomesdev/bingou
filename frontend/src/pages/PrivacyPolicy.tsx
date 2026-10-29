@@ -39,6 +39,12 @@ const PrivacyPolicy = () => {
               sorteador é salvo exclusivamente no seu navegador (via <i>localStorage</i>) e não é enviado ou armazenado
               em nossos servidores.
             </li>
+            <li>
+              <strong>Dados de Publicidade e Dispositivo:</strong> Através da integração com o Google AdMob, podem ser
+              coletados identificadores exclusivos do dispositivo (como o Google Advertising ID - GAID no Android),
+              endereço IP, informações de rede, dados de localização aproximada e interações com os anúncios veiculados
+              na plataforma.
+            </li>
           </ul>
         </section>
 
@@ -55,12 +61,15 @@ const PrivacyPolicy = () => {
         <section>
           <h2>3. Compartilhamento de Dados</h2>
           <p>
-            Não vendemos, alugamos ou repassamos seus dados pessoais a terceiros para fins que não sejam o de gerenciar
-            pagamento e assinatura do plano contratado.
+            O compartilhamento de dados é estritamente limitado às seguintes finalidades necessárias para o
+            funcionamento e monetização do serviço:
           </p>
+          <strong>Intermediadores de Pagamento:</strong>
+          <p>Para processamento de assinaturas e transações financeiras dos planos pagos.</p>
+          <strong>Redes de Anúncios (Google AdMob):</strong>
           <p>
-            O único compartilhamento de dados que fazemos é com intermediadores de pagamento para processamento de
-            pagamento e assinatura do plano contratado.
+            Para a veiculação e personalização de anúncios publicitários no Plano Gratuito. O Google AdMob pode utilizar
+            identificadores de publicidade do dispositivo para apresentar anúncios relevantes com base em interesses.
           </p>
         </section>
 

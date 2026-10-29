@@ -6,6 +6,7 @@ import styles from "./BallTable.module.css";
 
 // HOOKS
 import type { Goods } from "../types/pack";
+import { useMainContext } from "../hooks/useMainContext";
 
 // COMPONENTS
 interface Props {
@@ -15,6 +16,8 @@ interface Props {
   goods: Goods[];
 }
 const BallTable = ({ balls, handleSelectBall, setShowBallTable, goods }: Props) => {
+  const { showAds } = useMainContext();
+
   const table_numbers: Array<number[]> = [[], [], [], [], []];
   for (let c = 0; c < 5; c++) {
     const min = 1 + c * 15;
@@ -26,7 +29,7 @@ const BallTable = ({ balls, handleSelectBall, setShowBallTable, goods }: Props) 
 
   return (
     <section className={styles.section_balls_table}>
-      <div className={styles.div_balls_table}>
+      <div className={`${styles.div_balls_table} ${showAds && styles.div_balls_table_with_ads}`}>
         <nav>
           <h3>Bolas chamadas</h3>
           <X onClick={() => setShowBallTable(false)} />

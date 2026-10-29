@@ -4,6 +4,7 @@
   padding: 0;
   position: relative;
   top: 63px;
+  max-height: calc(env(safe-area-inset-bottom) - 70px);
 }
 .div_randomizer {
   display: flex;

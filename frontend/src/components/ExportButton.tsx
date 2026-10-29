@@ -10,7 +10,7 @@ import ProgressBar from "./ProgressBar";
 import type { Cards } from "../types/pack";
 import { Share2 } from "lucide-react";
 import { useMainContext } from "../hooks/useMainContext";
-import { admobService } from "../utils/admobService";
+import InterstitialAds from "./InterstitialAds";
 
 interface Props {
   packId: string;
@@ -18,10 +18,12 @@ interface Props {
   cards: Cards[];
 }
 const ExportButton = ({ packId, packName, cards }: Props) => {
+  const [showInterstitial, setShowInterstitial] = useState<boolean>(false);
   const [exportProgress, setExportProgress] = useState<number>(0);
   const { showAds } = useMainContext();
 
   const downloadPdf = async () => {
+    setShowInterstitial(false);
     setExportProgress(0);
     try {
       await exportPDF(cards, (p) => setExportProgress(p), packName, packId);
@@ -34,9 +36,7 @@ const ExportButton = ({ packId, packName, cards }: Props) => {
 
   const handleDownloadPdf = async () => {
     if (showAds) {
-      await admobService.showInterstitial(() => {
-        downloadPdf();
-      });
+      setShowInterstitial(true);
     } else {
       downloadPdf();
     }
@@ -44,6 +44,13 @@ const ExportButton = ({ packId, packName, cards }: Props) => {
 
   return (
     <>
+      {showInterstitial && (
+        <InterstitialAds
+          callback={downloadPdf}
+          message={"Veja o anúncio para gerar o PDF."}
+          close={() => setShowInterstitial(false)}
+        />
+      )}
       {exportProgress > 0 && <ProgressBar title="Gerando PDF, Aguarde..." percent={exportProgress} />}
 
       <button onClick={handleDownloadPdf} disabled={exportProgress > 0 ? true : false}>

@@ -30,9 +30,10 @@ import type {
   Goods,
 } from "../types/pack.ts";
 import Waiting from "../components/Waiting.tsx";
+import BannerAds from "../components/BannerAds.tsx";
 
 const Pack = () => {
-  const { headerTitle, setHeaderTitle, setHeaderSubTitle, setAlert, getCards, setGetCards } = useMainContext();
+  const { showAds, headerTitle, setHeaderTitle, setHeaderSubTitle, setAlert, getCards, setGetCards } = useMainContext();
 
   const [cards, setCards] = useState<Cards[]>([]);
 
@@ -313,6 +314,7 @@ const Pack = () => {
       <section className={styles.section_pack}>
         <div className={styles.div_pack}>
           <div className={styles.div_actions}>
+            <button onClick={() => navigate("/packs")}>Maços</button>
             <button onClick={() => setShowModalities(true)}>
               <GamepadDirectional />
               Padrões
@@ -370,10 +372,14 @@ const Pack = () => {
               )}
             </>
           )}
-          <button className={`${styles.add_cards}`} onClick={handleShowAddCards}>
+          <button
+            className={`${styles.add_cards} ${showAds && styles.add_cards_with_ads}`}
+            onClick={handleShowAddCards}
+          >
             <Plus />
           </button>
         </div>
+        {showAds && <BannerAds margin={0} top={false} />}
       </section>
     </>
   );

@@ -15,9 +15,10 @@ import { useFetch } from "../hooks/useFetch.tsx";
 // COMPONENTS
 import NewPack from "../components/NewPack.tsx";
 import Waiting from "../components/Waiting.tsx";
+import BannerAds from "../components/BannerAds.tsx";
 
 const Packs = () => {
-  const { setHeaderTitle, setHeaderSubTitle, setAlert, setGetCards, setShowAds } = useMainContext();
+  const { showAds, setHeaderTitle, setHeaderSubTitle, setAlert, setGetCards, setShowAds } = useMainContext();
   const { request } = useFetch();
   const navigate = useNavigate();
 
@@ -107,6 +108,8 @@ const Packs = () => {
   return (
     <>
       <NewPack sectionNewPack={sectionNewPack} setSectionNewPack={setSectionNewPack} />
+      {showAds && <BannerAds margin={63} top={true} />}
+
       <section className={styles.section_packs}>
         <div className={styles.div_packs}>
           {!requestIsDone ? (

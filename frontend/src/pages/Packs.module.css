@@ -1,7 +1,7 @@
 .section_packs {
   display: flex;
   flex-flow: column;
-  padding: 17px;
+  padding: 0 17px 17px;
   padding-bottom: calc(17px + env(safe-area-inset-bottom));
   position: relative;
   top: 63px;
@@ -13,7 +13,7 @@
 .packs_title {
   font-size: 18px;
   color: #282930;
-  margin: 0 auto 10px;
+  margin: 7px auto 10px;
   font-weight: 500;
   /* margin-top: 60px; */
 }

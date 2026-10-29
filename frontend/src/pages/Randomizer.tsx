@@ -8,11 +8,13 @@ import { useMainContext } from "../hooks/useMainContext.tsx";
 
 import { sleep, shuffleArray } from "../utils/functions.ts";
 import { Play, RotateCcw } from "lucide-react";
-import { admobService } from "../utils/admobService";
+import InterstitialAds from "../components/InterstitialAds.tsx";
+import BannerAds from "../components/BannerAds.tsx";
 
 // COMPONENTS
 
 const Randomizer = () => {
+  const [showInterstitial, setShowInterstitial] = useState<boolean>(false);
   const { setHeaderTitle, setHeaderSubTitle, setAlert, showAds } = useMainContext();
 
   useEffect(() => {
@@ -96,9 +98,7 @@ const Randomizer = () => {
     if (!confirm("O Sorteador será reiniciado. Todas as bolas sorteadas serão perdidas.")) return;
 
     if (showAds) {
-      await admobService.showInterstitial(() => {
-        resetBalls();
-      });
+      setShowInterstitial(true);
     } else {
       resetBalls();
     }
@@ -116,61 +116,74 @@ const Randomizer = () => {
   }
 
   return (
-    <section className={styles.section_randomizer}>
-      <div className={styles.div_randomizer}>
-        <div className={styles.div_table_numbers}>
-          {columns.map((column, index) => (
-            <ul key={`column_number_${index}`}>
-              {column.map((ball) => (
-                <li
-                  key={`column_number_${index}_${ball}`}
-                  className={`${!remainingBalls.includes(ball) ? styles.selected_number : ""} ${
-                    ball === lastBall && !buttonDisabled ? styles.last_ball : ""
-                  }`}
-                >
-                  {ball}
-                </li>
-              ))}
-            </ul>
-          ))}
-        </div>
+    <>
+      {showInterstitial && showAds && (
+        <InterstitialAds
+          callback={resetBalls}
+          message={"Veja o anúncio para resetar o sorteador."}
+          close={() => setShowInterstitial(false)}
+        />
+      )}
 
-        <div className={styles.div_actions}>
-          <RotateCcw onClick={handleReset} />
-        </div>
-
-        <div className={styles.drawn_balls}>
-          <p>{drawnBalls.length}/75</p>
-          <span>Bolas sorteadas</span>
-        </div>
-
-        <ul className={styles.ul_drawn_balls}>
-          {drawnBalls.toReversed().map((ball) => (
-            <li
-              key={`drawn_balls_${ball}`}
-              className={`${styles.ball} ${ball === lastBall && !buttonDisabled ? styles.last_ball : ""}`}
-            >
-              {ball}
-            </li>
-          ))}
-        </ul>
-
-        <button
-          className={styles.ball_button}
-          onClick={handleRandom}
-          disabled={remainingBalls.length === 0 || buttonDisabled ? true : false}
-        >
-          <div className={`${styles.way} ${remainingBalls.length === 0 || buttonDisabled ? styles.way_animation : ""}`}>
-            <div className={styles.button_drawn}>
-              <span>{lastBall === 0 ? <Play width={36} height={36} /> : lastBall}</span>
-            </div>
-            <div className={styles.button_drawn}>
-              <span>{lastBall === 0 ? <Play /> : lastBall}</span>
-            </div>
+      <section className={styles.section_randomizer}>
+        <div className={styles.div_randomizer}>
+          <div className={styles.div_table_numbers}>
+            {columns.map((column, index) => (
+              <ul key={`column_number_${index}`}>
+                {column.map((ball) => (
+                  <li
+                    key={`column_number_${index}_${ball}`}
+                    className={`${!remainingBalls.includes(ball) ? styles.selected_number : ""} ${
+                      ball === lastBall && !buttonDisabled ? styles.last_ball : ""
+                    }`}
+                  >
+                    {ball}
+                  </li>
+                ))}
+              </ul>
+            ))}
           </div>
-        </button>
-      </div>
-    </section>
+
+          <div className={styles.div_actions}>
+            <RotateCcw onClick={handleReset} />
+          </div>
+
+          <div className={styles.drawn_balls}>
+            <p>{drawnBalls.length}/75</p>
+            <span>Bolas sorteadas</span>
+          </div>
+
+          <ul className={styles.ul_drawn_balls}>
+            {drawnBalls.toReversed().map((ball) => (
+              <li
+                key={`drawn_balls_${ball}`}
+                className={`${styles.ball} ${ball === lastBall && !buttonDisabled ? styles.last_ball : ""}`}
+              >
+                {ball}
+              </li>
+            ))}
+          </ul>
+
+          <button
+            className={styles.ball_button}
+            onClick={handleRandom}
+            disabled={remainingBalls.length === 0 || buttonDisabled ? true : false}
+          >
+            <div
+              className={`${styles.way} ${remainingBalls.length === 0 || buttonDisabled ? styles.way_animation : ""}`}
+            >
+              <div className={styles.button_drawn}>
+                <span>{lastBall === 0 ? <Play width={36} height={36} /> : lastBall}</span>
+              </div>
+              <div className={styles.button_drawn}>
+                <span>{lastBall === 0 ? <Play /> : lastBall}</span>
+              </div>
+            </div>
+          </button>
+        </div>
+      </section>
+      {showAds && <BannerAds margin={0} top={false} />}
+    </>
   );
 };
 

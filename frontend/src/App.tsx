@@ -4,7 +4,6 @@ import { App as CapacitorApp } from "@capacitor/app";
 import { Capacitor } from "@capacitor/core";
 import { SplashScreen } from "@capacitor/splash-screen";
 import { AdMob } from "@capacitor-community/admob";
-import { admobService } from "./utils/admobService";
 import { NavigationBar, Style } from "@capawesome/capacitor-navigation-bar";
 
 import "./App.css";
@@ -41,8 +40,10 @@ function App() {
   useEffect(() => {
     const initAdMob = async () => {
       try {
+        if (!Capacitor.isNativePlatform()) {
+          throw new Error("Not mobile!");
+        }
         await AdMob.initialize();
-        admobService.loadInterstitial();
       } catch (e) {
         console.error("Failed to start AdMob:", e);
       }

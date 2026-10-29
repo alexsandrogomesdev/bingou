@@ -20,6 +20,7 @@
   display: flex;
   flex-flow: row;
   border-radius: 5px;
+  border: solid 1px #e7e7e7;
   gap: 25px;
   flex: 1;
   overflow-y: auto;
@@ -115,16 +116,24 @@
     display: flex;
     flex-flow: column;
     background-color: #fff;
-    min-height: calc(100vh - 50px);
-    max-height: calc(100vh - 50px);
+
     min-height: calc(100dvh - 50px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
     max-height: calc(100dvh - 50px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+
     margin: calc(25px + env(safe-area-inset-top)) auto calc(25px + env(safe-area-inset-bottom));
+
     min-width: calc(100dvw - 50px);
     max-width: calc(100dvw - 50px);
+
     padding: 8px;
     border: solid 1px #e7e7e7;
     border-radius: 12px;
+  }
+  .div_balls_table_with_ads {
+    margin: calc(0px + env(safe-area-inset-top)) auto calc(env(safe-area-inset-bottom));
+
+    min-height: calc(100dvh - 90px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    max-height: calc(100dvh - 90px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   }
 }
 @media (min-width: 768px) {

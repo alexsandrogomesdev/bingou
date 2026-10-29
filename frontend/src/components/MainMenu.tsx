@@ -12,21 +12,22 @@ import { useFetch } from "../hooks/useFetch.tsx";
 // COMPONENTS
 
 const MainMenu = () => {
-  const mainContext = useMainContext();
+  const { showAds, menuOpen, setMenuOpen } = useMainContext();
+
   const { request } = useFetch();
   const navigate = useNavigate();
 
   const handleLogOut = async () => {
-    mainContext.setMenuOpen(false);
+    setMenuOpen(false);
     await request("/logout", "POST", {}, {});
     localStorage.clear();
-    mainContext.setMenuOpen(false);
-    navigate("/");
+    setMenuOpen(false);
+    navigate("/signin");
     return;
   };
 
   return (
-    <section className={`${styles.menu_section} ${mainContext.menuOpen ? styles.menu_open : styles.menu_closed}`}>
+    <section className={`${styles.menu_section} ${menuOpen ? styles.menu_open : styles.menu_closed}`}>
       <div className={styles.menu_div}>
         <div className={styles.menu_header}>
           <img src="/logo192.png" width={32} height={32} className={styles.logo} />
@@ -34,11 +35,12 @@ const MainMenu = () => {
         </div>
 
         <ul className={styles.menu_ul}>
+          {showAds && <li style={{ minHeight: "105px" }}></li>}
           <li>
             <NavLink
               to="/"
               className={({ isActive }) => (isActive ? styles.active : "")}
-              onClick={() => mainContext.setMenuOpen(false)}
+              onClick={() => setMenuOpen(false)}
             >
               <House />
               <span>Inicio</span>
@@ -48,7 +50,7 @@ const MainMenu = () => {
             <NavLink
               to="/packs"
               className={({ isActive }) => (isActive ? styles.active : "")}
-              onClick={() => mainContext.setMenuOpen(false)}
+              onClick={() => setMenuOpen(false)}
             >
               <Boxes />
               <span>Maços</span>
@@ -58,7 +60,7 @@ const MainMenu = () => {
             <NavLink
               to="/profile"
               className={({ isActive }) => (isActive ? styles.active : "")}
-              onClick={() => mainContext.setMenuOpen(false)}
+              onClick={() => setMenuOpen(false)}
             >
               <UserRound />
               <span>Perfil</span>
@@ -69,7 +71,7 @@ const MainMenu = () => {
             <NavLink
               to="/signin"
               className={({ isActive }) => (isActive ? styles.active : "")}
-              onClick={() => mainContext.setMenuOpen(false)}
+              onClick={() => setMenuOpen(false)}
             >
               <UserKey />
               <span>Acessar</span>
@@ -80,7 +82,7 @@ const MainMenu = () => {
             <NavLink
               to="/plans"
               className={({ isActive }) => (isActive ? styles.active : "")}
-              onClick={() => mainContext.setMenuOpen(false)}
+              onClick={() => setMenuOpen(false)}
             >
               <HandCoins />
               <span>Planos</span>
@@ -91,7 +93,7 @@ const MainMenu = () => {
             <NavLink
               to="/shuffle"
               className={({ isActive }) => (isActive ? styles.active : "")}
-              onClick={() => mainContext.setMenuOpen(false)}
+              onClick={() => setMenuOpen(false)}
             >
               <Dices />
               <span>Sorteador</span>
@@ -99,17 +101,14 @@ const MainMenu = () => {
           </li>
 
           <li className={localStorage.getItem("userId") === null ? styles.hide : ""}>
-            <NavLink to="/" onClick={handleLogOut}>
+            <NavLink to="/signin" onClick={handleLogOut}>
               <LogOut />
               <span>Sair</span>
             </NavLink>
           </li>
         </ul>
       </div>
-      <div
-        className={styles.menu_div_close}
-        onClick={() => mainContext.setMenuOpen(mainContext.menuOpen ? false : true)}
-      ></div>
+      <div className={styles.menu_div_close} onClick={() => setMenuOpen(menuOpen ? false : true)}></div>
     </section>
   );
 };
