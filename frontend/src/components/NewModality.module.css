@@ -36,9 +36,9 @@
 .form {
   display: flex;
   flex-flow: column;
-  margin: 16px 0 0;
+  margin: 0;
 }
-.form > input {
+.form input {
   min-height: 32px;
   max-height: 32px;
   border: solid 1px #e7e7e7;
@@ -55,6 +55,23 @@
   font-weight: 400;
   margin: 10px 0 0;
 }
+.div_input {
+  display: flex;
+  flex-flow: column;
+  margin-top: 12px;
+  padding: 10px;
+  border: solid 1px #e7e7e7;
+  border-radius: 8px;
+}
+.div_input label {
+  font-size: 14px;
+  color: #282930;
+}
+.div_input span {
+  font-size: 12px;
+  color: #28293099;
+}
+
 .div_pattern {
   display: flex;
   flex-flow: row;

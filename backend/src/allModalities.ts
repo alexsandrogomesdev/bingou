@@ -13,6 +13,7 @@ export interface Modalities {
   id: number;
   on: boolean;
   name: string;
+  ballLimit: number;
   maps: Array<number[]>;
 }
 export const allModalities: Modalities[] = [
@@ -20,17 +21,14 @@ export const allModalities: Modalities[] = [
     id: 1,
     on: true,
     name: "Cheia",
-    maps: [
-      [
-        1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20,
-        21, 22, 23, 24,
-      ],
-    ],
+    ballLimit: 0,
+    maps: [[1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]],
   },
   {
     id: 2,
     on: false,
     name: "Quina",
+    ballLimit: 0,
     maps: [
       [1, 0, 1, 2, 3, 4],
       [1, 5, 6, 7, 8, 9],
@@ -47,6 +45,7 @@ export const allModalities: Modalities[] = [
     id: 3,
     on: false,
     name: "Coluna",
+    ballLimit: 0,
     maps: [
       [1, 0, 1, 2, 3, 4],
       [1, 5, 6, 7, 8, 9],
@@ -59,6 +58,7 @@ export const allModalities: Modalities[] = [
     id: 4,
     on: false,
     name: "Linha",
+    ballLimit: 0,
     maps: [
       [1, 0, 5, 10, 15, 20],
       [1, 1, 6, 11, 16, 21],
@@ -71,18 +71,21 @@ export const allModalities: Modalities[] = [
     id: 5,
     on: false,
     name: "4 Selos de Canto",
+    ballLimit: 0,
     maps: [[1, 0, 1, 3, 4, 5, 6, 8, 9, 15, 16, 18, 19, 20, 21, 23, 24]],
   },
   {
     id: 6,
     on: false,
     name: "4 Curvas",
+    ballLimit: 0,
     maps: [[1, 0, 1, 3, 4, 5, 9, 15, 19, 20, 21, 23, 24]],
   },
   {
     id: 7,
     on: false,
     name: "BIN ou NGO",
+    ballLimit: 0,
     maps: [
       [1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14],
       [1, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
@@ -92,48 +95,56 @@ export const allModalities: Modalities[] = [
     id: 8,
     on: false,
     name: "Martelo",
+    ballLimit: 0,
     maps: [[1, 0, 1, 5, 6, 10, 11, 13, 14, 15, 16, 20, 21]],
   },
   {
     id: 9,
     on: false,
     name: "Cacto",
+    ballLimit: 0,
     maps: [[1, 0, 1, 2, 7, 10, 11, 13, 14, 17, 20, 21, 22]],
   },
   {
     id: 10,
     on: false,
     name: "Quadro Grande",
+    ballLimit: 0,
     maps: [[1, 0, 1, 2, 3, 4, 5, 9, 10, 14, 15, 19, 20, 21, 22, 23, 24]],
   },
   {
     id: 11,
     on: false,
     name: "Quadro Pequeno",
+    ballLimit: 0,
     maps: [[1, 6, 7, 8, 11, 13, 16, 17, 18]],
   },
   {
     id: 12,
     on: false,
     name: "Tabuleiro de damas",
+    ballLimit: 0,
     maps: [[1, 0, 2, 4, 6, 8, 10, 14, 16, 18, 20, 22, 24]],
   },
   {
     id: 13,
     on: false,
     name: "4 Cantos",
+    ballLimit: 0,
     maps: [[1, 0, 4, 20, 24]],
   },
   {
     id: 14,
     on: false,
     name: "Cruz",
+    ballLimit: 0,
     maps: [[1, 2, 7, 10, 11, 13, 14, 17, 22]],
   },
   {
     id: 15,
     on: false,
     name: "Bolo de 3 camadas",
+    ballLimit: 0,
     maps: [[1, 0, 2, 4, 5, 7, 9, 10, 14, 15, 17, 19, 20, 22, 24]],
   },
 ];

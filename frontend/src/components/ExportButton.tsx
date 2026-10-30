@@ -23,7 +23,7 @@ const ExportButton = ({ packId, packName, cards }: Props) => {
   const { showAds } = useMainContext();
 
   const downloadPdf = async () => {
-    setShowInterstitial(false);
+    if (showAds && showInterstitial) setShowInterstitial(false);
     setExportProgress(0);
     try {
       await exportPDF(cards, (p) => setExportProgress(p), packName, packId);
@@ -38,7 +38,7 @@ const ExportButton = ({ packId, packName, cards }: Props) => {
     if (showAds) {
       setShowInterstitial(true);
     } else {
-      downloadPdf();
+      await downloadPdf();
     }
   };
 
@@ -53,7 +53,7 @@ const ExportButton = ({ packId, packName, cards }: Props) => {
       )}
       {exportProgress > 0 && <ProgressBar title="Gerando PDF, Aguarde..." percent={exportProgress} />}
 
-      <button onClick={handleDownloadPdf} disabled={exportProgress > 0 ? true : false}>
+      <button onClick={() => handleDownloadPdf()} disabled={exportProgress > 0 ? true : false}>
         <Share2 />
         PDF
       </button>

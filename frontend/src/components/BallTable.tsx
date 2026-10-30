@@ -31,7 +31,7 @@ const BallTable = ({ balls, handleSelectBall, setShowBallTable, goods }: Props) 
     <section className={styles.section_balls_table}>
       <div className={`${styles.div_balls_table} ${showAds && styles.div_balls_table_with_ads}`}>
         <nav>
-          <h3>Bolas chamadas</h3>
+          <h3>Bolas chamadas ({balls.size})</h3>
           <X onClick={() => setShowBallTable(false)} />
         </nav>
         <div className={styles.table_body}>

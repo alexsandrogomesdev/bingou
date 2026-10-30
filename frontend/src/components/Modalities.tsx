@@ -2,14 +2,7 @@ import { useState, memo } from "react";
 
 // STYLES
 import styles from "./Modalities.module.css";
-import {
-  X,
-  ToggleRight,
-  ToggleLeft,
-  ChevronDown,
-  ChevronUp,
-  Plus,
-} from "lucide-react";
+import { X, ToggleRight, ToggleLeft, ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
 
 // HOOKS
 
@@ -20,17 +13,23 @@ import NewModality from "./NewModality.tsx";
 
 // TYPES
 import type { ModalitiesInterface } from "../types/pack";
+import { useMainContext } from "../hooks/useMainContext.tsx";
 interface Props {
   setShowModalities: React.Dispatch<React.SetStateAction<boolean>>;
   modalities: ModalitiesInterface[];
   setModalities: React.Dispatch<React.SetStateAction<ModalitiesInterface[]>>;
 }
+interface Modality {
+  id: number;
+  on: boolean;
+  name: string;
+  ballLimit?: number;
+  maps: Array<number[]>;
+}
+const Modalities = ({ setShowModalities, modalities, setModalities }: Props) => {
+  const { showAds } = useMainContext();
+  const [modalityToRemove, setModalityToRemove] = useState<Modality | null>(null);
 
-const Modalities: React.FC<Props> = ({
-  setShowModalities,
-  modalities,
-  setModalities,
-}) => {
   const [showNewPattern, setShowNewPattern] = useState<boolean>(false);
   const [modalityId, setModalityId] = useState<number>(0);
   const handleShowNewPattern = (modality: number) => {
@@ -72,6 +71,13 @@ const Modalities: React.FC<Props> = ({
   const [openId, setOpenId] = useState<number>(0);
   const [showNewModality, setShowNewModality] = useState<boolean>(false);
 
+  const removeModality = () => {
+    setModalities((prevModalities) => {
+      return prevModalities.filter((m) => m.id !== modalityToRemove?.id);
+    });
+    setModalityToRemove(null);
+    return;
+  };
   return (
     <>
       {showNewPattern && (
@@ -83,21 +89,28 @@ const Modalities: React.FC<Props> = ({
         />
       )}
 
-      {showNewModality && (
-        <NewModality
-          setShowNewModality={setShowNewModality}
-          setModalities={setModalities}
-        />
+      {modalityToRemove !== null && (
+        <section className={styles.section_remove_modality}>
+          <div className={styles.div_remove_modality}>
+            <p>Você quer remover a modalidade: {modalityToRemove.name} ?</p>
+            <div>
+              <button className={styles.remove_modality_confirm} onClick={removeModality}>
+                SIM
+              </button>
+              <button className={styles.remove_modality_cancel} onClick={() => setModalityToRemove(null)}>
+                NÃO
+              </button>
+            </div>
+          </div>
+        </section>
       )}
+      {showNewModality && <NewModality setShowNewModality={setShowNewModality} setModalities={setModalities} />}
       <section className={styles.section_modalities}>
-        <div className={styles.div_modalities}>
+        <div className={`${styles.div_modalities} ${showAds && styles.div_modalities_with_ads}`}>
           <div className={styles.div_modalities_header}>
             <h3>Modalidades</h3>
 
-            <button
-              className={styles.new_modality}
-              onClick={() => setShowNewModality(true)}
-            >
+            <button className={styles.new_modality} onClick={() => setShowNewModality(true)}>
               <Plus />
             </button>
             <X onClick={() => setShowModalities(false)} />
@@ -107,7 +120,7 @@ const Modalities: React.FC<Props> = ({
               <li key={modality.id} className={styles.li_modality}>
                 <div>
                   <p>{modality.name}</p>
-                  <div>
+                  <div className={styles.modality_actions}>
                     {modality.on ? (
                       <ToggleRight
                         className={styles.modality_enabled}
@@ -119,26 +132,15 @@ const Modalities: React.FC<Props> = ({
                         onClick={() => changeModality(modality.id, true)}
                       />
                     )}
+                    <Trash2 className={styles.remove_modality} onClick={() => setModalityToRemove(modality)} />
                     {openId === modality.id ? (
-                      <ChevronUp
-                        className={styles.open_close_modality}
-                        onClick={() => setOpenId(0)}
-                      />
+                      <ChevronUp className={styles.open_close_modality} onClick={() => setOpenId(0)} />
                     ) : (
-                      <ChevronDown
-                        className={styles.open_close_modality}
-                        onClick={() => setOpenId(modality.id)}
-                      />
+                      <ChevronDown className={styles.open_close_modality} onClick={() => setOpenId(modality.id)} />
                     )}
                   </div>
                 </div>
-                <div
-                  className={
-                    openId === modality.id
-                      ? styles.modality_details_show
-                      : styles.modality_details_hide
-                  }
-                >
+                <div className={openId === modality.id ? styles.modality_details_show : styles.modality_details_hide}>
                   {modality.maps.map((item, index) => (
                     <ModalityPattern
                       key={`modality_example_${index}`}
@@ -148,10 +150,7 @@ const Modalities: React.FC<Props> = ({
                       changeMap={changeMap}
                     />
                   ))}
-                  <button
-                    className={styles.new_pattern}
-                    onClick={() => handleShowNewPattern(modality.id)}
-                  >
+                  <button className={styles.new_pattern} onClick={() => handleShowNewPattern(modality.id)}>
                     <Plus />
                   </button>
                 </div>

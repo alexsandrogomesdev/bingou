@@ -21,6 +21,7 @@ const NewModality = ({ setShowNewModality, setModalities }: Props) => {
   }, []);
 
   const [name, setName] = useState<string>("");
+  const [ballLimit, setBallLimit] = useState<number>(0);
   const [pattern, setPattern] = useState<number[]>([]);
 
   const selectIndex = (index: number) => {
@@ -34,15 +35,14 @@ const NewModality = ({ setShowNewModality, setModalities }: Props) => {
     });
     return;
   };
-  const handleSaveNewModality = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
+  const handleSaveNewModality = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
     const newModality = {
       id: Math.floor(Date.now() / 1000),
       on: true,
       name: name,
+      ballLimit: ballLimit,
       maps: [[1, ...pattern.sort((a, b) => a - b)]],
     };
 
@@ -62,25 +62,36 @@ const NewModality = ({ setShowNewModality, setModalities }: Props) => {
           <X onClick={() => setShowNewModality(false)} />
         </nav>
         <form className={styles.form}>
-          <input
-            type="text"
-            placeholder="Nome da modalidade"
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-            required
-          />
+          <div className={styles.div_input}>
+            <label>Nome da modalidade</label>
+            <span>Ex: Quina maluca</span>
+            <input type="text" placeholder="" onChange={(e) => setName(e.target.value)} value={name} required />
+          </div>
+
+          <div className={styles.div_input}>
+            <label>Até a bola</label>
+            <span>Ex: 10 para ganhar até a décima bola chamada. 0 para ignorar!</span>
+            <input
+              type="text"
+              inputMode={"numeric"}
+              value={ballLimit}
+              onChange={(e) => setBallLimit(Number(e.target.value))}
+              maxLength={2}
+              required
+            />
+          </div>
+
           <p>Padrão</p>
           <div className={styles.div_pattern}>
             {columns.map((column, index) => (
-              <ul
-                key={`new_modality_column_${index}`}
-                className={styles.ul_pattern}
-              >
+              <ul key={`new_modality_column_${index}`} className={styles.ul_pattern}>
                 {column.map((number) => (
                   <li
                     key={`new_modality_column_${index}_${number}`}
                     onClick={() => selectIndex(number)}
-                    className={`${pattern.includes(number) ? styles.selected_index : ""} ${number === 12 ? styles.joker : ""}`}
+                    className={`${pattern.includes(number) ? styles.selected_index : ""} ${
+                      number === 12 ? styles.joker : ""
+                    }`}
                   >
                     {number === 12 ? <Sparkles /> : ""}
                   </li>

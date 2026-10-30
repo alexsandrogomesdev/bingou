@@ -176,6 +176,9 @@ const Pack = () => {
       for (let a = 0; a < modalitiesLength; a++) {
         // modality per modality
         if (modalities[a].on === false) continue; // modality off
+        const ballLimit = modalities[a].ballLimit ?? 0;
+        if (ballLimit > 0 && ballLimit < updatedBalls.size) continue;
+
         const cardsOnModality: WinningsObject = {
           modality: {
             id: modalities[a].id,
@@ -201,23 +204,32 @@ const Pack = () => {
                 pattern.push(card.numbers.data[map[d]]);
               }
             }
+
             if (mapLength - 1 === pattern.length && pattern.includes(ball)) {
               // wins
               // -1 because the first index is the control 0 or 1
-              cardsOnModality.cards.push({
-                id: card.id,
-                pattern: pattern,
-                numbers: card.numbers.data,
-              });
+              if (ballLimit === 0 || (ballLimit > 0 && ballLimit <= updatedBalls.size)) {
+                cardsOnModality.cards.push({
+                  id: card.id,
+                  pattern: pattern,
+                  numbers: card.numbers.data,
+                });
+              }
             } else if (mapLength - 1 - pattern.length === 1) {
               // good, miss 1 ball to win
-              for (let e = 1; e < mapLength; e++) {
-                if (!updatedBalls.has(card.numbers.data[map[e]])) {
-                  goodBalls.push({
-                    ball: card.numbers.data[map[e]],
-                    modality: modalities[a].name,
-                    card: cards[c].id,
-                  });
+              console.log(ballLimit);
+              console.log(updatedBalls.size);
+              if (ballLimit === 0 || (ballLimit > 0 && ballLimit > updatedBalls.size)) {
+                console.log("===");
+
+                for (let e = 1; e < mapLength; e++) {
+                  if (!updatedBalls.has(card.numbers.data[map[e]])) {
+                    goodBalls.push({
+                      ball: card.numbers.data[map[e]],
+                      modality: modalities[a].name,
+                      card: cards[c].id,
+                    });
+                  }
                 }
               }
             }
@@ -314,7 +326,6 @@ const Pack = () => {
       <section className={styles.section_pack}>
         <div className={styles.div_pack}>
           <div className={styles.div_actions}>
-            <button onClick={() => navigate("/packs")}>Maços</button>
             <button onClick={() => setShowModalities(true)}>
               <GamepadDirectional />
               Padrões
@@ -323,10 +334,10 @@ const Pack = () => {
               <Grid3x3 />
               Bolas
             </button>
+            <ExportButton cards={cards} packName={packName} packId={packId} />
             <button onClick={() => setShowWinnings(true)}>
               <Gift />
             </button>
-            <ExportButton cards={cards} packName={packName} packId={packId} />
           </div>
 
           {balls && id && showBallTable && (

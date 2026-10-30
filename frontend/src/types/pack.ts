@@ -13,6 +13,7 @@ export interface ModalitiesInterface {
   id: number;
   on: boolean;
   name: string;
+  ballLimit: number;
   maps: Array<number[]>;
 }
 export interface CardWinningObject {
