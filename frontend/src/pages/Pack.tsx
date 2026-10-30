@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef, useMemo, memo } from "react";
+import { useEffect, useState, useCallback, useRef, memo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { GamepadDirectional, Gift, Grid3x3, Plus } from "lucide-react";
 
@@ -51,7 +51,6 @@ const Pack = () => {
   const [cardsAdded, setCardsAdded] = useState<boolean>(false);
   const [requestIsDone, setRequestIsDone] = useState<boolean>(false);
   const [goods, setGoods] = useState<Goods[]>([]);
-  const [cardsWithGoods, setCardsWithGoods] = useState<Set<number>>(new Set([]));
 
   const prevStateRef = useRef({ winnings, balls, modalities, goods });
 
@@ -87,7 +86,6 @@ const Pack = () => {
       setBalls(new Set(response.result.balls.data));
       setBallsToRender(new Set(response.result.balls.data));
       setGoods(response.result.goods);
-      setCardsWithGoods(new Set(response.result.goods.map((item) => item.card)));
       setWinnings(response.result.winnings);
       setModalities(response.result.modalities);
       setHeaderSubTitle(`${response.result.cards.length} cartelas`);
@@ -121,7 +119,6 @@ const Pack = () => {
     }
     if (prev.goods !== goods) {
       body.goods = goods;
-      setCardsWithGoods(new Set(goods.map((item) => item.card)));
     }
     if (prev.winnings !== winnings) {
       body.winnings = winnings;
@@ -217,11 +214,7 @@ const Pack = () => {
               }
             } else if (mapLength - 1 - pattern.length === 1) {
               // good, miss 1 ball to win
-              console.log(ballLimit);
-              console.log(updatedBalls.size);
               if (ballLimit === 0 || (ballLimit > 0 && ballLimit > updatedBalls.size)) {
-                console.log("===");
-
                 for (let e = 1; e < mapLength; e++) {
                   if (!updatedBalls.has(card.numbers.data[map[e]])) {
                     goodBalls.push({
@@ -242,8 +235,6 @@ const Pack = () => {
       }
 
       setGoods(goodBalls);
-
-      // console.log("Good balls: " + goodBalls.map((item) => item.ball));
 
       if (action === "REMOVE") {
         setWinnings((prevWinnings) => {
@@ -295,17 +286,18 @@ const Pack = () => {
     [request, setAlert],
   );
 
-  const goodsByCard = useMemo(() => {
-    const map = new Map<number, Set<number>>();
+  const goodsByCard = (cardId: number) => {
+    const map: number[] = [];
 
     for (const item of goods) {
-      if (!map.has(item.card)) {
-        map.set(item.card, new Set());
+      if (item.card !== cardId) continue;
+      if (!map.includes(item.ball)) {
+        map.push(item.ball);
       }
-      map.get(item.card)!.add(item.ball);
     }
+
     return map;
-  }, [goods]);
+  };
 
   const handleShowAddCards = async () => {
     setShowAddCards(true);
@@ -374,8 +366,7 @@ const Pack = () => {
                       ball={lastBall}
                       balls={ballsToRender}
                       cardNumbers={card.numbers.data}
-                      isGoodCard={cardsWithGoods.has(card.id)}
-                      goodBalls={goodsByCard.get(card.id) || new Set()}
+                      goodBalls={goodsByCard(card.id)}
                       handleRemoveCard={handleRemoveCard}
                     />
                   ))}

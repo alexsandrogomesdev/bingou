@@ -117,9 +117,11 @@ const Modalities = ({ setShowModalities, modalities, setModalities }: Props) => 
           </div>
           <ul className={styles.ul_modalities}>
             {modalities.map((modality) => (
-              <li key={modality.id} className={styles.li_modality}>
+              <li key={modality.id} className={`${styles.li_modality} ${modality.on ? styles.modality_on : ""}`}>
                 <div>
-                  <p>{modality.name}</p>
+                  <p>
+                    {modality.name} {modality.ballLimit > 0 ? `(até ${modality.ballLimit} bolas)` : ""}
+                  </p>
                   <div className={styles.modality_actions}>
                     {modality.on ? (
                       <ToggleRight

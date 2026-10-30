@@ -17,12 +17,11 @@ interface CardsProps {
   balls: Set<number>;
   cardNumbers: number[];
   pattern?: number[];
-  isGoodCard?: boolean;
-  goodBalls?: Set<number>;
+  goodBalls?: number[];
   handleRemoveCard?: (id: number) => void;
 }
 
-const Card = ({ index, id, balls, cardNumbers, pattern, isGoodCard, goodBalls, handleRemoveCard }: CardsProps) => {
+const Card = ({ index, id, balls, cardNumbers, pattern, goodBalls, handleRemoveCard }: CardsProps) => {
   const [showEditCard, setShowEditCard] = useState<boolean>(false);
   const [showChangeNumbers, setShowChangeNumbers] = useState<boolean>(false);
 
@@ -49,8 +48,10 @@ const Card = ({ index, id, balls, cardNumbers, pattern, isGoodCard, goodBalls, h
     return;
   };
 
+  const goodCard = goodBalls && goodBalls.length > 0 ? true : false;
+
   return (
-    <section className={styles.section}>
+    <section className={`${styles.section} ${goodCard ? styles.good_card : ""}`}>
       {showChangeNumbers && (
         <EditCard
           id={id}
@@ -60,7 +61,7 @@ const Card = ({ index, id, balls, cardNumbers, pattern, isGoodCard, goodBalls, h
         />
       )}
 
-      <article className={`${styles.card} ${isGoodCard && styles.good_card}`} onClick={() => handleEditCard()}>
+      <article className={`${styles.card}`} onClick={() => handleEditCard()}>
         <div className={styles.card_header}>
           <p>#{index}</p>
           <span>({id})</span>
@@ -90,7 +91,7 @@ const Card = ({ index, id, balls, cardNumbers, pattern, isGoodCard, goodBalls, h
                     number={number}
                     isMarked={balls.has(number)}
                     onPattern={pattern && pattern.includes(number) ? true : false}
-                    isGoodBall={goodBalls && goodBalls.has(number) ? true : false}
+                    isGoodBall={goodBalls && goodBalls.includes(number) ? true : false}
                   />
                 );
               })}
@@ -105,6 +106,9 @@ const Card = ({ index, id, balls, cardNumbers, pattern, isGoodCard, goodBalls, h
 export default memo(Card, (prevProps, nextProps) => {
   if (prevProps.ball === nextProps.ball) {
     // return true;
+  }
+  if (nextProps.goodBalls && prevProps.goodBalls && nextProps.goodBalls.length !== prevProps.goodBalls.length) {
+    return false;
   }
   if (nextProps.ball && nextProps.cardNumbers.includes(nextProps.ball)) {
     return false;

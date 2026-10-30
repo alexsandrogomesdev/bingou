@@ -68,6 +68,9 @@
   background-color: #f7f7f7;
   border-radius: 12px;
 }
+.modality_on {
+  order: -1;
+}
 .li_modality > div:nth-of-type(1) {
   display: flex;
   min-width: 100%;
@@ -91,7 +94,6 @@
 .modality_details_hide {
   display: none;
 }
-
 .modality_actions {
   display: flex;
   align-items: center;

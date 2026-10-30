@@ -1,3 +1,7 @@
+.section {
+  display: flex;
+  flex-flow: column;
+}
 .card {
   display: flex;
   flex-flow: column;
@@ -9,12 +13,12 @@
   max-width: 152px;
   background-color: #fff;
   max-height: 214px;
-  order: 2;
+  order: 1;
   padding: 4px;
   content-visibility: auto;
 }
 .good_card {
-  order: 1;
+  order: -1;
 }
 .card_header {
   display: flex;
