@@ -27,6 +27,12 @@ const authenticate = async (request: any, reply: any) => {
   }
 };
 
+// PLANS
+const allPlans: number[] = [];
+allPlans.push(500);
+allPlans.push(2000);
+allPlans.push(10000);
+
 // GLOBALS
 import { type Modalities, allModalities } from "./allModalities";
 import { shuffleArray, getRandomNumber, isObjectEmpty, formatCurrency, formatToDecimal } from "./utils";
@@ -97,6 +103,30 @@ fastify.get("/modalities", { preHandler: [authenticate] }, async (request: Fasti
   return reply.status(200).send({
     message: "ok",
     result: allModalities,
+  });
+});
+
+// APP UPDATED
+fastify.get("/appUpdated", { preHandler: [authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
+  const id = request.user.sub;
+  const result = await query("SELECT app_updated FROM users WHERE id = $1", [id]);
+  if (result.rowCount && result.rowCount === 1) {
+    const appUpdated = result.rows[0].app_updated ?? true;
+    return reply.status(200).send({
+      message: "ok",
+      appUpdated: Boolean(appUpdated),
+    });
+  } else {
+    return reply.status(401).send({
+      message: "failed",
+    });
+  }
+});
+fastify.patch("/appUpdated", { preHandler: [authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
+  const id = request.user.sub;
+  await query("UPDATE users SET app_updated = true WHERE id = $1", [id]);
+  return reply.status(200).send({
+    message: "ok",
   });
 });
 
@@ -445,6 +475,7 @@ interface NewPackBody {
   name: string;
   qty: number;
 }
+
 const plans: Array<string> = ["Gratuito", "Basico", "Completo"];
 fastify.post(
   "/packs/new",
@@ -458,17 +489,11 @@ fastify.post(
     const balls = new Uint8Array();
     const time = Math.floor(Date.now() / 1000);
 
-    let limit: number = 50;
+    let limit: number = allPlans[0];
 
     const userDetails = await query("SELECT plan,due_at FROM users WHERE id = $1", [userId]);
     if (Number(userDetails.rows[0].due_at) > Math.floor(Date.now() / 1000)) {
-      if (userDetails.rows[0].plan === 1) {
-        // BASIC
-        limit = 2000;
-      } else if (userDetails.rows[0].plan === 2) {
-        // FULL
-        limit = 10000;
-      }
+      limit = allPlans[userDetails.rows[0].plan];
     }
 
     if (qty > limit) {
@@ -696,7 +721,7 @@ fastify.post(
     const packId = request.params.id;
     const userId = request.user.sub;
 
-    let limit: number = 50;
+    let limit: number = allPlans[0];
     const userDetails = await query(
       "SELECT p.plan, p.due_at, COUNT(c.id)::bigint AS cards FROM users p LEFT JOIN cards c ON c.pack_id = $1 WHERE p.id = $2 GROUP BY p.plan, p.due_at",
       [packId, userId],
@@ -704,13 +729,7 @@ fastify.post(
 
     if (Number(userDetails.rows[0].due_at) > Math.floor(Date.now() / 1000)) {
       console.log("Here");
-      if (userDetails.rows[0].plan === 1) {
-        // BASIC
-        limit = 2000;
-      } else if (userDetails.rows[0].plan === 2) {
-        // FULL
-        limit = 10000;
-      }
+      limit = allPlans[userDetails.rows[0].plan];
     }
     if (Number(userDetails.rows[0].cards) + qty > limit) {
       return reply.status(400).send({

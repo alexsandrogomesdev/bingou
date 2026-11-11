@@ -16,9 +16,10 @@ import { useFetch } from "../hooks/useFetch.tsx";
 import NewPack from "../components/NewPack.tsx";
 import Waiting from "../components/Waiting.tsx";
 import BannerAds from "../components/BannerAds.tsx";
+import UpdateApp from "../components/UpdateApp.tsx";
 
 const Packs = () => {
-  const { showAds, setHeaderTitle, setHeaderSubTitle, setAlert, setGetCards, setShowAds } = useMainContext();
+  const { showAds, menuOpen, setHeaderTitle, setHeaderSubTitle, setAlert, setGetCards, setShowAds } = useMainContext();
   const { request } = useFetch();
   const navigate = useNavigate();
 
@@ -108,7 +109,9 @@ const Packs = () => {
   return (
     <>
       <NewPack sectionNewPack={sectionNewPack} setSectionNewPack={setSectionNewPack} />
-      {showAds && <BannerAds margin={63} top={true} />}
+      {showAds && !menuOpen && <BannerAds margin={63} top={true} />}
+
+      <UpdateApp />
 
       <section className={styles.section_packs}>
         <div className={styles.div_packs}>
@@ -147,7 +150,7 @@ const Packs = () => {
                     plan === 0 || dueAt < timeStamp ? styles.show : styles.hide
                   }`}
                 >
-                  <p>Seu plano gratuito permite gerar até 50 cartelas por maço. Para gerar mais obtenha um plano.</p>
+                  <p>Seu plano gratuito permite gerar até 500 cartelas por maço. Para gerar mais obtenha um plano.</p>
 
                   <Link to="/plans">
                     <CircleStar />

@@ -1,0 +1,38 @@
+.section {
+  display: flex;
+  flex-flow: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  width: 100vw;
+  height: 100dvh;
+  z-index: 15;
+}
+.div {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  margin: auto 25px;
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 12px;
+}
+.div button {
+  min-height: 44px;
+  max-height: 44px;
+  border: none;
+  border-radius: 8px;
+  background-color: #24af60;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  margin-top: 16px;
+  width: 100%;
+}
+.div button:nth-of-type(2) {
+  /* margin-top: 0px; */
+  border: none;
+  background-color: transparent;
+  color: #171717;
+}

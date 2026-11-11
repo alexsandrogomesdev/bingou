@@ -10,12 +10,13 @@ import { sleep, shuffleArray } from "../utils/functions.ts";
 import { Play, RotateCcw } from "lucide-react";
 import InterstitialAds from "../components/InterstitialAds.tsx";
 import BannerAds from "../components/BannerAds.tsx";
+import UpdateApp from "../components/UpdateApp.tsx";
 
 // COMPONENTS
 
 const Randomizer = () => {
   const [showInterstitial, setShowInterstitial] = useState<boolean>(false);
-  const { setHeaderTitle, setHeaderSubTitle, setAlert, showAds } = useMainContext();
+  const { setHeaderTitle, setHeaderSubTitle, setAlert, showAds, menuOpen } = useMainContext();
 
   useEffect(() => {
     setHeaderTitle("Sorteador");
@@ -125,6 +126,8 @@ const Randomizer = () => {
         />
       )}
 
+      <UpdateApp />
+
       <section className={styles.section_randomizer}>
         <div className={styles.div_randomizer}>
           <div className={styles.div_table_numbers}>
@@ -182,7 +185,7 @@ const Randomizer = () => {
           </button>
         </div>
       </section>
-      {showAds && <BannerAds margin={0} top={false} />}
+      {showAds && !menuOpen && <BannerAds margin={0} top={false} />}
     </>
   );
 };

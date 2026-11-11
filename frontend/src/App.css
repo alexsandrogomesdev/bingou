@@ -11,12 +11,10 @@ body {
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
 }
-html,
 body,
 #root {
   background-color: #ffffff;
-  min-height: 100dvh;
-
+  height: max-content;
   padding-bottom: env(safe-area-inset-bottom);
 }
 

@@ -11,7 +11,7 @@ const TermsOfUse = () => {
       <article className={styles.article_terms}>
         <h1>Termos de Uso - Bingou</h1>
         <p>
-          <strong>Última atualização:</strong> 21 de setembro de 2026
+          <strong>Última atualização:</strong> 11 de novembro de 2026
         </p>
 
         <p>
@@ -50,7 +50,7 @@ const TermsOfUse = () => {
           <p>O serviço é oferecido sob o modelo de assinatura com as seguintes especificações:</p>
           <ul>
             <li>
-              <strong>Plano Gratuito:</strong> Limite de até 50 cartelas por maço. Inclui a exibição de anúncios
+              <strong>Plano Gratuito:</strong> Limite de até 500 cartelas por maço. Inclui a exibição de anúncios
               publicitários (personalizados e contextuais via Google AdMob) como forma de financiamento do acesso
               gratuito.
             </li>

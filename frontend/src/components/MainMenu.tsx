@@ -12,7 +12,7 @@ import { useFetch } from "../hooks/useFetch.tsx";
 // COMPONENTS
 
 const MainMenu = () => {
-  const { showAds, menuOpen, setMenuOpen } = useMainContext();
+  const { menuOpen, setMenuOpen } = useMainContext();
 
   const { request } = useFetch();
   const navigate = useNavigate();
@@ -35,7 +35,6 @@ const MainMenu = () => {
         </div>
 
         <ul className={styles.menu_ul}>
-          {showAds && <li style={{ minHeight: "105px" }}></li>}
           <li>
             <NavLink
               to="/"

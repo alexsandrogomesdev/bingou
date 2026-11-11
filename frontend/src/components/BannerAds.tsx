@@ -1,4 +1,4 @@
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import styles from "./BannerAds.module.css";
 import { AdMob, BannerAdPosition } from "@capacitor-community/admob";
 import { Capacitor } from "@capacitor/core";
@@ -8,6 +8,8 @@ interface Props {
   top: boolean;
 }
 const BannerAds = ({ margin, top }: Props) => {
+  const [adKey, setAdKey] = useState(0);
+
   useEffect(() => {
     let isMounted = true;
 
@@ -16,8 +18,6 @@ const BannerAds = ({ margin, top }: Props) => {
 
       if (isMounted && Capacitor.isNativePlatform()) {
         try {
-          // const position =
-          if (top) console.log(top);
           await AdMob.showBanner({
             adId: "ca-app-pub-3611957232178140/3353834291",
             position: top ? BannerAdPosition.TOP_CENTER : BannerAdPosition.BOTTOM_CENTER,
@@ -33,12 +33,19 @@ const BannerAds = ({ margin, top }: Props) => {
 
     renderAd();
 
+    const interval = setInterval(() => {
+      if (isMounted) {
+        setAdKey((prevKey) => prevKey + 1);
+      }
+    }, 2.5 * 60 * 1000);
+
     return () => {
       isMounted = false;
       // Remove o banner nativo ao fechar o modal
+      clearInterval(interval);
       AdMob.removeBanner().catch(() => {});
     };
-  }, []);
+  }, [margin, top, adKey]);
 
   return <div className={styles.div}></div>;
 };

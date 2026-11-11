@@ -33,7 +33,8 @@ import Waiting from "../components/Waiting.tsx";
 import BannerAds from "../components/BannerAds.tsx";
 
 const Pack = () => {
-  const { showAds, headerTitle, setHeaderTitle, setHeaderSubTitle, setAlert, getCards, setGetCards } = useMainContext();
+  const { showAds, menuOpen, headerTitle, setHeaderTitle, setHeaderSubTitle, setAlert, getCards, setGetCards } =
+    useMainContext();
 
   const [cards, setCards] = useState<Cards[]>([]);
 
@@ -381,7 +382,7 @@ const Pack = () => {
             <Plus />
           </button>
         </div>
-        {showAds && <BannerAds margin={0} top={false} />}
+        {showAds && !menuOpen && <BannerAds margin={0} top={false} />}
       </section>
     </>
   );
