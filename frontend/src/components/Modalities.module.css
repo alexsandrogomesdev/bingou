@@ -57,7 +57,7 @@
   flex: 1;
   min-height: calc(100dvh - 115px - env(safe-area-inset-bottom));
   max-height: calc(100dvh - 115px - env(safe-area-inset-bottom));
-  padding: 0 0 60px;
+  padding: 0 0 100px;
 }
 .li_modality {
   display: flex;

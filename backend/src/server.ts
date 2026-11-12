@@ -29,7 +29,7 @@ const authenticate = async (request: any, reply: any) => {
 
 // PLANS
 const allPlans: number[] = [];
-allPlans.push(500);
+allPlans.push(200);
 allPlans.push(2000);
 allPlans.push(10000);
 
@@ -44,7 +44,15 @@ import { emailQueue } from "./queue/emailQueue";
 
 // FASTIFY
 const fastify = Fastify({
-  logger: true,
+  logger: {
+    timestamp: () => {
+      const now = new Date().toLocaleString("pt-BR", {
+        timeZone: "America/Sao_Paulo",
+      });
+      return `,"time":"${now}"`;
+    },
+  },
+  trustProxy: true,
 });
 
 interface ResponseStatus {

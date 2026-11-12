@@ -150,7 +150,7 @@ const Packs = () => {
                     plan === 0 || dueAt < timeStamp ? styles.show : styles.hide
                   }`}
                 >
-                  <p>Seu plano gratuito permite gerar até 500 cartelas por maço. Para gerar mais obtenha um plano.</p>
+                  <p>Seu plano gratuito permite gerar até 200 cartelas por maço. Para gerar mais obtenha um plano.</p>
 
                   <Link to="/plans">
                     <CircleStar />

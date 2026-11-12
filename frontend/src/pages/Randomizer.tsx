@@ -1,4 +1,4 @@
-import { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo, useRef } from "react";
 
 // STYLES
 import styles from "./Randomizer.module.css";
@@ -6,17 +6,23 @@ import styles from "./Randomizer.module.css";
 // HOOKS
 import { useMainContext } from "../hooks/useMainContext.tsx";
 
-import { sleep, shuffleArray } from "../utils/functions.ts";
+import { sleep } from "../utils/functions.ts";
 import { Play, RotateCcw } from "lucide-react";
 import InterstitialAds from "../components/InterstitialAds.tsx";
 import BannerAds from "../components/BannerAds.tsx";
 import UpdateApp from "../components/UpdateApp.tsx";
+import { useRandomizerContext } from "../hooks/RandomizerContext.ts";
 
 // COMPONENTS
 
 const Randomizer = () => {
   const [showInterstitial, setShowInterstitial] = useState<boolean>(false);
   const { setHeaderTitle, setHeaderSubTitle, setAlert, showAds, menuOpen } = useMainContext();
+
+  const { drawnBalls, remainingBalls, lastBall, setDrawnBalls, setRemainingBalls, setLastBall, clearRandomizer } =
+    useRandomizerContext();
+
+  const isDrawingRef = useRef<boolean>(false);
 
   useEffect(() => {
     setHeaderTitle("Sorteador");
@@ -26,73 +32,45 @@ const Randomizer = () => {
 
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
 
-  const [lastBall, setLastBall] = useState<number>(() => {
-    const raw = localStorage.getItem("lastBall");
-    if (!raw) return 0;
-
-    const number = Number(raw);
-    return Number.isNaN(number) ? 0 : number;
-  });
-  const [drawnBalls, setDrawnBalls] = useState<number[]>(() => {
-    const raw = localStorage.getItem("drawnBalls");
-    if (!raw) return [];
-
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) && parsed.every((x) => typeof x === "number") ? parsed : [];
-  });
-  const [remainingBalls, setRemainingBalls] = useState<number[]>(() => {
-    const raw = localStorage.getItem("remainingBalls");
-    const full = Array.from({ length: 75 }, (_, i) => i + 1).sort(() => Math.random() - 0.5);
-    if (!raw) return shuffleArray(full);
-
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) && parsed.every((x) => typeof x === "number") ? parsed : shuffleArray(full);
-  });
-
-  useEffect(() => {
-    localStorage.setItem("lastBall", lastBall.toString());
-  }, [lastBall]);
-  useEffect(() => {
-    localStorage.setItem("drawnBalls", JSON.stringify(drawnBalls));
-  }, [drawnBalls]);
-  useEffect(() => {
-    localStorage.setItem("remainingBalls", JSON.stringify(remainingBalls));
-  }, [remainingBalls]);
-
   const handleRandom = async () => {
-    if (remainingBalls.length === 0) {
+    if (remainingBalls.length === 0 || isDrawingRef.current) return;
+
+    isDrawingRef.current = true;
+    setButtonDisabled(true);
+
+    console.log("size: " + remainingBalls.length);
+
+    // ANIMATION
+    const interval = setInterval(() => {
+      setLastBall(remainingBalls[Math.floor(Math.random() * remainingBalls.length)]);
+    }, 100);
+    await sleep(750);
+    clearInterval(interval);
+
+    // CHOOSE A RANDOM BALL
+    const index = Math.floor(Math.random() * remainingBalls.length);
+
+    const ball = remainingBalls[index];
+    setLastBall(ball);
+    setRemainingBalls(remainingBalls.filter((i) => i !== ball));
+    setDrawnBalls([...drawnBalls, ball]);
+
+    const { remainingBalls: updatedRemainingBalls } = useRandomizerContext.getState();
+    if (updatedRemainingBalls.length === 0) {
       setAlert({
         id: Date.now(),
         type: "error",
         message: "Todas as bolas já foram sorteadas, reinicie o sorteador.",
       });
-      return;
     }
-    setButtonDisabled(true);
-    const interval = setInterval(() => {
-      setLastBall(remainingBalls[Math.floor(Math.random() * remainingBalls.length)]);
-    }, 100);
-    await sleep(2000);
-    clearInterval(interval);
 
-    const index = Math.floor(Math.random() * remainingBalls.length);
-    const ball = remainingBalls[index];
-    setLastBall(ball);
-    setDrawnBalls((prevDrawnBalls) => {
-      return [...prevDrawnBalls, ball];
-    });
-    setRemainingBalls((prevRemainingBalls) => {
-      return prevRemainingBalls.filter((i) => i !== ball);
-    });
-
+    isDrawingRef.current = false;
     setButtonDisabled(false);
     return;
   };
 
   const resetBalls = async () => {
-    setLastBall(0);
-    setDrawnBalls([]);
-    setRemainingBalls(Array.from({ length: 75 }, (_, i) => i + 1).sort(() => Math.random() - 0.5));
+    clearRandomizer();
     return;
   };
   const handleReset = async () => {
@@ -172,19 +150,20 @@ const Randomizer = () => {
             onClick={handleRandom}
             disabled={remainingBalls.length === 0 || buttonDisabled ? true : false}
           >
-            <div
-              className={`${styles.way} ${remainingBalls.length === 0 || buttonDisabled ? styles.way_animation : ""}`}
-            >
+            <div className={`${styles.way} ${buttonDisabled ? styles.way_animation : ""}`}>
               <div className={styles.button_drawn}>
-                <span>{lastBall === 0 ? <Play width={36} height={36} /> : lastBall}</span>
+                <span>
+                  {lastBall === 0 || remainingBalls.length === 0 ? <Play width={36} height={36} /> : lastBall}
+                </span>
               </div>
               <div className={styles.button_drawn}>
-                <span>{lastBall === 0 ? <Play /> : lastBall}</span>
+                <span>{lastBall === 0 || remainingBalls.length === 0 ? <Play /> : lastBall}</span>
               </div>
             </div>
           </button>
         </div>
       </section>
+
       {showAds && !menuOpen && <BannerAds margin={0} top={false} />}
     </>
   );

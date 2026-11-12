@@ -96,7 +96,7 @@ const Plans = () => {
         <ul className={styles.ul_plans}>
           <li>
             <h2>Inicial</h2>
-            <p>Limite de 500 cartelas por maço.</p>
+            <p>Limite de 200 cartelas por maço.</p>
             <p>Com anúncios</p>
             <span>Grátis</span>
           </li>
