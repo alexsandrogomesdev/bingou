@@ -23,10 +23,8 @@ const NewPack = ({ sectionNewPack, setSectionNewPack }: Props) => {
   const { request } = useFetch();
   const navigate = useNavigate();
 
-  localStorage.setItem("max_cards", String(100)); // remove after backend is done
-
   const [packName, setPackName] = useState<string>("");
-  const [cardsQty, setCardsQty] = useState<number>(50);
+  const [cardsQty, setCardsQty] = useState<number>(500);
   const [creating, setCreating] = useState<boolean>(false);
 
   const handleCreatePack = async (e: React.SubmitEvent<HTMLFormElement>) => {

@@ -7,7 +7,7 @@
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: 15;
+  z-index: 16;
 }
 .menu_open {
   left: 0;
@@ -35,7 +35,7 @@
   max-height: 63px;
   gap: 10px;
   justify-content: center;
-  background-color: #24af60;
+  background-color: #000634;
 }
 .logo {
   min-width: 32px;
@@ -62,7 +62,7 @@
   gap: 16px;
 }
 .menu_ul > li:hover {
-  background-color: #24af604b;
+  background-color: #0006344b;
   color: #fff;
 }
 .menu_ul > li > a {
@@ -75,7 +75,7 @@
   padding: 10px;
 }
 .active {
-  background-color: #24af60;
+  background-color: #000634;
 }
 .active svg {
   color: #fff;

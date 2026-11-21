@@ -2,7 +2,7 @@
   display: flex;
   flex-flow: row;
   position: fixed;
-  z-index: 16;
+  z-index: 15;
   align-items: center;
   gap: 5px;
   justify-content: space-between;
@@ -26,6 +26,9 @@
 .alert > svg {
   color: #fff;
   cursor: pointer;
+}
+.with_ads {
+  bottom: calc(80px + env(safe-area-inset-top));
 }
 
 @media screen and (max-width: 768px) {

@@ -17,11 +17,14 @@ import NewPack from "../components/NewPack.tsx";
 import Waiting from "../components/Waiting.tsx";
 import BannerAds from "../components/BannerAds.tsx";
 import UpdateApp from "../components/UpdateApp.tsx";
+import { useGeneralContext } from "../contexts/GeneralContext.ts";
 
 const Packs = () => {
-  const { showAds, menuOpen, setHeaderTitle, setHeaderSubTitle, setAlert, setGetCards, setShowAds } = useMainContext();
+  const { setHeaderTitle, setHeaderSubTitle, setAlert, setGetCards } = useMainContext();
   const { request } = useFetch();
   const navigate = useNavigate();
+
+  const { showAds, menuOpen, setShowAds, setPlan, setDueAt } = useGeneralContext();
 
   // STATE VARIABLES
   type Pack = {
@@ -33,9 +36,6 @@ const Packs = () => {
   };
   const [packs, setPacks] = useState<Pack[]>([]);
   const [sectionNewPack, setSectionNewPack] = useState<boolean>(false);
-  const [timeStamp] = useState<number>(() => Math.floor(Date.now() / 1000));
-  const [plan, setPlan] = useState<number>(0);
-  const [dueAt, setDueAt] = useState<number>(() => Math.floor(Date.now() / 1000));
   const [requestIsDone, setRequestIsDone] = useState<boolean>(false);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const Packs = () => {
       }
     };
     getPacks();
-  }, []);
+  }, [navigate, request, setDueAt, setPlan, setShowAds]);
 
   useEffect(() => {
     setHeaderTitle("Maços");
@@ -123,7 +123,7 @@ const Packs = () => {
               {packs.length === 0 ? (
                 <p className={styles.none_packs}>Nenhum maço criado, crie um no botão abaixo!</p>
               ) : (
-                <ul className={`${styles.packs} ${plan === 0 || dueAt < timeStamp ? styles.padding_bottom : ""}`}>
+                <ul className={`${styles.packs} ${showAds ? styles.padding_bottom : ""}`}>
                   {packs.map((pack) => (
                     <li key={pack.id} className={styles.pack} onClick={() => goTo(pack.id)}>
                       <div>
@@ -145,11 +145,7 @@ const Packs = () => {
                 <button className={styles.button_new_pack} onClick={() => setSectionNewPack(true)}>
                   <Plus />
                 </button>
-                <article
-                  className={`${styles.article_buy_plan} ${
-                    plan === 0 || dueAt < timeStamp ? styles.show : styles.hide
-                  }`}
-                >
+                <article className={`${styles.article_buy_plan} ${showAds ? styles.show : styles.hide}`}>
                   <p>
                     Seu plano gratuito permite gerar até 500 cartelas por maço. Para gerar mais e não ver anúncios
                     compre um plano.

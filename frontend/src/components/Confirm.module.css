@@ -1,0 +1,48 @@
+.section {
+  display: flex;
+  flex-flow: column;
+  position: fixed;
+  width: 100%;
+  height: 100dvh;
+  top: 0;
+  left: 0;
+  padding: 17px;
+  background-color: rgba(7, 7, 7, 0.7);
+  z-index: 4;
+}
+.div {
+  display: flex;
+  flex-flow: column;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  min-height: max-content;
+  max-height: max-content;
+  overflow: hidden;
+  margin: auto;
+}
+.div > div {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  margin: 16px auto 0;
+  gap: 16px;
+}
+.confirm {
+  min-width: 64px;
+  min-height: 32px;
+  background-color: #23af58;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+}
+.cancel {
+  min-width: 64px;
+  min-height: 32px;
+  background-color: #f12828;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+}

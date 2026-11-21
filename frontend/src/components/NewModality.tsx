@@ -1,5 +1,5 @@
 // STYLES
-import { useMemo, useState, memo, type Dispatch, type SetStateAction, type MouseEvent, type SubmitEvent } from "react";
+import { useMemo, useState, memo, type Dispatch, type SetStateAction, type SubmitEvent } from "react";
 import styles from "./NewModality.module.css";
 import { Sparkles, X } from "lucide-react";
 

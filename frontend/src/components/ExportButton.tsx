@@ -9,9 +9,9 @@ import { exportPDF } from "../utils/exportPDF";
 import ProgressBar from "./ProgressBar";
 import type { Cards } from "../types/pack";
 import { Share2 } from "lucide-react";
-import { useMainContext } from "../hooks/useMainContext";
 import InterstitialAds from "./InterstitialAds";
 import { Capacitor } from "@capacitor/core";
+import { useGeneralContext } from "../contexts/GeneralContext";
 
 interface Props {
   packId: string;
@@ -21,7 +21,7 @@ interface Props {
 const ExportButton = ({ packId, packName, cards }: Props) => {
   const [showInterstitial, setShowInterstitial] = useState<boolean>(false);
   const [exportProgress, setExportProgress] = useState<number>(0);
-  const { showAds } = useMainContext();
+  const { showAds } = useGeneralContext();
 
   const downloadPdf = async () => {
     if (showAds && showInterstitial) setShowInterstitial(false);

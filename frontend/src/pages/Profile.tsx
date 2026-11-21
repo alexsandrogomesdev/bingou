@@ -12,11 +12,14 @@ import { useFetch } from "../hooks/useFetch.tsx";
 import { dateFromUnix } from "../utils/functions.ts";
 import { useMainContext } from "../hooks/useMainContext.tsx";
 import Waiting from "../components/Waiting.tsx";
+import { useGeneralContext } from "../contexts/GeneralContext.ts";
 
 const Profile = () => {
   const { setHeaderTitle, setHeaderSubTitle } = useMainContext();
   const { request } = useFetch();
   const navigate = useNavigate();
+
+  const { setPlan, setDueAt } = useGeneralContext();
 
   interface User {
     name: string;
@@ -49,11 +52,11 @@ const Profile = () => {
       }
       setProfile(response.result);
       setRequestIsDone(true);
-      localStorage.setItem("plan", String(response.result.plan));
-      localStorage.setItem("due_at", String(response.result.due_at));
+      setPlan(response.result.plan);
+      setDueAt(response.result.due_at);
     };
     getProfile();
-  }, [request, setProfile, navigate]);
+  }, [request, setProfile, navigate, setDueAt, setPlan]);
 
   useEffect(() => {
     setHeaderTitle("Perfil");

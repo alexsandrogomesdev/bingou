@@ -8,7 +8,8 @@ import { useMainContext } from "../hooks/useMainContext.tsx";
 import { useFetch } from "../hooks/useFetch.tsx";
 import PixOrder from "../components/PixOrder.tsx";
 import { Loader } from "lucide-react";
-import BannerComponent from "../components/BannerComponent.tsx";
+import { useGeneralContext } from "../contexts/GeneralContext.ts";
+import BannerAds from "../components/BannerAds.tsx";
 
 // COMPONENTS
 
@@ -40,6 +41,7 @@ const GetPlan = ({ plan, setShowGetPlan, generateOrder, loading }: Props) => {
 };
 const Plans = () => {
   const mainContext = useMainContext();
+  const { userId, showAds } = useGeneralContext();
 
   useEffect(() => {
     mainContext.setHeaderTitle("Planos");
@@ -52,9 +54,9 @@ const Plans = () => {
   const [orderId, setOrderId] = useState<string>("");
   const [amount, setAmount] = useState<string>("0,00");
   const [showPixOrder, setShowPixOrder] = useState<boolean>(false);
-  const [plan, setPlan] = useState<number>(0);
   const [showGetPlan, setShowGetPlan] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [plan, setPlan] = useState<number>(0);
 
   const handleGetPlan = (plan: number) => {
     setPlan(plan);
@@ -88,9 +90,11 @@ const Plans = () => {
   return (
     <section className={styles.section_plans}>
       {showPixOrder && <PixOrder orderId={orderId} pixCode={pixCode} amount={amount} />}
+
       {showGetPlan && (
         <GetPlan plan={plan} setShowGetPlan={setShowGetPlan} generateOrder={generateOrder} loading={loading} />
       )}
+
       <div className={`${styles.div_plans} ${showPixOrder ? styles.hide : styles.show}`}>
         <h1>Planos de assinatura</h1>
         <ul className={styles.ul_plans}>
@@ -105,18 +109,18 @@ const Plans = () => {
             <p>Limite de 2.000 cartelas por maço.</p>
             <p>Sem anúncios.</p>
             <span>R$ 19,90/mês no Pix</span>
-            <a onClick={() => handleGetPlan(1)}>{localStorage.getItem("userId") !== null ? "Comprar" : ""}</a>
+            <a onClick={() => handleGetPlan(1)}>{userId ? "Comprar" : ""}</a>
           </li>
           <li>
             <h2>Completo</h2>
             <p>Limite de 10.000 cartelas por maço.</p>
             <span>Sem anúncios</span>
             <span>R$ 29,90/mês no Pix</span>
-            <a onClick={() => handleGetPlan(2)}>{localStorage.getItem("userId") !== null ? "Comprar" : ""}</a>
+            <a onClick={() => handleGetPlan(2)}>{userId ? "Comprar" : ""}</a>
           </li>
         </ul>
 
-        {mainContext.showAds && <BannerComponent />}
+        {showAds && <BannerAds margin={0} top={false} />}
       </div>
     </section>
   );

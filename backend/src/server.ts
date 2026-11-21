@@ -328,7 +328,7 @@ interface SignInBody {
 fastify.post("/user/signin", async (request: FastifyRequest<{ Body: SignInBody }>, reply: FastifyReply) => {
   const { email, password } = request.body;
 
-  const result = await query("SELECT id,name,email,password,plan FROM users WHERE email = $1 LIMIT 1", [email]);
+  const result = await query("SELECT id,name,email,password,plan,due_at FROM users WHERE email = $1 LIMIT 1", [email]);
 
   if (!result.rowCount || result.rowCount === 0) {
     return reply.status(401).send({
@@ -340,12 +340,13 @@ fastify.post("/user/signin", async (request: FastifyRequest<{ Body: SignInBody }
     id: number;
     name: string;
     email: string;
-    password: string;
+    password?: string;
     plan: number;
+    due_at: number;
   }
   const user: UserSignIn = result.rows[0];
 
-  const isPasswordValid = await bcrypt.compare(password, user.password);
+  const isPasswordValid = await bcrypt.compare(password, user.password ?? "");
   if (!isPasswordValid) {
     return reply.status(401).send({
       message: "Email ou senha inválidos",
@@ -369,8 +370,9 @@ fastify.post("/user/signin", async (request: FastifyRequest<{ Body: SignInBody }
     .status(200)
     .send({
       message: "ok",
-      userId: String(user.id),
-      plan: String(user.plan),
+      userId: user.id,
+      plan: user.plan,
+      due_at: user.due_at,
     });
 });
 fastify.post("/logout", async (request: FastifyRequest, reply: FastifyReply) => {

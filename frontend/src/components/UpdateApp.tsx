@@ -1,18 +1,21 @@
 import styles from "./UpdateApp.module.css";
 import { useFetch } from "../hooks/useFetch.tsx";
 import { useEffect, useState } from "react";
+import { Capacitor } from "@capacitor/core";
 
 const UpdateApp = () => {
   const { request } = useFetch();
   const [appUpdated, setAppUpdated] = useState<boolean>(true);
 
   useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
     const getAppUpdated = async () => {
       const result: { message: string; appUpdated: boolean } = await request("/appUpdated", "GET");
       setAppUpdated(result.appUpdated);
     };
     getAppUpdated();
-  }, []);
+  }, [request]);
 
   const handleUpdateApp = async () => {
     request("/appUpdated", "PATCH", {}, {});
@@ -21,6 +24,9 @@ const UpdateApp = () => {
     window.open(link, "_blank", "noopener,noreferrer");
     return;
   };
+
+  if (appUpdated || !Capacitor.isNativePlatform()) return;
+
   return (
     <>
       {!appUpdated && (

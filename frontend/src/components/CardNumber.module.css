@@ -1,6 +1,6 @@
 .number_selected,
 .good_ball {
-  background-color: #24af60;
+  background-color: #000634;
   color: #fff !important;
   text-align: center;
   padding: 3px;
@@ -46,7 +46,7 @@
   }
 }
 .joker > svg {
-  color: #24af60;
+  color: #ff5e0e;
   width: 16px;
   height: 16px;
   position: relative;

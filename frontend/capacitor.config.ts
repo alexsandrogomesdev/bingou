@@ -15,13 +15,13 @@ const config: CapacitorConfig = {
     SplashScreen: {
       launchShowDuration: 6000,
       launchAutoHide: true,
-      backgroundColor: "#24af60",
+      backgroundColor: "#000634",
       androidScaleType: "CENTER_CROP",
       showSpinner: false,
     },
     StatusBar: {
       overlaysWebView: false,
-      backgroundColor: "#24af60",
+      backgroundColor: "#000634",
       style: "LIGHT",
     },
     NavigationBar: {

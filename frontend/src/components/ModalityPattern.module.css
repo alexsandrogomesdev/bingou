@@ -35,19 +35,19 @@
   align-items: center;
 }
 .selected {
-  background-color: #24af60 !important;
+  background-color: #23af59 !important;
 }
 .joker {
   background-color: #fff !important;
 }
 .joker > svg {
-  color: #24af60;
+  color: #23af59;
   min-width: 18px;
   max-width: 18px;
 }
 
 .modality_enabled {
-  color: #24af60;
+  color: #23af59;
   min-width: 28px;
   max-width: 28px;
   min-height: 28px;

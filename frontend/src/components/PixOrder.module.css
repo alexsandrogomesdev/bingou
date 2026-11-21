@@ -19,7 +19,7 @@
 }
 .div_waiting_payment > span {
   font-size: 18px;
-  color: #24af60;
+  color: #000634;
   font-weight: 500;
   margin: 16px auto;
 }
@@ -51,7 +51,7 @@
   max-height: 44px;
   border: none;
   border-radius: 8px;
-  background-color: #24af60;
+  background-color: #000634;
   font-size: 16px;
   font-weight: 500;
   color: #fff;
@@ -72,7 +72,7 @@
   max-width: 44px;
   min-height: 44px;
   max-height: 44px;
-  color: #24af60;
+  color: #000634;
   animation: paymentConfirmed 1s ease-in-out infinite;
   margin: 25px auto;
 }
@@ -89,13 +89,13 @@
 }
 .div_payment_confirmed > a {
   padding: 10px;
-  border: solid 1px #24af60;
+  border: solid 1px #000634;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   border-radius: 8px;
-  background-color: #24af60;
+  background-color: #000634;
   color: #fff;
   text-decoration: none;
   font-size: 16px;

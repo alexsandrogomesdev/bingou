@@ -12,12 +12,16 @@ import InterstitialAds from "../components/InterstitialAds.tsx";
 import BannerAds from "../components/BannerAds.tsx";
 import UpdateApp from "../components/UpdateApp.tsx";
 import { useRandomizerContext } from "../hooks/RandomizerContext.ts";
+import { useGeneralContext } from "../contexts/GeneralContext.ts";
+import { Capacitor } from "@capacitor/core";
+import Confirm from "../components/Confirm.tsx";
 
 // COMPONENTS
 
 const Randomizer = () => {
   const [showInterstitial, setShowInterstitial] = useState<boolean>(false);
-  const { setHeaderTitle, setHeaderSubTitle, setAlert, showAds, menuOpen } = useMainContext();
+  const { setHeaderTitle, setHeaderSubTitle, setAlert } = useMainContext();
+  const { userId, showAds, menuOpen } = useGeneralContext();
 
   const { drawnBalls, remainingBalls, lastBall, setDrawnBalls, setRemainingBalls, setLastBall, clearRandomizer } =
     useRandomizerContext();
@@ -37,8 +41,6 @@ const Randomizer = () => {
 
     isDrawingRef.current = true;
     setButtonDisabled(true);
-
-    console.log("size: " + remainingBalls.length);
 
     // ANIMATION
     const interval = setInterval(() => {
@@ -73,15 +75,15 @@ const Randomizer = () => {
     clearRandomizer();
     return;
   };
-  const handleReset = async () => {
-    if (!confirm("O Sorteador será reiniciado. Todas as bolas sorteadas serão perdidas.")) return;
 
-    if (showAds) {
+  const [resetNumbers, setResetNumbers] = useState<boolean>(false);
+  const handleReset = async () => {
+    setResetNumbers(false);
+    if (showAds && Capacitor.isNativePlatform()) {
       setShowInterstitial(true);
     } else {
       resetBalls();
     }
-
     return;
   };
 
@@ -104,7 +106,15 @@ const Randomizer = () => {
         />
       )}
 
-      <UpdateApp />
+      {userId && <UpdateApp />}
+
+      {resetNumbers && (
+        <Confirm
+          text={"Você tem certeza que quer resetar todas as bolas do sorteador ?"}
+          yes={handleReset}
+          no={() => setResetNumbers(false)}
+        />
+      )}
 
       <section className={styles.section_randomizer}>
         <div className={styles.div_randomizer}>
@@ -126,7 +136,7 @@ const Randomizer = () => {
           </div>
 
           <div className={styles.div_actions}>
-            <RotateCcw onClick={handleReset} />
+            <RotateCcw onClick={() => setResetNumbers(true)} />
           </div>
 
           <div className={styles.drawn_balls}>

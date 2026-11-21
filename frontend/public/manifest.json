@@ -49,7 +49,7 @@
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "background_color": "#000634",
   "screenshots": [
     {
       "src": "screenshot-mobile.png",

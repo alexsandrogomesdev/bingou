@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
   starts_at BIGINT NOT NULL,
   due_at BIGINT NOT NULL,
   status SMALLINT DEFAULT 0,
+  app_updated BOOLEAN DEFAULT true, 
   created_at BIGINT NOT NULL
 );
 

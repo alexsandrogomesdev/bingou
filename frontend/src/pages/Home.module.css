@@ -16,7 +16,6 @@
 .div_1 {
   display: flex;
   flex-flow: column;
-  background-image: radial-gradient(circle at 50% 5%, #c5ffe2 0%, #c5ffe2 17%, transparent 50%);
   max-width: 100%;
 }
 
@@ -33,16 +32,16 @@
 }
 .initial_presentation > span {
   font-size: 12px;
-  color: #24af60;
+  color: #000634;
   font-weight: 500;
   display: flex;
   align-items: center;
   margin: 0 auto;
   max-width: max-content;
-  background-color: #24af601a;
+  background-color: #0006341a;
   padding: 1px 15px;
   border-radius: 22px;
-  border: solid 1px #24af601a;
+  border: solid 1px #0006341a;
   gap: 10px;
 }
 .initial_presentation > span > svg {
@@ -56,7 +55,7 @@
 }
 .initial_presentation > h2 {
   font-size: 2.25rem;
-  color: #24af60;
+  color: #000634;
   margin: -15px 0 0 0;
 }
 .initial_presentation > p {
@@ -72,8 +71,8 @@
   width: 100%;
   text-decoration: none;
 }
-.initial_presentation > ul li:nth-of-type(1) a {
-  background-color: #24af60;
+.initial_presentation > ul li a {
+  background-color: #000634;
   border: none;
   border-radius: 52px;
   min-height: 52px;
@@ -86,29 +85,15 @@
   font-weight: 500;
   font-size: 16px;
   cursor: pointer;
-  box-shadow: 0px 5px 20px 0px #24af6080;
-  -webkit-box-shadow: 0px 5px 20px 0px #24af6080;
-}
-.initial_presentation > ul li:nth-of-type(2) a {
-  width: 100%;
-  color: #0f0f0f;
-  border: solid 1px #f1e5dd;
-  border-radius: 52px;
-  min-height: 52px;
-  max-height: 52px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 16px;
-  font-weight: 500;
-  background-color: #fffaf5;
+  box-shadow: 0px 5px 20px 0px #00063480;
+  -webkit-box-shadow: 0px 5px 20px 0px #00063480;
 }
 
 .template_card {
   display: flex;
   flex-flow: column;
   margin: 25px;
-  box-shadow: 0 20px 50px -24px #24af608c;
+  box-shadow: 0 20px 50px -24px #0006348c;
   border-radius: 34px;
   border: solid 1px #cffce5;
   background-color: #fff;
@@ -128,7 +113,7 @@
   font-size: 16px;
   color: #ffffff;
   font-weight: 800;
-  background-color: #24af60;
+  background-color: #000634;
   min-height: 44px;
   max-height: 44px;
   min-width: 55px;
@@ -169,12 +154,12 @@
   border: none !important;
 }
 .joker svg {
-  color: #24af60;
+  color: #000634;
   min-height: 18px;
   max-height: 18px;
 }
 .number_selected {
-  background-color: #24af60;
+  background-color: #000634;
   color: #fff !important;
   border: none !important;
 }
@@ -192,7 +177,7 @@
 .div_2 > ul > li {
   display: flex;
   flex-flow: column;
-  background-color: rgba(50, 169, 109, 0.1);
+  background-color: rgb(25, 16, 97, 0.04);
   padding: 20px;
   border-radius: 26px;
 }
@@ -203,15 +188,13 @@
   max-height: 44px;
   border-radius: 44px;
   background-color: #ffffff;
-  color: #24af60;
+  color: #000634;
   display: flex;
   flex-flow: column;
   justify-content: center;
   text-align: center;
   align-items: center;
-  box-shadow:
-    0 1px 3px 0 #0000001a,
-    0 1px 2px -1px #0000001a;
+  box-shadow: 0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a;
 }
 .div_2 > ul > li > i > svg {
   min-width: 20px;
@@ -232,7 +215,7 @@
 .div_3 {
   display: flex;
   flex-flow: column;
-  background-color: #24af60;
+  background-color: #000634;
   padding: 45px 17px;
   margin: 0 20px 40px;
   border-radius: 20px;
@@ -250,7 +233,7 @@
   font-weight: 300;
 }
 .div_3 > a {
-  color: #24af60;
+  color: #000634;
   background-color: #fff;
   min-width: 156px;
   max-width: 156px;
@@ -312,7 +295,7 @@
     max-width: 180px;
   }
   .initial_presentation > ul li:nth-of-type(2) a {
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
   }
 
   .div_2 > ul {

@@ -6,7 +6,7 @@ import styles from "./BallTable.module.css";
 
 // HOOKS
 import type { Goods } from "../types/pack";
-import { useMainContext } from "../hooks/useMainContext";
+import { useGeneralContext } from "../contexts/GeneralContext";
 
 // COMPONENTS
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
   goods: Goods[];
 }
 const BallTable = ({ balls, handleSelectBall, setShowBallTable, goods }: Props) => {
-  const { showAds } = useMainContext();
+  const { showAds } = useGeneralContext();
 
   const table_numbers: Array<number[]> = [[], [], [], [], []];
   for (let c = 0; c < 5; c++) {

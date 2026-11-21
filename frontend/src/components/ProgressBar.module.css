@@ -25,7 +25,7 @@
   margin-bottom: 10px;
 }
 .div_progress_bar > div {
-  border: solid 1px #24af60;
+  border: solid 1px #23af59;
   border-radius: 8px;
   min-height: 36px;
   max-height: 36px;
@@ -46,7 +46,7 @@
   left: 0;
   min-height: 36px;
   max-height: 36px;
-  background-color: #24af60;
+  background-color: #23af59;
   display: flex;
   align-items: center;
   justify-content: center;

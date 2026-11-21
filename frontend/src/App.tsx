@@ -20,6 +20,7 @@ import Header from "./components/Header.tsx";
 import Footer from "./components/Footer.tsx";
 
 import { sleep } from "./utils/functions.ts";
+import { useGeneralContext } from "./contexts/GeneralContext.ts";
 
 // PAGES
 const Randomizer = lazy(() => import("./pages/Randomizer.tsx"));
@@ -36,6 +37,13 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword.tsx"));
 
 function App() {
   const navigate = useNavigate();
+  const { userId } = useGeneralContext();
+
+  const mainContext = useMainContext();
+  const hideOnRoutes: Array<string> = [];
+
+  const location = useLocation();
+  const showComponent = !hideOnRoutes.includes(location.pathname);
 
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
@@ -58,26 +66,20 @@ function App() {
     if (!Capacitor.isNativePlatform()) return;
 
     const initApp = async () => {
-      if (localStorage.getItem("userId") !== null) navigate("/packs");
-      await sleep(1000);
-      await SplashScreen.hide();
-
+      if (userId && location.pathname === "/") navigate("/packs");
       try {
-        await NavigationBar.setColor({ color: "#24af60" });
+        await NavigationBar.setColor({ color: "#000634" });
         await NavigationBar.setStyle({ style: Style.Light });
       } catch (e) {
         console.error("Navigation bar not supported on this device or platform", e);
       }
+
+      await sleep(1000);
+      await SplashScreen.hide();
     };
     //
     initApp();
-  }, []);
-
-  const mainContext = useMainContext();
-  const hideOnRoutes: Array<string> = [];
-
-  const location = useLocation();
-  const showComponent = !hideOnRoutes.includes(location.pathname);
+  }, [navigate, userId, location]);
 
   useEffect(() => {
     const listenerPromise = CapacitorApp.addListener("backButton", () => {

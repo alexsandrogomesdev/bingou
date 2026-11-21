@@ -1,13 +1,11 @@
 import { useCallback } from "react";
+import { useGeneralContext } from "../contexts/GeneralContext";
 
 export const useFetch = () => {
+  const { logOut } = useGeneralContext();
+
   const request = useCallback(
-    async <T = unknown,>(
-      url: string,
-      method: string = "GET",
-      headers?: HeadersInit,
-      body?: object,
-    ): Promise<T> => {
+    async <T = unknown,>(url: string, method: string = "GET", headers?: HeadersInit, body?: object): Promise<T> => {
       if (!url.includes("://")) {
         url = `https://api.bingou.alexsandrogomes.dev${url}`;
       }
@@ -38,7 +36,7 @@ export const useFetch = () => {
         const json = await response.json();
 
         if (json.message === "Unauthorized") {
-          localStorage.clear();
+          logOut();
         }
 
         return json as T;
@@ -50,7 +48,7 @@ export const useFetch = () => {
         }
       }
     },
-    [],
+    [logOut],
   );
 
   return { request };

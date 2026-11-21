@@ -31,10 +31,12 @@ import type {
 } from "../types/pack.ts";
 import Waiting from "../components/Waiting.tsx";
 import BannerAds from "../components/BannerAds.tsx";
+import { useGeneralContext } from "../contexts/GeneralContext.ts";
 
 const Pack = () => {
-  const { showAds, menuOpen, headerTitle, setHeaderTitle, setHeaderSubTitle, setAlert, getCards, setGetCards } =
-    useMainContext();
+  const { headerTitle, setHeaderTitle, setHeaderSubTitle, setAlert, getCards, setGetCards } = useMainContext();
+
+  const { showAds, menuOpen } = useGeneralContext();
 
   const [cards, setCards] = useState<Cards[]>([]);
 

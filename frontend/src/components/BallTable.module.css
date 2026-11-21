@@ -52,9 +52,9 @@
   margin: auto;
 }
 .number_selected {
-  background-color: #24af60;
+  background-color: #000634;
   text-align: center;
-  border: solid 1px #24af60;
+  border: solid 1px #000634;
   position: relative;
 }
 .number_selected > span {

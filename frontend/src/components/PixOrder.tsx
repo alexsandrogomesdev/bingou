@@ -6,6 +6,7 @@ import { useFetch } from "../hooks/useFetch.tsx";
 import { CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useMainContext } from "../hooks/useMainContext.tsx";
+import { useGeneralContext } from "../contexts/GeneralContext.ts";
 
 // HOOKS
 
@@ -17,6 +18,8 @@ interface Props {
 }
 const PixOrder = ({ orderId, pixCode, amount }: Props) => {
   const mainContext = useMainContext();
+  const { setPlan } = useGeneralContext();
+
   const handleCopyCode = () => {
     navigator.clipboard.writeText(pixCode);
     mainContext.setAlert({
@@ -37,41 +40,30 @@ const PixOrder = ({ orderId, pixCode, amount }: Props) => {
         status: number;
         plan: number;
       }
-      const response: RequestResponse = await request(
-        `/orders/${orderId}/status`,
-        "GET",
-        {},
-        {},
-      );
+      const response: RequestResponse = await request(`/orders/${orderId}/status`, "GET", {}, {});
       if (response.message !== "ok") return;
       setStatus(response.status);
       if (response.status === 1) {
-        localStorage.setItem("plan", String(response.plan));
+        setPlan(response.plan);
       }
     };
 
     const intervalId = setInterval(checkStatus, 3000);
     return () => clearInterval(intervalId);
-  }, [orderId, status, request]);
+  }, [orderId, status, request, setPlan]);
 
   return (
     <section className={styles.section_pix_order}>
       <div className={styles.div_pix_order}>
-        <div
-          className={`${styles.div_waiting_payment} ${status !== 1 ? styles.show : styles.hide}`}
-        >
+        <div className={`${styles.div_waiting_payment} ${status !== 1 ? styles.show : styles.hide}`}>
           <h3>Aguardando pagamento!</h3>
           <span>{amount}</span>
-          <p>
-            Faça o pagamento do código pix abaixo para completar sua assinatura.
-          </p>
+          <p>Faça o pagamento do código pix abaixo para completar sua assinatura.</p>
           <label htmlFor={"pixCode"}>Código Pix:</label>
           <input type="text" value={pixCode} disabled={true} />
           <button onClick={handleCopyCode}>Copiar código</button>
         </div>
-        <div
-          className={`${styles.div_payment_confirmed} ${status === 1 ? styles.show : styles.hide}`}
-        >
+        <div className={`${styles.div_payment_confirmed} ${status === 1 ? styles.show : styles.hide}`}>
           <h3>Pagamento confirmado!</h3>
           <CheckCircle2 />
           <Link to="/packs">Meus Maços</Link>

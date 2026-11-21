@@ -1,5 +1,5 @@
 import { useRef, useEffect, memo } from "react";
-import { Sparkles, Play, Grid3x3, Check, Printer } from "lucide-react";
+import { Sparkles, Play, Grid3x3, Check, Printer, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
 
 // STYLES
@@ -10,22 +10,18 @@ import { useMainContext } from "../hooks/useMainContext.tsx";
 
 // COMPONENTS
 import InstallButton from "../components/InstallButton.tsx";
+import { useGeneralContext } from "../contexts/GeneralContext.ts";
 
 const Home = () => {
   const { setHeaderTitle, setHeaderSubTitle } = useMainContext();
+  const { userId } = useGeneralContext();
 
   useEffect(() => {
     setHeaderTitle("Bingou");
     setHeaderSubTitle("");
-  }, [setHeaderTitle]);
+  }, [setHeaderTitle, setHeaderSubTitle]);
 
   const sectionHowItWorks = useRef<HTMLDivElement>(null);
-  // const scrollToHowItWorks = () => {
-  // sectionHowItWorks.current?.scrollIntoView({
-  // behavior: "smooth",
-  // block: "start",
-  // });
-  // };
 
   return (
     <section className={styles.section_home}>
@@ -68,7 +64,7 @@ const Home = () => {
                   gradientUnits="userSpaceOnUse"
                 >
                   <stop stopColor="#5BD066" />
-                  <stop offset="1" stopColor="#27B43E" />
+                  <stop offset="1" stopColor="#191061" />
                 </linearGradient>
               </defs>
             </svg>
@@ -89,7 +85,13 @@ const Home = () => {
               <li>
                 <Link to="/packs">
                   <Play />
-                  {localStorage.getItem("userId") !== null ? "Meus maços" : "Minhas Cartelas"}
+                  {userId ? "Meus maços" : "Minhas Cartelas"}
+                </Link>
+              </li>
+              <li>
+                <Link to="/shuffle">
+                  <Globe />
+                  Sorteador
                 </Link>
               </li>
               <li>

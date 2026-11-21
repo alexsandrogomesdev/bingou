@@ -43,7 +43,7 @@
   animation: loading 1s linear infinite;
   min-width: 36px;
   min-height: 36px;
-  color: #24af60;
+  color: #000634;
 }
 @keyframes loading {
   0% {

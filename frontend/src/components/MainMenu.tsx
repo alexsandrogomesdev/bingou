@@ -6,22 +6,21 @@ import { memo } from "react";
 import styles from "./MainMenu.module.css";
 
 // HOOKS
-import { useMainContext } from "../hooks/useMainContext.tsx";
 import { useFetch } from "../hooks/useFetch.tsx";
+import { useGeneralContext } from "../contexts/GeneralContext.ts";
 
 // COMPONENTS
 
 const MainMenu = () => {
-  const { menuOpen, setMenuOpen } = useMainContext();
+  const { userId, menuOpen, setMenuOpen, logOut } = useGeneralContext();
 
   const { request } = useFetch();
   const navigate = useNavigate();
 
   const handleLogOut = async () => {
     setMenuOpen(false);
+    logOut();
     await request("/logout", "POST", {}, {});
-    localStorage.clear();
-    setMenuOpen(false);
     navigate("/signin");
     return;
   };
@@ -35,7 +34,7 @@ const MainMenu = () => {
         </div>
 
         <ul className={styles.menu_ul}>
-          <li>
+          <li className={userId ? styles.hide : ""}>
             <NavLink
               to="/"
               className={({ isActive }) => (isActive ? styles.active : "")}
@@ -45,7 +44,7 @@ const MainMenu = () => {
               <span>Inicio</span>
             </NavLink>
           </li>
-          <li className={localStorage.getItem("userId") === null ? styles.hide : ""}>
+          <li className={!userId ? styles.hide : ""}>
             <NavLink
               to="/packs"
               className={({ isActive }) => (isActive ? styles.active : "")}
@@ -55,7 +54,7 @@ const MainMenu = () => {
               <span>Maços</span>
             </NavLink>
           </li>
-          <li className={localStorage.getItem("userId") === null ? styles.hide : ""}>
+          <li className={!userId ? styles.hide : ""}>
             <NavLink
               to="/profile"
               className={({ isActive }) => (isActive ? styles.active : "")}
@@ -66,7 +65,7 @@ const MainMenu = () => {
             </NavLink>
           </li>
 
-          <li className={localStorage.getItem("userId") !== null ? styles.hide : ""}>
+          <li className={userId ? styles.hide : ""}>
             <NavLink
               to="/signin"
               className={({ isActive }) => (isActive ? styles.active : "")}
@@ -99,7 +98,7 @@ const MainMenu = () => {
             </NavLink>
           </li>
 
-          <li className={localStorage.getItem("userId") === null ? styles.hide : ""}>
+          <li className={!userId ? styles.hide : ""}>
             <NavLink to="/signin" onClick={handleLogOut}>
               <LogOut />
               <span>Sair</span>

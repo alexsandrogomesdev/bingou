@@ -11,11 +11,14 @@ import { useFetch } from "../hooks/useFetch.tsx";
 // COMPONENTS
 import ForgotPassword from "../components/ForgotPassword.tsx";
 import { Eye, EyeClosed } from "lucide-react";
+import { useGeneralContext } from "../contexts/GeneralContext.ts";
 
 const SignIn = () => {
   const mainContext = useMainContext();
   const { request } = useFetch();
   const navigate = useNavigate();
+
+  const { setUserId, setPlan, setDueAt } = useGeneralContext();
 
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
@@ -33,8 +36,9 @@ const SignIn = () => {
 
     interface Request {
       message: string;
-      userId: string;
-      plan: string;
+      userId: number;
+      plan: number;
+      due_at: number;
     }
     const signIn: Request = await request(
       "/user/signin",
@@ -49,8 +53,9 @@ const SignIn = () => {
     setSigning(false);
 
     if (signIn.message === "ok") {
-      localStorage.setItem("userId", signIn.userId);
-      localStorage.setItem("plan", signIn.plan);
+      setUserId(signIn.userId);
+      setPlan(signIn.plan);
+      setDueAt(signIn.due_at);
       navigate("/packs");
     } else {
       mainContext.setAlert({

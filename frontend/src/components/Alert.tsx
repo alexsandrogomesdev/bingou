@@ -6,6 +6,8 @@ import styles from "./Alert.module.css";
 
 // HOOKS
 import { useMainContext } from "../hooks/useMainContext";
+import { useGeneralContext } from "../contexts/GeneralContext";
+import { Capacitor } from "@capacitor/core";
 
 // COMPONENTS
 type AlertObject = {
@@ -22,6 +24,8 @@ const Alert = () => {
   };
 
   const mainContext = useMainContext();
+  const { showAds } = useGeneralContext();
+
   const id = mainContext.alert.id;
   const type = mainContext.alert.type;
   const message = mainContext.alert.message;
@@ -52,7 +56,9 @@ const Alert = () => {
     <>
       {type !== "" && (
         <div
-          className={`${styles.alert} ${type === "error" ? styles.alert_error : styles.alert_success}`}
+          className={`${styles.alert} ${type === "error" ? styles.alert_error : styles.alert_success} ${
+            showAds && Capacitor.isNativePlatform() ? styles.with_ads : ""
+          }`}
         >
           <p>{message}</p>
           <X onClick={handleCloseAlert} />

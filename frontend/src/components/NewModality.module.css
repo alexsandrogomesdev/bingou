@@ -96,14 +96,14 @@
   background-color: #f1f1f1;
 }
 .selected_index {
-  background-color: #24af60 !important;
+  background-color: #000634 !important;
 }
 .joker {
   background-color: transparent !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #24af60;
+  color: #000634;
 }
 .div_buttons {
   display: flex;
@@ -127,7 +127,7 @@
   font-weight: 400;
 }
 .div_buttons > button:nth-of-type(2) {
-  color: #24af60;
+  color: #000634;
 }
 
 @media (min-width: 768px) {

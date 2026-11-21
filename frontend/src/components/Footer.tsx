@@ -22,11 +22,7 @@ const Footer = () => {
         <p>{mainContext.headerTitle} gerador e marcador de cartelas.</p>
         <p>
           Desenvolvido por&nbsp;
-          <a
-            href="https://wa.me/5511995452626"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://wa.me/5511995452626" target="_blank" rel="noopener noreferrer">
             @alexsandrogomes.dev
           </a>
         </p>

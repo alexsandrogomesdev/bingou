@@ -34,8 +34,6 @@ const Card = ({ index, id, balls, cardNumbers, pattern, goodBalls, handleRemoveC
     return cols;
   }, [cardNumbersKey]);
 
-  // console.log("Card: " + id);
-
   const handleEditCard = useCallback(() => {
     setShowEditCard((prevShowEditCard) => {
       return prevShowEditCard ? false : true;
