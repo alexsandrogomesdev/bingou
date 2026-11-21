@@ -1,5 +1,5 @@
 // STYLES
-import { useMemo, useState, memo } from "react";
+import { useMemo, useState, memo, type Dispatch, type SetStateAction, type MouseEvent, type SubmitEvent } from "react";
 import styles from "./NewModality.module.css";
 import { Sparkles, X } from "lucide-react";
 
@@ -8,10 +8,11 @@ import type { ModalitiesInterface } from "../types/pack";
 
 // COMPONENTS
 interface Props {
-  setShowNewModality: React.Dispatch<React.SetStateAction<boolean>>;
-  setModalities: React.Dispatch<React.SetStateAction<ModalitiesInterface[]>>;
+  setShowNewModality: Dispatch<SetStateAction<boolean>>;
+  setModalitiesTemp: Dispatch<SetStateAction<ModalitiesInterface[]>>;
+  setHasChanges: Dispatch<SetStateAction<boolean>>;
 }
-const NewModality = ({ setShowNewModality, setModalities }: Props) => {
+const NewModality = ({ setShowNewModality, setModalitiesTemp, setHasChanges }: Props) => {
   const columns = useMemo(() => {
     const cols: number[][] = [[], [], [], [], []];
     for (let i = 0; i < 25; i++) {
@@ -35,7 +36,8 @@ const NewModality = ({ setShowNewModality, setModalities }: Props) => {
     });
     return;
   };
-  const handleSaveNewModality = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+
+  const handleSaveNewModality = async (e: SubmitEvent) => {
     e.preventDefault();
 
     const newModality = {
@@ -46,11 +48,12 @@ const NewModality = ({ setShowNewModality, setModalities }: Props) => {
       maps: [[1, ...pattern.sort((a, b) => a - b)]],
     };
 
-    setModalities((prevModalities) => {
-      return [...prevModalities, newModality];
+    setModalitiesTemp((prev) => {
+      return [...prev, newModality];
     });
 
     setShowNewModality(false);
+    setHasChanges(true);
     return;
   };
 
@@ -61,7 +64,7 @@ const NewModality = ({ setShowNewModality, setModalities }: Props) => {
           <p>Nova Modalidade</p>
           <X onClick={() => setShowNewModality(false)} />
         </nav>
-        <form className={styles.form}>
+        <form onSubmit={(e) => handleSaveNewModality(e)} className={styles.form}>
           <div className={styles.div_input}>
             <label>Nome da modalidade</label>
             <span>Ex: Quina maluca</span>
@@ -100,8 +103,10 @@ const NewModality = ({ setShowNewModality, setModalities }: Props) => {
             ))}
           </div>
           <div className={styles.div_buttons}>
-            <button onClick={() => setShowNewModality(false)}>Cancelar</button>
-            <button onClick={(e) => handleSaveNewModality(e)}>Salvar</button>
+            <button type={"button"} onClick={() => setShowNewModality(false)}>
+              Cancelar
+            </button>
+            <button>Salvar</button>
           </div>
         </form>
       </div>

@@ -1,8 +1,16 @@
-import { useState, memo } from "react";
+import {
+  useState,
+  memo,
+  useEffect,
+  type Dispatch,
+  type SetStateAction,
+  type ButtonHTMLAttributes,
+  useRef,
+} from "react";
 
 // STYLES
 import styles from "./Modalities.module.css";
-import { X, ToggleRight, ToggleLeft, ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
+import { X, ToggleRight, ToggleLeft, ChevronDown, ChevronUp, Plus, Trash2, Check } from "lucide-react";
 
 // HOOKS
 
@@ -15,9 +23,9 @@ import NewModality from "./NewModality.tsx";
 import type { ModalitiesInterface } from "../types/pack";
 import { useMainContext } from "../hooks/useMainContext.tsx";
 interface Props {
-  setShowModalities: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowModalities: Dispatch<SetStateAction<boolean>>;
   modalities: ModalitiesInterface[];
-  setModalities: React.Dispatch<React.SetStateAction<ModalitiesInterface[]>>;
+  setModalities: Dispatch<SetStateAction<ModalitiesInterface[]>>;
 }
 interface Modality {
   id: number;
@@ -27,7 +35,7 @@ interface Modality {
   maps: Array<number[]>;
 }
 const Modalities = ({ setShowModalities, modalities, setModalities }: Props) => {
-  const { showAds } = useMainContext();
+  const { showAds, setAlert } = useMainContext();
   const [modalityToRemove, setModalityToRemove] = useState<Modality | null>(null);
 
   const [showNewPattern, setShowNewPattern] = useState<boolean>(false);
@@ -38,85 +46,158 @@ const Modalities = ({ setShowModalities, modalities, setModalities }: Props) => 
     return;
   };
 
-  const changeModality = (modality: number, on: boolean) => {
-    const modalitiesTemp: ModalitiesInterface[] = [...modalities];
-    for (let a = 0; a < modalitiesTemp.length; a++) {
-      if (modalitiesTemp[a].id === modality) {
-        modalitiesTemp[a].on = on;
-        break;
-      }
-    }
-    setModalities(modalitiesTemp);
-    return;
-  };
-  const changeMap = (modality: number, index: number, on: number) => {
-    const modalitiesTemp: ModalitiesInterface[] = [...modalities];
-    let changed: boolean = false;
-    for (let a = 0; a < modalitiesTemp.length; a++) {
-      if (modalitiesTemp[a].id === modality) {
-        for (let b = 0; b < modalitiesTemp[a].maps.length; b++) {
-          if (b === index) {
-            changed = true;
-            modalitiesTemp[a].maps[b][0] = on;
-            break;
-          }
-        }
-        if (changed === true) break;
-      }
-    }
-    setModalities(modalitiesTemp);
-    return;
-  };
-
   const [openId, setOpenId] = useState<number>(0);
   const [showNewModality, setShowNewModality] = useState<boolean>(false);
 
-  const removeModality = () => {
-    setModalities((prevModalities) => {
-      return prevModalities.filter((m) => m.id !== modalityToRemove?.id);
-    });
-    setModalityToRemove(null);
+  const [hasChanges, setHasChanges] = useState<boolean>(false);
+  const [modalitiesTemp, setModalitiesTemp] = useState<ModalitiesInterface[]>(() => structuredClone(modalities));
+
+  const changeModality = (modalityId: number, on: boolean) => {
+    setModalitiesTemp((prev) => prev.map((item) => (item.id === modalityId ? { ...item, on: on } : item)));
+    setHasChanges(true);
     return;
   };
+
+  const changeMap = (modalityId: number, index: number, on: number) => {
+    setModalitiesTemp((prev) =>
+      prev.map((item) =>
+        item.id === modalityId
+          ? { ...item, maps: item.maps.map((map, i) => (i === index ? [(map[0] = on), ...map.slice(1)] : map)) }
+          : item,
+      ),
+    );
+    setHasChanges(true);
+    return;
+  };
+
+  const changeBallLimit = (ball: number, id: number) => {
+    if (ball > 75) return;
+    setModalitiesTemp((prev) => prev.map((item) => (item.id === id ? { ...item, ballLimit: ball } : item)));
+    setHasChanges(true);
+    return;
+  };
+
+  const removeModality = () => {
+    setModalitiesTemp((prev) => {
+      return prev.filter((m) => m.id !== modalityToRemove?.id);
+    });
+    setModalityToRemove(null);
+    setHasChanges(true);
+    return;
+  };
+
+  const [saveChanges, setSaveChanges] = useState<boolean>(false);
+  const confirmChangesRef = useRef<HTMLButtonElement>(null);
+  const confirmChanges = () => {
+    if (confirmChangesRef.current) confirmChangesRef.current.disabled = true;
+    setModalities(structuredClone(modalitiesTemp));
+    setSaveChanges(false);
+    setHasChanges(false);
+    if (confirmChangesRef.current) confirmChangesRef.current.disabled = false;
+    setAlert({
+      id: Math.floor(Math.random() * 10),
+      type: "success",
+      message: "Modalidades alteradas com sucesso.",
+    });
+  };
+
+  const [pendingChanges, setPendingChanges] = useState<boolean>(false);
+  const close = () => {
+    if (!hasChanges) {
+      setShowModalities(false);
+    } else {
+      setPendingChanges(true);
+    }
+    return;
+  };
+
   return (
     <>
       {showNewPattern && (
         <NewPattern
           modality={modalityId}
           setShowNewPattern={setShowNewPattern}
-          modalities={modalities}
-          setModalities={setModalities}
+          modalitiesTemp={modalitiesTemp}
+          setModalitiesTemp={setModalitiesTemp}
+          setHasChanges={setHasChanges}
         />
       )}
 
       {modalityToRemove !== null && (
-        <section className={styles.section_remove_modality}>
-          <div className={styles.div_remove_modality}>
+        <section className={styles.section_alert_modality}>
+          <div className={styles.div_alert_modality}>
             <p>Você quer remover a modalidade: {modalityToRemove.name} ?</p>
             <div>
-              <button className={styles.remove_modality_confirm} onClick={removeModality}>
+              <button className={styles.alert_modality_confirm} onClick={removeModality}>
                 SIM
               </button>
-              <button className={styles.remove_modality_cancel} onClick={() => setModalityToRemove(null)}>
+              <button className={styles.alert_modality_cancel} onClick={() => setModalityToRemove(null)}>
                 NÃO
               </button>
             </div>
           </div>
         </section>
       )}
-      {showNewModality && <NewModality setShowNewModality={setShowNewModality} setModalities={setModalities} />}
+
+      {pendingChanges && (
+        <section className={styles.section_alert_modality}>
+          <div className={styles.div_alert_modality}>
+            <p>Tem alterações que você não salvou, tem certeza que deseja fechar a aba de modalidades ?</p>
+            <div>
+              <button className={styles.alert_modality_confirm} onClick={() => setShowModalities(false)}>
+                SIM
+              </button>
+              <button className={styles.alert_modality_cancel} onClick={() => setPendingChanges(false)}>
+                NÃO
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {saveChanges && (
+        <section className={styles.section_alert_modality}>
+          <div className={styles.div_alert_modality}>
+            <p>Deseja confirmar todas as alterações nas modalidades ?</p>
+            <div>
+              <button className={styles.alert_modality_confirm} onClick={confirmChanges}>
+                SIM
+              </button>
+              <button className={styles.alert_modality_cancel} onClick={() => setSaveChanges(false)}>
+                NÃO
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {showNewModality && (
+        <NewModality
+          setShowNewModality={setShowNewModality}
+          setModalitiesTemp={setModalitiesTemp}
+          setHasChanges={setHasChanges}
+        />
+      )}
+
       <section className={styles.section_modalities}>
         <div className={`${styles.div_modalities} ${showAds && styles.div_modalities_with_ads}`}>
           <div className={styles.div_modalities_header}>
             <h3>Modalidades</h3>
-
+            <button
+              ref={confirmChangesRef}
+              className={styles.confirm_changes}
+              onClick={() => setSaveChanges(true)}
+              disabled={!hasChanges}
+            >
+              Salvar alterações
+            </button>
             <button className={styles.new_modality} onClick={() => setShowNewModality(true)}>
               <Plus />
             </button>
-            <X onClick={() => setShowModalities(false)} />
+            <X onClick={() => close()} />
           </div>
           <ul className={styles.ul_modalities}>
-            {modalities.map((modality) => (
+            {modalitiesTemp.map((modality) => (
               <li key={modality.id} className={`${styles.li_modality} ${modality.on ? styles.modality_on : ""}`}>
                 <div>
                   <p>
@@ -142,19 +223,34 @@ const Modalities = ({ setShowModalities, modalities, setModalities }: Props) => 
                     )}
                   </div>
                 </div>
+
                 <div className={openId === modality.id ? styles.modality_details_show : styles.modality_details_hide}>
-                  {modality.maps.map((item, index) => (
-                    <ModalityPattern
-                      key={`modality_example_${index}`}
-                      modality={modality.id}
-                      map={item}
-                      index={index}
-                      changeMap={changeMap}
-                    />
-                  ))}
-                  <button className={styles.new_pattern} onClick={() => handleShowNewPattern(modality.id)}>
-                    <Plus />
-                  </button>
+                  <div className={styles.ball_limit}>
+                    <label>Até qual bola cantada?</label>
+                    <span>Ex: 10, até a décima bola cantada. 0 para desativar.</span>
+                    <div>
+                      <input
+                        type={"text"}
+                        inputMode={"numeric"}
+                        value={modality.ballLimit}
+                        onChange={(e) => changeBallLimit(Number(e.target.value), modality.id)}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.modality_patterns}>
+                    <button className={styles.new_pattern} onClick={() => handleShowNewPattern(modality.id)}>
+                      <Plus />
+                    </button>
+                    {modality.maps.map((item, index) => (
+                      <ModalityPattern
+                        key={`modality_example_${index}`}
+                        modality={modality.id}
+                        map={item}
+                        index={index}
+                        changeMap={changeMap}
+                      />
+                    ))}
+                  </div>
                 </div>
               </li>
             ))}

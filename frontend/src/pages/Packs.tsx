@@ -123,7 +123,7 @@ const Packs = () => {
               {packs.length === 0 ? (
                 <p className={styles.none_packs}>Nenhum maço criado, crie um no botão abaixo!</p>
               ) : (
-                <ul className={`${styles.packs}`}>
+                <ul className={`${styles.packs} ${plan === 0 || dueAt < timeStamp ? styles.padding_bottom : ""}`}>
                   {packs.map((pack) => (
                     <li key={pack.id} className={styles.pack} onClick={() => goTo(pack.id)}>
                       <div>
@@ -150,7 +150,10 @@ const Packs = () => {
                     plan === 0 || dueAt < timeStamp ? styles.show : styles.hide
                   }`}
                 >
-                  <p>Seu plano gratuito permite gerar até 200 cartelas por maço. Para gerar mais obtenha um plano.</p>
+                  <p>
+                    Seu plano gratuito permite gerar até 500 cartelas por maço. Para gerar mais e não ver anúncios
+                    compre um plano.
+                  </p>
 
                   <Link to="/plans">
                     <CircleStar />

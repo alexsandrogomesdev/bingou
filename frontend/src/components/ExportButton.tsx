@@ -11,6 +11,7 @@ import type { Cards } from "../types/pack";
 import { Share2 } from "lucide-react";
 import { useMainContext } from "../hooks/useMainContext";
 import InterstitialAds from "./InterstitialAds";
+import { Capacitor } from "@capacitor/core";
 
 interface Props {
   packId: string;
@@ -35,7 +36,7 @@ const ExportButton = ({ packId, packName, cards }: Props) => {
   };
 
   const handleDownloadPdf = async () => {
-    if (showAds) {
+    if (showAds && Capacitor.isNativePlatform()) {
       setShowInterstitial(true);
     } else {
       await downloadPdf();

@@ -50,7 +50,7 @@ const TermsOfUse = () => {
           <p>O serviço é oferecido sob o modelo de assinatura com as seguintes especificações:</p>
           <ul>
             <li>
-              <strong>Plano Gratuito:</strong> Limite de até 200 cartelas por maço. Inclui a exibição de anúncios
+              <strong>Plano Gratuito:</strong> Limite de até 500 cartelas por maço. Inclui a exibição de anúncios
               publicitários (personalizados e contextuais via Google AdMob) como forma de financiamento do acesso
               gratuito.
             </li>

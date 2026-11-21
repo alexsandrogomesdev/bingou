@@ -61,8 +61,9 @@ const Pack = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
     const getPack = async () => {
-      if (!getCards && !cardsAdded && headerTitle !== "Sorteador") return;
+      if (!getCards && !cardsAdded) return;
 
       const response: PackType = await request(`/packs/${id}`, "GET");
       if (response.message === "Unauthorized") {
@@ -375,12 +376,14 @@ const Pack = () => {
               )}
             </>
           )}
-          <button
-            className={`${styles.add_cards} ${showAds && styles.add_cards_with_ads}`}
-            onClick={handleShowAddCards}
-          >
-            <Plus />
-          </button>
+          {balls.size === 0 && (
+            <button
+              className={`${styles.add_cards} ${showAds && styles.add_cards_with_ads}`}
+              onClick={handleShowAddCards}
+            >
+              <Plus />
+            </button>
+          )}
         </div>
         {showAds && !menuOpen && <BannerAds margin={0} top={false} />}
       </section>

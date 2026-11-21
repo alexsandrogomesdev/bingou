@@ -38,6 +38,8 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
     const initAdMob = async () => {
       try {
         if (!Capacitor.isNativePlatform()) {
@@ -53,6 +55,8 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
     const initApp = async () => {
       if (localStorage.getItem("userId") !== null) navigate("/packs");
       await sleep(1000);

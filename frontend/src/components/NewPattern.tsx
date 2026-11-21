@@ -1,4 +1,4 @@
-import { useState, useMemo, memo } from "react";
+import { useState, useMemo, memo, type Dispatch, type SetStateAction } from "react";
 
 // STYLES
 import styles from "./NewPattern.module.css";
@@ -11,16 +11,12 @@ import type { ModalitiesInterface } from "../types/pack";
 
 interface Props {
   modality: number;
-  setShowNewPattern: React.Dispatch<React.SetStateAction<boolean>>;
-  modalities: ModalitiesInterface[];
-  setModalities: React.Dispatch<React.SetStateAction<ModalitiesInterface[]>>;
+  setShowNewPattern: Dispatch<SetStateAction<boolean>>;
+  modalitiesTemp: ModalitiesInterface[];
+  setModalitiesTemp: Dispatch<SetStateAction<ModalitiesInterface[]>>;
+  setHasChanges: Dispatch<SetStateAction<boolean>>;
 }
-const NewPattern = ({
-  modality,
-  setShowNewPattern,
-  modalities,
-  setModalities,
-}: Props) => {
+const NewPattern = ({ modality, setShowNewPattern, modalitiesTemp, setModalitiesTemp, setHasChanges }: Props) => {
   const columns = useMemo(() => {
     const cols: number[][] = [[], [], [], [], []];
     for (let i = 0; i < 25; i++) {
@@ -42,15 +38,16 @@ const NewPattern = ({
     return;
   };
   const handleSaveNewPattern = () => {
-    const newModalities = [...modalities];
+    const newModalities: ModalitiesInterface[] = [...modalitiesTemp];
     for (let a = 0; a < newModalities.length; a++) {
       if (newModalities[a].id === modality) {
         newModalities[a].maps.push([1, ...pattern.sort((a, b) => a - b)]);
         break;
       }
     }
-    setModalities(newModalities);
+    setModalitiesTemp(newModalities);
     setShowNewPattern(false);
+    setHasChanges(true);
     return;
   };
 
@@ -60,15 +57,14 @@ const NewPattern = ({
         <p>Novo padrão</p>
         <div className={styles.div_pattern}>
           {columns.map((column, index) => (
-            <ul
-              key={`new_modality_column_${index}`}
-              className={styles.ul_pattern}
-            >
+            <ul key={`new_modality_column_${index}`} className={styles.ul_pattern}>
               {column.map((number) => (
                 <li
                   key={`new_modality_column_${index}_${number}`}
                   onClick={() => selectIndex(number)}
-                  className={`${pattern.includes(number) ? styles.selected_index : ""} ${number === 12 ? styles.joker : ""}`}
+                  className={`${pattern.includes(number) ? styles.selected_index : ""} ${
+                    number === 12 ? styles.joker : ""
+                  }`}
                 >
                   {number === 12 ? <Sparkles /> : ""}
                 </li>

@@ -29,7 +29,7 @@ const authenticate = async (request: any, reply: any) => {
 
 // PLANS
 const allPlans: number[] = [];
-allPlans.push(200);
+allPlans.push(500);
 allPlans.push(2000);
 allPlans.push(10000);
 

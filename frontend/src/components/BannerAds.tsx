@@ -11,12 +11,14 @@ const BannerAds = ({ margin, top }: Props) => {
   const [adKey, setAdKey] = useState(0);
 
   useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
     let isMounted = true;
 
     const renderAd = async () => {
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      if (isMounted && Capacitor.isNativePlatform()) {
+      if (isMounted) {
         try {
           await AdMob.showBanner({
             adId: "ca-app-pub-3611957232178140/3353834291",
@@ -47,6 +49,7 @@ const BannerAds = ({ margin, top }: Props) => {
     };
   }, [margin, top, adKey]);
 
+  if (!Capacitor.isNativePlatform()) return;
   return <div className={styles.div}></div>;
 };
 

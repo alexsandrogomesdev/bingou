@@ -97,19 +97,21 @@
     position: fixed;
     min-width: 250px;
     max-width: 250px;
-    min-height: 250px;
-    max-height: 250px;
+    min-height: 330px;
+    max-height: 330px;
     background-color: #fff;
     box-shadow: 0px 0px 10px 10px rgba(255, 113, 1, 0.05);
     -webkit-box-shadow: 0px 0px 10px 10px rgba(255, 113, 1, 0.05);
     border-radius: 12px;
     overflow: hidden;
-    top: 63px;
-    left: calc((((100vw - 1100px) + (100vw - 1100px)) - ((100vw - 1100px) / 2)) + 23px);
+    top: 65px;
+    right: calc((100% - 1100px) / 2);
+    left: auto;
+    /* left: calc((((100vw - 1100px) + (100vw - 1100px)) - ((100vw - 1100px) / 2)) + 23px); */
   }
   .menu_div {
     min-width: 100%;
     max-width: 100%;
-    max-height: 250px;
+    max-height: 350px;
   }
 }

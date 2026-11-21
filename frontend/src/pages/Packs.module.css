@@ -27,6 +27,10 @@
   flex-flow: column;
   gap: 10px;
   flex: 1;
+  overflow-y: auto;
+}
+.padding_bottom {
+  padding-bottom: 150px;
 }
 .pack {
   display: flex;

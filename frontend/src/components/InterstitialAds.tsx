@@ -14,6 +14,8 @@ const InterstitialAds = ({ callback, message, close }: Props) => {
   const [showButtonClose, setShowButtonClose] = useState<boolean>(false);
 
   useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
     const timing = setTimeout(() => {
       setShowButtonClose(true);
     }, 2000);
@@ -24,12 +26,14 @@ const InterstitialAds = ({ callback, message, close }: Props) => {
   }, []);
 
   useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
     let isMounted = true;
 
     const renderAd = async () => {
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      if (isMounted && Capacitor.isNativePlatform()) {
+      if (isMounted) {
         try {
           await AdMob.prepareInterstitial({
             adId: "ca-app-pub-3611957232178140/6728780552",
@@ -51,6 +55,8 @@ const InterstitialAds = ({ callback, message, close }: Props) => {
   }, []);
 
   useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
     let dismissListener: PluginListenerHandle;
     let failedListener: PluginListenerHandle;
 
@@ -78,6 +84,7 @@ const InterstitialAds = ({ callback, message, close }: Props) => {
     close();
   };
 
+  if (!Capacitor.isNativePlatform()) return;
   return (
     <>
       {loading && (
